@@ -1,0 +1,255 @@
+# {{PROJECT_NAME}} - AI Assistant Configuration
+
+<!--
+INSTRUCTIONS FOR AI ASSISTANT DURING BOOTSTRAP:
+This file enforces development discipline for EVERY interaction.
+Replace {{PLACEHOLDERS}} with project-specific values.
+These rules apply to: bugs, changes, new features, refactoring, docs - EVERYTHING.
+Never skip rules based on task type - consistency is critical.
+
+NOTE: This file will be saved as .clinerules (for Cline) or .roorules (for Roo)
+based on which AI assistant you're using. The content is identical.
+-->
+
+## Date Handling
+Always use the current date from environment_details "Current Time" field, not training data dates.
+
+---
+
+## Single Source of Truth
+**{{DOCS_DIR}}/context_master_guide.md**
+
+All project rules, philosophy, workflows, and standards are defined there. This file only configures HOW and WHEN you access that master document.
+
+---
+
+## Universal Session Protocol (APPLIES TO EVERY INTERACTION)
+
+<!-- CRITICAL: These rules apply to ALL tasks - no exceptions -->
+
+**EVERY chat session MUST start with:**
+```
+1. MCP tool: get_context_for_task(task_type="session_start")
+2. MCP tool: get_current_implementation_status()
+3. Determine interaction type:
+   - New {{CYCLE_TYPE}} → Follow {{CYCLE_TYPE}} workflow
+   - Bug/change request → start_change_request()
+   - Question/exploration → Check patterns first
+```
+
+**Before starting new {{CYCLE_TYPE}} work:**
+```
+1. MCP tool: get_context_for_task(task_type="{{CYCLE_TYPE}}_start")
+2. MCP tool: check_pattern_exists(feature_description="[what you're building]")
+   - If pattern exists: Follow it exactly
+   - If no pattern: Plan to document new pattern after implementation
+3. Read relevant design docs as identified in the context
+```
+
+**Before making ANY code changes (bugs, features, refactoring, ANY code modification):**
+```
+1. MCP tool: check_pattern_exists(feature_description)
+2. Read relevant patterns from pattern library
+3. Follow existing pattern OR plan to document new one
+```
+
+**During change iteration (fixes/refinements):**
+```
+- Make code changes and test
+- **DO NOT document until user confirms change works**
+- Keep iterating until user confirms success
+```
+
+**After user confirms change works:**
+```
+1. MCP tool: validate_change_resolution(change_id)
+2. Review COMPLETE documentation checklist returned by tool
+3. Create change documentation in {{CHANGES_DIR}}/ directory
+4. Update ALL affected docs:
+   - technical_status.md (ALWAYS - Recently Fixed/Changed section)
+   - patterns/ (if pattern revealed, established, or fixed)
+   - {{WORKFLOW_DOCS}} (if conceptual logic changed - use validate_workflow_documentation)
+   - {{ADDITIONAL_CONTEXT_FILE}} (if queryable data/capabilities affected)
+5. MCP tool: close_change_request(change_id, documentation_file)
+6. Present summary showing ALL docs updated
+```
+
+**Before marking work complete:**
+```
+1. MCP tool: get_context_for_task(task_type="{{CYCLE_TYPE}}_complete")
+2. MCP tool: get_completion_checklist()
+3. IF any endpoints added/modified:
+   - MCP tool: validate_api_contracts(endpoints_modified=["POST /endpoint", "GET /other"])
+   - MANDATORY check - separate from pattern validation
+   - Ensure ALL contract requirements met
+4. Review COMPLETE checklist with user
+5. Complete Critical Update Sequence:
+   - technical_status.md updated
+   - patterns/ updated (if new patterns OR pattern applied)
+   - {{ADDITIONAL_CONTEXT_FILE}} updated (if applicable)
+   - {{WORKFLOW_DOCS}} updated (if conceptual logic changed)
+   - {{IMPLEMENTATION_PLAN_FILE}} updated (status → COMPLETE)
+6. MCP tool: validate_{{CYCLE_TYPE}}_completion({{CYCLE_TYPE}}="X.X", completed_items=[...])
+7. MCP tool: validate_workflow_documentation(changes_made=[...], description="...")
+8. Verify Implementation Plan Alignment (both high-level and detailed plans must match)
+9. Show validation results to user
+10. ONLY THEN use attempt_completion
+```
+
+---
+
+## Document Updates
+
+All changes to files in `{{DOCS_DIR}}/` require:
+1. Show diff to user
+2. Wait for approval
+3. Apply only after approval
+
+---
+
+## MCP Tools Available
+
+**For All Work:**
+- `get_context_for_task` - Extract relevant sections from master guide
+- `get_current_implementation_status` - Read technical_status.md
+- `check_pattern_exists` - Search pattern library
+- `validate_workflow_documentation` - Check if workflow docs need updates
+- `get_completion_checklist` - Get comprehensive completion checklist
+
+**For {{CYCLE_TYPE_PLURAL}} (New Features):**
+- `validate_{{CYCLE_TYPE}}_completion` - Verify completion criteria
+
+**For Changes (Bugs/Refinements):**
+- `start_change_request` - Initialize change tracking
+- `validate_change_resolution` - Get complete documentation checklist (ONLY after user confirms fix)
+- `close_change_request` - Mark change as complete after all docs updated
+
+---
+
+## Critical Rules
+
+<!-- AI ASSISTANT: Customize this section based on project's chosen API contract approach -->
+
+**For API Development ({{API_CONTRACT_APPROACH}}):**
+
+<!-- AI ASSISTANT: If using OpenAPI + Pydantic + TypeScript (recommended): -->
+{{#if API_APPROACH_OPENAPI}}
+- ALL new endpoints MUST use {{BACKEND_MODEL_TYPE}} response models
+- ALL endpoints MUST have `response_model` parameter
+- ALL endpoints MUST explicitly map service data to {{BACKEND_MODEL_TYPE}} model
+- Frontend MUST use {{API_CLIENT_MODULE}} from `{{API_CLIENT_PATH}}`
+- Frontend MUST use {{API_HOOKS_MODULE}} from `{{API_HOOKS_PATH}}` when possible
+{{#unless PROJECT_TYPE_PROTOTYPE}}
+- NO direct {{HTTP_CLIENT}} calls in components (use API client) - ZERO EXCEPTIONS
+{{/unless}}
+{{#if PROJECT_TYPE_PROTOTYPE}}
+- Direct {{HTTP_CLIENT}} calls allowed for prototyping (but API client recommended)
+{{/if}}
+- ALL components MUST use auto-generated TypeScript types from `{{TYPES_PATH}}`
+- NO manual type definitions that duplicate API response types
+- When fixing bugs, ALWAYS check if component uses {{API_CLIENT_MODULE}} and auto-generated types
+- Reference: `{{DOCS_DIR}}/patterns/api_contract_pattern.md`
+
+**API Contract Enforcement:**
+Before making ANY changes to frontend components that fetch data:
+1. Check if component uses `{{API_CLIENT_MODULE}}` - if not, refactor it first
+2. Check if component uses auto-generated types - if not, update it first
+{{#unless PROJECT_TYPE_PROTOTYPE}}
+3. Never use direct `{{HTTP_CLIENT}}()` calls - always use `{{API_CLIENT_MODULE}}` methods
+4. If {{API_CLIENT_MODULE}} method doesn't exist, add it to `{{API_CLIENT_PATH}}` first
+5. This applies to bug fixes, new features, and refactoring - NO EXCEPTIONS
+{{/unless}}
+{{#if PROJECT_TYPE_PROTOTYPE}}
+3. Direct `{{HTTP_CLIENT}}()` calls allowed for speed, but consider `{{API_CLIENT_MODULE}}` for stability
+{{/if}}
+{{/if}}
+
+<!-- AI ASSISTANT: If using GraphQL: -->
+{{#if API_APPROACH_GRAPHQL}}
+- ALL new queries/mutations MUST be defined in GraphQL schema first
+- Frontend MUST use generated types from GraphQL schema
+- NO manual GraphQL queries in components - use generated hooks
+- ALL schema changes require regenerating frontend types
+- Reference: `{{DOCS_DIR}}/patterns/graphql_pattern.md`
+{{/if}}
+
+<!-- AI ASSISTANT: If using JSON Schema or Custom: -->
+{{#if API_APPROACH_CUSTOM}}
+- ALL endpoints MUST document request/response contracts in `{{CONTRACT_DOC_PATH}}`
+- Frontend types MUST match backend contracts
+- Contract changes require updating both backend and frontend
+- Reference: `{{DOCS_DIR}}/patterns/api_contract_pattern.md`
+{{/if}}
+
+**For Changes:**
+- Never update documentation during iteration
+- Only after user confirmation of successful change
+- ALWAYS update ALL affected docs, not just the change doc
+- Bug fixes go in {{CHANGES_DIR}}/ directory with full template
+
+**For Pattern Library:**
+- Check patterns BEFORE implementing ANY feature
+- Follow existing patterns exactly when they exist
+- Document new patterns immediately when discovered
+- Add to Harmonization Backlog if inconsistencies found
+
+---
+
+## Project-Specific Critical Rules
+
+<!-- AI ASSISTANT: Add any project-specific rules that must be enforced -->
+
+{{#if CUSTOM_RULE_1}}
+**{{CUSTOM_RULE_1_CATEGORY}}:**
+- {{CUSTOM_RULE_1_REQUIREMENT_1}}
+- {{CUSTOM_RULE_1_REQUIREMENT_2}}
+- {{CUSTOM_RULE_1_REQUIREMENT_3}}
+- Reference: `{{CUSTOM_RULE_1_DOC_PATH}}`
+{{/if}}
+
+{{#if CUSTOM_RULE_2}}
+**{{CUSTOM_RULE_2_CATEGORY}}:**
+- {{CUSTOM_RULE_2_REQUIREMENT_1}}
+- {{CUSTOM_RULE_2_REQUIREMENT_2}}
+- Reference: `{{CUSTOM_RULE_2_DOC_PATH}}`
+{{/if}}
+
+---
+
+## Rule Enforcement Philosophy
+
+**These rules apply to:**
+- ✅ New {{CYCLE_TYPE}} development
+- ✅ Bug fixes
+- ✅ Simple changes
+- ✅ Refactoring
+- ✅ Documentation updates
+- ✅ Any code modification
+
+**Why rules apply to ALL interactions:**
+- **Consistency:** Good practices aren't situational
+- **Discipline:** Skipping rules "just this once" creates technical debt
+- **Quality:** Small changes done wrong create big problems
+- **Pattern Discovery:** Every task is an opportunity to learn/document
+- **Context Preservation:** Documentation ensures knowledge survives
+
+**The Universal Protocol ensures:**
+- Context is gathered before any work
+- Patterns are checked before any implementation
+- Changes are validated before documentation
+- Documentation is complete before marking work done
+- Quality is consistent across all task types
+
+---
+
+For all rules, workflows, and standards, read context_master_guide.md using the MCP tools.
+
+<!--
+AI ASSISTANT CUSTOMIZATION NOTES:
+1. Replace all {{PLACEHOLDERS}} during bootstrap
+2. Choose appropriate API contract section based on project choice
+3. Add project-specific rules if needed
+4. Ensure MCP tool names match server configuration
+5. Verify file paths match project structure
+6. Save as .clinerules (for Cline) or .roorules (for Roo)
+-->
