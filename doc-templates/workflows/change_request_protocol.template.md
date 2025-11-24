@@ -131,11 +131,12 @@ start_change_request(
 
 **Goal:** Fix the problem, validate it works
 
-### 4. Attempt Change
+### 4. Attempt Change & Verify
 
 **Actions:**
 - Make code changes
-- Test locally/in production
+- **Verify in {{VERIFICATION_ENV}}**
+- {{VERIFICATION_INSTRUCTIONS}}
 - Verify fix addresses root cause
 
 **Rule:** DO NOT document yet
@@ -219,7 +220,7 @@ start_change_request(
 - ✅ <Side benefits>
 
 ## Testing
-<Test scenarios performed>
+<Test scenarios performed in {{VERIFICATION_ENV}}>
 
 ## Files Modified
 - `path/to/file.ext` - Description
@@ -235,7 +236,7 @@ start_change_request(
 
 ## Deployment
 - Commit: `<hash>`
-- Deployed to: <environment>
+- Deployed to: {{VERIFICATION_ENV}} / Production
 ```
 
 ### 8. Update Technical Status (ALWAYS)
@@ -403,7 +404,7 @@ close_change_request(
 
 ### ❌ "User will test in production"
 **Problem:** Broken code reaches production  
-**Solution:** User tests BEFORE deployment/merge
+**Solution:** User tests in {{VERIFICATION_ENV}} BEFORE deployment/merge
 
 ### ❌ "It's just a typo, no need for protocol"
 **Problem:** "Simple" changes break things  
@@ -457,7 +458,7 @@ close_change_request(
 
 ## Deployment
 - Commit: `<hash>`
-- Environment: <where deployed>
+- Environment: {{VERIFICATION_ENV}}
 ```
 
 ---
@@ -478,7 +479,7 @@ close_change_request(
 
 2. [Iterate on fix]
 
-3. [User confirms: "It works!"]
+3. [User confirms in {{VERIFICATION_ENV}}: "It works!"]
 
 4. validate_change_resolution(change_id)
    → Returns: Complete checklist of docs to update
@@ -497,7 +498,7 @@ close_change_request(
 ## Key Takeaways
 
 1. **ANALYZE before fixing** - Understand root cause
-2. **ITERATE until confirmed** - User must validate
+2. **ITERATE until confirmed** - User must validate in {{VERIFICATION_ENV}}
 3. **DOCUMENT after confirmation** - Update ALL affected docs
 4. **MONITOR in production** - Verify fix holds
 5. **ARCHIVE after 1 month** - Keep docs current

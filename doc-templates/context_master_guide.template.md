@@ -225,7 +225,7 @@ After any significant change—a feature is built, an architectural decision is 
 
 **DURING Implementation:**
 1. **First:** Implement the {{BACKEND_COMPONENT}} functionality WITH REAL COMPONENTS (no stubs)
-2. **Second:** Integrate the {{FRONTEND_COMPONENT}} so results are visible to users  
+2. **Second:** **Deploy & Verify in {{VERIFICATION_ENV}}** - {{VERIFICATION_INSTRUCTIONS}}
 3. **Third:** **ALIGN ALL TESTING WITH ACTUAL IMPLEMENTATION** - Ensure test data, instructions, and validation precisely match what was built
 4. **Fourth:** RUN AND PASS ALL TESTS ({{TEST_TYPES}}) - using correctly aligned test data
 

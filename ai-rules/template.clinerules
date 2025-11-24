@@ -78,7 +78,10 @@ All project rules, philosophy, workflows, and standards are defined there. This 
 ```
 1. MCP tool: get_context_for_task(task_type="{{CYCLE_TYPE}}_complete")
 2. MCP tool: get_completion_checklist()
-3. IF any endpoints added/modified:
+3. **MANDATORY VERIFICATION**:
+   - {{VERIFICATION_RULE}}
+   - You MUST NOT mark complete until user confirms verification in this environment.
+4. IF any endpoints added/modified:
    - MCP tool: validate_api_contracts(endpoints_modified=["POST /endpoint", "GET /other"])
    - MANDATORY check - separate from pattern validation
    - Ensure ALL contract requirements met

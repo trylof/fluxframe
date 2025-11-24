@@ -272,9 +272,8 @@ fluxframe/
 │       └── pattern_template.md
 │
 ├── development-cycles/                # Iteration methodology
-│   ├── cycle_workflow.md
-│   ├── completion_checklist.md
-│   └── change_request_protocol.md
+│   └── completion_checklist.md
+│   (Workflows generated from doc-templates/workflows/)
 │
 ├── testing-framework/                 # Testing philosophy
 │   ├── README.md

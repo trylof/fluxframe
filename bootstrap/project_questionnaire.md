@@ -217,10 +217,27 @@ Choose option (1-2):
 
 ---
 
+### Q8: Verification Environment
+
+**Ask:**
+```
+How will you/users verify changes before marking them complete?
+
+1. **Localhost:** I run it locally (e.g., localhost:3000)
+2. **Preview Environment:** CI creates ephemeral previews (e.g., Vercel)
+3. **Staging Server:** I deploy to a specific staging URL
+4. **Production:** I deploy directly to prod (behind feature flags)
+```
+
+**Impact:**
+- Customizes the "Verification" step in workflows
+- AI will instruct you to verify in this specific environment
+
+---
+
 ## Optional Questions (Ask only if relevant)
 
-### Q8: Key Features (if not provided)
-### Q8: Key Features (if not provided)
+### Q9: Key Features (if not provided)
 
 **Ask if:**
 - User gave minimal description
@@ -240,26 +257,6 @@ For example:
 ```
 
 **Use answers for:** Populating initial implementation_plan.md with cycle ideas
-
----
-
-### Q9: Deployment Environment
-
-**Usually DON'T ask** - Can be defined later
-
-**Ask only if:**
-- User mentioned deployment concerns
-- Affects architecture decisions
-
-**Question:**
-```
-Where will this be deployed?
-
-1. Local development only (for now)
-2. Cloud (AWS, GCP, Azure)
-3. Self-hosted server
-4. Specific platform (Vercel, Railway, etc.)
-```
 
 ---
 
@@ -494,6 +491,7 @@ Based on your answers:
 - **Purpose:** [PURPOSE]
 - **Stack:** [STACK]
 - **API Contracts:** [APPROACH]
+- **Verification:** [ENV_TYPE]
 - **Docs Location:** [PATH]
 
 I'll create:

@@ -90,14 +90,18 @@ Each phase has mandatory steps that ensure quality, consistency, and knowledge p
 - ❌ DON'T: Return hardcoded `{"status": "success"}` from API
 - ✅ DO: Actually call the database/service/AI model
 
-### 2. Make Results Visible to Users
+### 2. Deploy & Verify in {{VERIFICATION_ENV}}
 
-**Rule:** Every cycle must produce UI changes or observable outputs.
+**Rule:** Implementation isn't done until users can verify it in {{VERIFICATION_ENV}}.
 
-**Implementation isn't done until users can:**
-- See it (in UI)
-- Click it (if interactive)
-- Test it (manually or automated)
+**Instructions:**
+{{VERIFICATION_INSTRUCTIONS}}
+
+**Verification isn't done until users can:**
+- Access the deployment ({{VERIFICATION_ENV}})
+- See the new functionality (in UI)
+- Interact with it (if applicable)
+- Validate it works as expected
 
 **Why:** "Backend complete but no UI" means nothing to users. Complete the loop.
 
@@ -242,6 +246,7 @@ Verifies:
 - What docs were updated
 - What patterns were applied/created
 - What's ready for next cycle
+- **Deployment URL/Status in {{VERIFICATION_ENV}}**
 
 **Get user confirmation before using `attempt_completion`.**
 
@@ -252,7 +257,7 @@ Verifies:
 **A cycle is NOT complete until:**
 
 ✅ Real components implemented (no stubs)  
-✅ Visible UI results  
+✅ Visible UI results in {{VERIFICATION_ENV}}  
 ✅ All tests passing (aligned with implementation)  
 ✅ technical_status.md updated  
 ✅ Pattern library updated (if applicable)  
@@ -284,7 +289,7 @@ Verifies:
 
 ### ❌ "It works on my machine"
 **Problem:** Production environment differs  
-**Solution:** Use real components, test in real environment
+**Solution:** Use real components, test in {{VERIFICATION_ENV}}
 
 ### ❌ "Quick fix, no need for patterns"
 **Problem:** Inconsistency accumulates  
@@ -351,7 +356,7 @@ Following this workflow consistently:
 ## Key Takeaways
 
 1. **BEFORE:** Gather context, check patterns, plan approach
-2. **DURING:** Real components, visible results, aligned tests
+2. **DURING:** Real components, verify in {{VERIFICATION_ENV}}, aligned tests
 3. **AFTER:** Update ALL docs, validate completion, get confirmation
 
 **Every cycle. Every time. No exceptions.**

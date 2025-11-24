@@ -70,6 +70,13 @@ mkdir -p {{DOCS_DIR}}/bug_fixes
 4. Adapt examples where marked `{{EXAMPLE}}`
 5. Remove template comments (lines starting with `<!-- TEMPLATE:`)
 
+**Verification Logic (Important):**
+Based on user's Q8 Answer (Verification Environment), set `{{VERIFICATION_INSTRUCTIONS}}`:
+- **Localhost:** "Run local server (e.g., `npm run dev`) and verify functionality at `http://localhost:3000` (or configured port)."
+- **Preview Env:** "Wait for CI to generate preview URL. Verify functionality at that URL."
+- **Staging:** "Deploy to Staging environment. Verify functionality at [STAGING_URL]."
+- **Production:** "Deploy to Production (ensure feature flags active if needed). Verify functionality at [PROD_URL]."
+
 **Placeholder Extraction Examples:**
 
 From project info:
@@ -89,6 +96,8 @@ Results in:
 {{DOCS_DIR}} → project_docs
 {{API_CONTRACT_APPROACH}} → OpenAPI + Pydantic + Auto-Generated TypeScript
 {{ARCHITECTURE_TYPE}} → Frontend + Backend (API-first)
+{{VERIFICATION_ENV}} → Localhost
+{{VERIFICATION_INSTRUCTIONS}} → Run local server and verify...
 ```
 
 **Special Handling:**
@@ -548,15 +557,29 @@ See `context_master_guide.md` Section 4 for pattern documentation guidelines.
 
 ---
 
-### Step 7: Create Workflow Documentation (Optional)
+### Step 7: Create Workflow Documentation (MANDATORY)
 
-**Only if:** User requested workflow docs during bootstrap
+**Files to Create in `{{DOCS_DIR}}/workflows/`:**
 
-**Otherwise:** Skip and note in technical_status.md: "Workflows: To be documented"
+**7.1: `cycle_workflow.md`**
+- **Source:** `doc-templates/workflows/cycle_workflow.template.md`
+- **Replace:** 
+  - `{{VERIFICATION_ENV}}` → User's verification choice (Localhost/Staging/etc.)
+  - `{{VERIFICATION_INSTRUCTIONS}}` → Implementation specific instructions (see Step 2 logic)
 
-**If creating workflows:**
+**7.2: `change_request_protocol.md`**
+- **Source:** `doc-templates/workflows/change_request_protocol.template.md`
+- **Replace:**
+  - `{{VERIFICATION_ENV}}` → User's verification choice
+  - `{{VERIFICATION_INSTRUCTIONS}}` → Implementation specific instructions
 
-From `doc-templates/workflow_*.template.md`
+**7.3: `README.md` (Workflow Index)**
+- Create simple index linking to above protocols.
+
+**Validation:**
+- [ ] Protocol files created
+- [ ] Verification steps customized to environment
+- [ ] Files valid markdown
 
 ---
 
@@ -617,8 +640,14 @@ From `doc-templates/workflow_*.template.md`
 2. Replace placeholders:
    - `{{PROJECT_NAME}}` → Project name
    - `{{DOCS_DIR}}` → Documentation directory
+   - `{{VERIFICATION_RULE}}` → Insert environment verification rule
    - `{{API_CONTRACT_RULES}}` → Insert approach-specific rules
 3. Save as `.clinerules` in project root
+
+**Verification Rule Logic:**
+Based on user's Q8 Answer:
+- **Localhost:** "Verify locally. Ensure you can run the app and user can access it."
+- **Preview/Staging/Prod:** "Instruct user to DEPLOY to `{{VERIFICATION_ENV}}` and verify functionality there."
 
 **API Contract Rules by Approach:**
 
@@ -710,6 +739,8 @@ Before presenting to user, verify:
 - [ ] `{{DOCS_DIR}}/implementation_plan.md`
 - [ ] `{{DOCS_DIR}}/patterns/README.md`
 - [ ] `{{DOCS_DIR}}/patterns/*_patterns.md` (as applicable)
+- [ ] `{{DOCS_DIR}}/workflows/cycle_workflow.md`
+- [ ] `{{DOCS_DIR}}/workflows/change_request_protocol.md`
 - [ ] `{{DOCS_DIR}}/api_contract_standards.md` (if applicable)
 - [ ] `.clinerules`
 - [ ] `mcp-server.js`
