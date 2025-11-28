@@ -523,12 +523,6 @@ Recommended: Keep framework directory separate from your project code. Bootstrap
 
 ---
 
-## Credits
-
-Extracted and generalized from Henrik's private side project for Tele2.
-
----
-
 ## Next Steps
 
 1. **Read the philosophy**: [PHILOSOPHY.md](PHILOSOPHY.md)
