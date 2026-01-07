@@ -22,18 +22,37 @@ IMPORTANT: To prevent this file from becoming too large, follow the Modular Tech
 
 ## 🏗️ Current Architecture Overview
 
-<!-- AI ASSISTANT: Customize based on actual stack -->
-### Production Environment
-- **Frontend:** {{FRONTEND_FRAMEWORK}} deployed on {{FRONTEND_PLATFORM}}
-- **Backend:** {{BACKEND_FRAMEWORK}} deployed on {{BACKEND_PLATFORM}}
+<!-- AI ASSISTANT: Focus on software structure, not hosting -->
+### Core Stack
+- **Frontend:** {{FRONTEND_FRAMEWORK}}
+- **Backend:** {{BACKEND_FRAMEWORK}}
 - **Database:** {{DATABASE_TECHNOLOGY}}
 - **Auth:** {{AUTH_PROVIDER}}
-- **CI/CD:** {{CICD_PLATFORM}}
 
-<!-- AI ASSISTANT: Optional - add if project uses specific architectural approaches -->
 ### Architecture Approach
 - **{{ARCHITECTURE_PATTERN_1}}:** {{PATTERN_DESCRIPTION_1}}
 - **{{ARCHITECTURE_PATTERN_2}}:** {{PATTERN_DESCRIPTION_2}}
+
+---
+
+## 🌐 Infrastructure & Environments
+
+<!-- AI ASSISTANT: Focus on WHERE the code runs and HOW it is deployed -->
+
+### Environment Matrix
+
+| Environment | Status | URL / Access | Hosting/Platform |
+|-------------|--------|--------------|------------------|
+| **Development** | {{DEV_STATUS}} | `{{DEV_URL}}` | {{DEV_PLATFORM}} |
+| **Testing/CI** | {{TEST_STATUS}} | `{{TEST_URL}}` | {{TEST_PLATFORM}} |
+| **Staging** | {{STAGING_STATUS}} | `{{STAGING_URL}}` | {{STAGING_PLATFORM}} |
+| **Production** | {{PROD_STATUS}} | `{{PROD_URL}}` | {{PROD_PLATFORM}} |
+
+### Infrastructure Overview
+- **CI/CD Pipeline:** {{CICD_PLATFORM}}
+- **Config Management:** {{CONFIG_MANAGEMENT_STRATEGY}}
+- **IaC Tooling:** {{IAC_TOOLING}}
+- **Monitoring/Observability:** {{MONITORING_SETUP}}
 
 ---
 

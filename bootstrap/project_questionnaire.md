@@ -245,27 +245,67 @@ Choose option (1-2):
 
 ---
 
-### Q8: Verification Environment
+---
+
+## Infrastructure & Environment Strategy (ALWAYS ASK)
+
+### Q8: Environment Map
 
 **Ask:**
 ```
-How will you/users verify changes before marking them complete?
+Which environments do you require for this project, and what is their current status?
 
-1. **Localhost:** I run it locally (e.g., localhost:3000)
-2. **Preview Environment:** CI creates ephemeral previews (e.g., Vercel)
-3. **Staging Server:** I deploy to a specific staging URL
-4. **Production:** I deploy directly to prod (behind feature flags)
+1. **Development / Localhost** (Essential for coding)
+   - Status: [Ready / Needs Setup]
+   - Hosting: [e.g., Local Mac/PC, Docker, Dev Container]
+
+2. **Testing / CI** (For automated PR checks)
+   - Status: [Ready / Needs Setup / Not Required]
+   - Platform: [e.g., GitHub Actions, GitLab CI]
+
+3. **Staging / Preview** (For stakeholder review)
+   - Status: [Ready / Needs Setup / Not Required]
+   - Platform: [e.g., Vercel Previews, Heroku Staging, AWS Amplify]
+
+4. **Production** (The live system)
+   - Status: [Ready / Needs Setup]
+   - Platform: [e.g., AWS, GCP, Azure, Vercel, Railway]
 ```
 
-**Impact:**
-- Customizes the "Verification" step in workflows
-- AI will instruct you to verify in this specific environment
+### Q9: Configuration & Secrets Management
+
+**Ask:**
+```
+How will you manage environment-specific configurations and secrets?
+
+1. **Local .env files** (Standard for most projects)
+2. **Secret Manager** (Vault, AWS Secrets Manager, Doppler)
+3. **SOPS / Encrypted files in Git**
+4. **Platform-native env variables** (Vercel/Heroku dashboard)
+```
+
+### Q10: Infrastructure as Code (IaC)
+
+**Ask:**
+```
+Do you plan to use Infrastructure as Code to manage these environments?
+
+1. **Manual / Dashboard-managed** (Best for simple projects)
+2. **Terraform / OpenTofu**
+3. **Pulumi**
+4. **Cloud-specific** (CloudFormation, CDK, Bicep)
+```
+
+**Impact of Infrastructure Questions:**
+- **Status "Needs Setup":** Automatically adds Environment Setup cycles to your initial `implementation_plan.md`.
+- **Infrastructure Section:** Populates the dedicated Infrastructure docs in your master guide.
+- **Patterns:** Triggers the creation of infrastructure/deployment patterns.
 
 ---
 
 ## Optional Questions (Ask only if relevant)
 
-### Q9: Key Features (if not provided)
+### Q11: Key Features (if not provided)
 
 **Ask if:**
 - User gave minimal description
@@ -288,7 +328,7 @@ For example:
 
 ---
 
-### Q10: Team Size
+### Q12: Team Size
 
 **Usually DON'T ask** - Framework works for any size
 

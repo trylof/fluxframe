@@ -554,3 +554,165 @@ rm -rf project_docs/  # if created new
 ```
 
 Include this in handoff documentation.
+
+---
+
+## Phase 7: Cleanup FluxFrame Template Files
+
+**CRITICAL:** After user confirms bootstrap is complete and working, remove redundant FluxFrame framework files.
+
+### Why Cleanup Is Necessary
+
+When FluxFrame bootstraps a project, it generates all necessary files. The original template/framework files become redundant and should be removed to:
+- Keep the project clean
+- Avoid confusion between templates and generated files
+- Reduce project size
+- Prevent accidental use of templates instead of generated docs
+
+### Step 7.1: Present Cleanup Summary
+
+Ask user for confirmation:
+
+```markdown
+## Cleanup: Remove FluxFrame Template Files
+
+Your project is now bootstrapped with FluxFrame. The framework template files are no longer needed.
+
+### Files to REMOVE (redundant templates):
+- `BOOTSTRAP_INSTRUCTIONS.md` - Bootstrap complete
+- `RESTRUCTURE_PLAN.md` - Internal planning (if exists)
+- `ai-rules/` - Templates (your rules are in AGENTS.md + tool-specific files)
+- `bootstrap/` - Workflow instructions (bootstrap complete)
+- `doc-templates/` - Templates (your docs are in {{DOCS_DIR}}/)
+- `mcp-server/` - Template (your server is at ./mcp-server.js)
+- `pattern-library-system/` - Meta-patterns (your patterns are in {{DOCS_DIR}}/patterns/)
+- `development-cycles/` - Framework docs (your workflows are in {{DOCS_DIR}}/workflows/)
+- `testing-framework/` - Framework reference docs
+- `examples/` - Example project (not needed)
+
+### Files that STAY (your project files):
+- `{{DOCS_DIR}}/` - Your project documentation
+- `AGENTS.md` - Your AI baseline rules
+- `[tool-specific files]` - Your tool configurations
+- `mcp-server.js` - Your MCP server
+- `package.json` - Your project config
+- `README.md` - Your project readme (will be updated)
+- `PHILOSOPHY.md` - (Optional: can keep as reference or remove)
+- `.fluxframe-backup/` - Your backup (keep until confident)
+
+Shall I remove the template files now?
+```
+
+### Step 7.2: Execute Cleanup
+
+**Commands (Unix/macOS):**
+```bash
+# Remove redundant FluxFrame template directories
+rm -rf ai-rules/
+rm -rf bootstrap/
+rm -rf doc-templates/
+rm -rf mcp-server/
+rm -rf pattern-library-system/
+rm -rf development-cycles/
+rm -rf testing-framework/
+rm -rf examples/
+
+# Remove redundant FluxFrame files
+rm -f BOOTSTRAP_INSTRUCTIONS.md
+rm -f RESTRUCTURE_PLAN.md
+
+# Optional: Remove or keep PHILOSOPHY.md based on user preference
+# rm -f PHILOSOPHY.md
+```
+
+**Commands (Windows PowerShell):**
+```powershell
+Remove-Item -Recurse -Force ai-rules, bootstrap, doc-templates, mcp-server, pattern-library-system, development-cycles, testing-framework, examples -ErrorAction SilentlyContinue
+Remove-Item -Force BOOTSTRAP_INSTRUCTIONS.md, RESTRUCTURE_PLAN.md -ErrorAction SilentlyContinue
+```
+
+### Step 7.3: Update README.md
+
+Replace FluxFrame's README with project-specific content:
+
+```markdown
+# [PROJECT_NAME]
+
+[PROJECT_PURPOSE]
+
+## Quick Start
+
+[Basic setup instructions]
+
+## Development
+
+This project uses the FluxFrame methodology for AI-assisted development.
+
+### Documentation
+- See `{{DOCS_DIR}}/context_master_guide.md` for development guidelines
+- See `{{DOCS_DIR}}/technical_status.md` for current project state
+
+### AI Assistance
+- MCP Server: `npm run mcp`
+- AI Rules: See `AGENTS.md` and tool-specific configurations
+
+## License
+
+[License information]
+```
+
+### Step 7.4: Verify Cleanup Complete
+
+```bash
+# Verify only project files remain
+ls -la
+
+# Test MCP server still works
+node mcp-server.js
+
+# Verify docs still accessible
+ls {{DOCS_DIR}}/
+```
+
+**Validation:**
+- [ ] Only project files remain
+- [ ] No template directories left
+- [ ] MCP server still works
+- [ ] Documentation accessible
+- [ ] Backup still available if needed
+
+### Step 7.5: Final Confirmation
+
+```markdown
+## ✅ Cleanup Complete!
+
+FluxFrame template files have been removed. Your project now contains only:
+- Your generated documentation in `{{DOCS_DIR}}/`
+- Your AI rules (`AGENTS.md` + tool-specific files)
+- Your MCP server (`mcp-server.js`)
+- Your preserved customizations
+- Your project configuration
+
+**Backup available at:** `.fluxframe-backup/[timestamp]/`
+
+**Your project is ready for development!**
+
+Next: Start a development cycle to experience the upgraded workflow.
+```
+
+---
+
+## Final Success Criteria (After Cleanup)
+
+Bootstrap upgrade is fully complete when:
+
+1. ✅ All required files created/updated
+2. ✅ User customizations preserved as decided
+3. ✅ MCP server starts successfully
+4. ✅ Dependencies installed
+5. ✅ No errors in any file
+6. ✅ User can read generated docs
+7. ✅ Template files cleaned up
+8. ✅ README.md updated for project
+9. ✅ Backup preserved for rollback
+10. ✅ Ready to start development cycle

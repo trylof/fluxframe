@@ -287,9 +287,18 @@ Verifies:
 **Problem:** Knowledge is lost, future devs struggle  
 **Solution:** Document immediately while context is fresh
 
-### ❌ "It works on my machine"
-**Problem:** Production environment differs  
-**Solution:** Use real components, test in {{VERIFICATION_ENV}}
+### ❌ Environment Drift / "It works on my machine"
+**Problem:** Code works locally but fails in Staging/Production due to environment differences.
+
+**Solution:** Verify in all target environments before marking complete.
+
+**Environment Verification Checklist:**
+1. [ ] **Development/Local:** Works on your machine (`{{DEV_URL}}`)
+2. [ ] **Testing/CI:** Automated tests pass in CI environment
+3. [ ] **Staging/Preview:** Stakeholder can access and verify (`{{STAGING_URL}}`)
+4. [ ] **Production:** (If deploying directly) Feature flags active, monitoring in place
+
+**Only proceed when all applicable environments are verified.**
 
 ### ❌ "Quick fix, no need for patterns"
 **Problem:** Inconsistency accumulates  

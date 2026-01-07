@@ -205,7 +205,19 @@ Located in `{{DOCS_DIR}}/workflows/`:
 *   **Reference:** See `patterns/api_contract_pattern.md` for complete guide
 *   **Update frequency:** Every new endpoint must follow this standard. No exceptions.
 
-### J. Additional Domain-Specific Documents
+### J. Infrastructure & Environment Strategy
+
+<!-- AI ASSISTANT: Dedicated section for hosting and deployment strategy -->
+
+*   **What it is:** The map of where the system lives. It defines the environment matrix (Dev/Test/Staging/Prod), deployment pipelines, secret management, and hosting providers. This information is tracked in the Infrastructure & Environments section of `technical_status.md`.
+*   **How to use it:** Reference this when setting up new environments, troubleshooting deployment issues, or planning infrastructure changes. It ensures that environments remain consistent and reproducible.
+*   **Key Components:**
+    - **Environment Matrix:** Status, URLs, and platforms for Dev, Test, Staging, and Production.
+    - **CI/CD Pipeline:** How code is built, tested, and deployed.
+    - **Config Management:** How secrets and environment variables are handled.
+    - **IaC Tooling:** What tools manage cloud resources (Terraform, Pulumi, etc.).
+
+### K. Additional Domain-Specific Documents
 
 <!-- AI ASSISTANT: Add any project-specific documents here -->
 <!-- Examples: dashboard_architecture.md, ai_assistant_design.md, data_model.md -->
