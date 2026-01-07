@@ -140,6 +140,43 @@ Map existing docs to FluxFrame structure:
 - UI patterns (from: ___)
 - API patterns (from: ___)
 
+### Step 1.5: Detect Existing Infrastructure
+
+Analyze the codebase for infrastructure configuration:
+
+```markdown
+## Infrastructure Detection
+
+### Configuration Files Found
+- [ ] `.env.example` or `.env.template` - Environment variables
+- [ ] `docker-compose.yml` - Container orchestration
+- [ ] `.github/workflows/` or `.gitlab-ci.yml` - CI/CD configuration
+- [ ] `terraform/` or `infra/` - Infrastructure as Code
+- [ ] `vercel.json`, `netlify.toml`, `railway.json` - Platform configs
+- [ ] Cloud provider configs (AWS, GCP, Azure)
+
+### Inferred Environments
+Based on detected files and configs:
+
+| Environment | Evidence | Status |
+|-------------|----------|--------|
+| Development | [file or "assumed localhost"] | [Likely exists] |
+| Testing/CI | [CI config found or "not detected"] | [Exists/Unknown] |
+| Staging | [config found or "not detected"] | [Exists/Unknown] |
+| Production | [config found or "not detected"] | [Exists/Unknown] |
+
+### Hosting Platforms Detected
+- **Frontend:** [Vercel/Netlify/other/unknown]
+- **Backend:** [Railway/Heroku/AWS/other/unknown]
+- **Database:** [managed service or self-hosted]
+
+### CI/CD Pipeline
+- **Platform:** [GitHub Actions/GitLab CI/other/none]
+- **Deployment:** [Automated/Manual/Unknown]
+
+**Note:** This is preliminary detection. Will confirm with user in Phase 2.5.
+```
+
 ---
 
 ## Phase 2: User Preferences
@@ -244,6 +281,58 @@ Your choice (1/2/3)?
 - [ ] `implementation_plan.md` - [Create]
 - [ ] `patterns/` - [Create/Adapt existing]
 - [ ] `workflows/` - [Create]
+```
+
+---
+
+## Phase 2.5: Infrastructure & Environment Strategy
+
+**Purpose:** Confirm detected infrastructure and gather environment strategy information.
+
+### Step 2.5.1: Present Infrastructure Findings
+
+Present the infrastructure detection results from Phase 1.5:
+
+```markdown
+## Infrastructure & Environment Assessment
+
+Based on analyzing your codebase, here's what I found:
+
+### Detected Configuration
+[Show infrastructure detection summary from Phase 1.5]
+
+### Questions to Confirm Setup
+
+I need to confirm your environment strategy to properly configure FluxFrame documentation.
+```
+
+### Step 2.5.2: Ask Infrastructure Questions
+
+**Ask Q8-Q10 from project_questionnaire.md:**
+
+Follow the same questionnaire format as similar_workflow Phase 2.5:
+- **Q8:** Environment Map (Dev/Test/Staging/Prod status and platforms)
+- **Q9:** Configuration & Secrets Management approach
+- **Q10:** Infrastructure as Code tooling preferences
+
+### Step 2.5.3: Record Infrastructure Preferences
+
+```markdown
+## Infrastructure Configuration Recorded
+
+| Question | Answer | Notes |
+|----------|--------|-------|
+| Development | [Status/Platform] | [notes] |
+| Testing/CI | [Status/Platform] | [notes] |
+| Staging | [Status/Platform] | [notes] |
+| Production | [Status/Platform] | [notes] |
+| Config Management | [Choice] | [notes] |
+| IaC Tooling | [Choice] | [notes] |
+
+**Impact on Migration:**
+- Environments marked "Needs Setup" will be added to implementation_plan.md
+- Infrastructure section will be populated in technical_status.md with Environment Matrix
+- infra_patterns.md will be created from template
 ```
 
 ---
@@ -522,6 +611,331 @@ Create MCP server configured for:
 - Pattern library location
 - Bug fixes location
 - Any custom paths from migration
+
+---
+
+## Phase 4.5: Browser Automation Configuration (RECOMMENDED for Web Projects)
+
+**This phase is RECOMMENDED for web projects where browser automation is desired.**
+
+**Purpose:**
+Configure browser automation capabilities for the AI assistant. For migration projects, this involves detecting existing test frameworks and integrating AI browser access alongside them.
+
+---
+
+### Step 4.5.1: Detect Existing Browser Testing
+
+Check for existing browser testing frameworks:
+
+```markdown
+## Existing Browser Testing Analysis
+
+**Checking for existing test frameworks...**
+
+**Test Frameworks Found:**
+- [ ] Playwright (check for `playwright.config.js`, `@playwright/test` in package.json)
+- [ ] Cypress (check for `cypress.config.js`, `cypress/` directory)
+- [ ] Selenium (check for `selenium` dependencies)
+- [ ] Puppeteer standalone (check for `puppeteer` in dependencies)
+- [ ] TestCafe (check for `.testcaferc.json`)
+- [ ] None detected
+
+**Existing Test Structure:**
+| Framework | Version | Test Location | Status |
+|-----------|---------|---------------|--------|
+| [Framework] | [version] | [path] | [Active/Deprecated] |
+
+**Test Coverage:**
+- E2E tests: [Yes/No] - [count if yes]
+- Integration tests: [Yes/No]
+- Visual regression: [Yes/No]
+```
+
+### Step 4.5.2: Research Current AI Browser Capabilities (RECOMMENDED)
+
+**Browser automation for AI assistants is rapidly evolving.** Offer to research:
+
+```markdown
+Your project has [existing test framework / no existing framework].
+
+I can research the latest browser automation capabilities for AI assistants 
+to help you set up optimal testing and debugging workflows.
+
+Research will cover:
+- Current AI assistant browser features (Claude Code Chrome, Cline/Roo Puppeteer)
+- Recent capability announcements
+- Compatibility with your existing test framework
+- Best practices for coexistence
+
+Selected AI tools to research:
+[List user's AI tools from earlier detection]
+
+Proceed with research? (yes/skip)
+```
+
+**If user chooses research, follow the process from greenfield Step 9.5:**
+- Search official documentation for each tool
+- Check recent announcements (last 3-6 months)
+- Compile research report
+- Save to `{{DOCS_DIR}}/browser_automation_research.md`
+
+### Step 4.5.3: Present Configuration Options
+
+Based on detection and research (if performed):
+
+```markdown
+## Browser Automation Options
+
+**Current State:**
+[Summarize findings from detection and research]
+
+**Configuration Options:**
+
+1. **Keep existing tests only** - No AI browser automation
+   - Your test framework continues as-is
+   - AI writes/maintains tests but doesn't interact directly
+   - Best for: Projects with comprehensive test coverage
+   
+2. **Add AI browser access alongside tests** - Coexistence approach
+   - Keep your existing test framework
+   - Add AI assistant browser access (Chrome/Puppeteer)
+   - AI can debug live + run automated tests
+   - Best for: Development + testing workflows
+   
+3. **Full AI browser setup** - Comprehensive configuration
+   - Configure all AI browser capabilities
+   - Document relationship with existing tests
+   - Create guidelines for when to use each
+   - Best for: Teams wanting full AI integration
+   
+4. **Add AI browser (no existing tests)** - First-time setup
+   - Configure AI browser automation from scratch
+   - Follow greenfield setup process
+   - Best for: Projects without test frameworks
+   
+5. **Skip** - No browser automation for AI
+
+Your choice (1-5):
+```
+
+### Step 4.5.4: Execute Based on Choice
+
+**For "Keep existing tests only" (Option 1):**
+- Document existing test framework in technical_status.md
+- Note that AI assistance is limited to writing/maintaining tests
+- No AI rules changes for browser automation
+
+**For "Add AI browser access alongside tests" (Option 2):**
+- Keep existing test framework untouched
+- Add browser automation sections to AI rules
+- Document the distinction in configuration:
+  ```markdown
+  ## Testing & Browser Access
+  
+  ### Automated Tests (Existing Framework)
+  **Framework:** [Playwright/Cypress/etc.]
+  **Purpose:** CI/CD, regression testing, release verification
+  **Location:** `[test_directory]/`
+  **Run:** `[test command]`
+  
+  ### AI Assistant Browser Access
+  **Tools:** Claude Code Chrome / Cline Puppeteer
+  **Purpose:** Live debugging, interactive testing during development
+  **Usage:** Available during AI-assisted development
+  **Limitation:** Cannot access authenticated sessions (Puppeteer only)
+  
+  **When to Use Which:**
+  | Need | Method |
+  |------|--------|
+  | Debug during development | AI browser access |
+  | Verify feature before commit | Run test suite |
+  | CI/CD validation | Automated tests |
+  | Visual regression | Test framework |
+  ```
+
+**For "Full AI browser setup" (Option 3):**
+- Configure comprehensive browser automation
+- Implement research findings
+- Create detailed documentation showing both methods
+- Update AI rules with browser capabilities
+
+**For "Add AI browser (no existing tests)" (Option 4):**
+- Follow project_questionnaire.md browser automation section
+- Implement as greenfield setup
+- Consider recommending test framework for CI/CD
+
+**For "Skip" (Option 5):**
+- No changes
+- Can revisit later
+
+### Step 4.5.5: Update AI Rules with Browser Configuration
+
+If browser automation is added, update AGENTS.md and tool-specific rules:
+
+```markdown
+## Browser Automation
+
+**Status:** [Configured/Integrated/Not configured]
+
+**AI Assistant Browser Access:**
+
+### Claude Code (if applicable)
+**Chrome Integration:** [Enabled/Available/Not configured]
+- Chrome browser + Claude in Chrome extension v1.0.36+
+- Setup: `claude --chrome`
+- Capabilities: Navigate, click, console logs, authenticated sessions, GIF recording
+- **Use for:** Live debugging during development
+
+### Cline/Roo Code (if applicable)
+**Puppeteer Browser:** [Enabled/Available/Not configured]
+- Headless browser for local testing
+- Capabilities: Navigate, click, screenshots, console logs
+- **Use for:** Local dev server testing, visual verification
+
+### Existing Test Framework (if applicable)
+**Framework:** [Playwright/Cypress/etc.]
+- Location: `[test_directory]/`
+- Purpose: Automated testing, CI/CD
+- Run: `[test command]`
+- **Use for:** Pre-commit verification, release testing
+
+**Coexistence Strategy:**
+- AI browser access: Development and debugging
+- Test framework: Verification and CI/CD
+- Both complement each other, serve different purposes
+
+See `{{DOCS_DIR}}/browser_automation_setup.md` for detailed configuration (if created).
+```
+
+**Validation:**
+- [ ] Existing test framework detected and documented
+- [ ] Research performed if requested
+- [ ] Configuration preference recorded
+- [ ] Changes implemented per user choice
+- [ ] AI rules updated if applicable
+- [ ] Coexistence documented if both methods present
+
+---
+
+## Phase 4.6: Configure Log Access (OPTIONAL)
+
+**This phase is OPTIONAL based on user's Q11 answer (Observability & Log Access).**
+
+**When to Execute:**
+- User chose option 1 (Full setup) or option 2 (Local only) in Q11
+- Skip if user chose option 3 (Later) or option 4 (No)
+
+**Purpose:**
+Configure AI assistant access to logs from various environments for debugging and troubleshooting. For migration projects, this may involve integrating with existing logging infrastructure.
+
+---
+
+### Step 4.5.1: Detect Existing Logging Setup
+
+Before configuring, check if project has existing logging:
+
+```markdown
+## Existing Logging Analysis
+
+**Checking for existing log configuration...**
+
+**Found:**
+- [ ] Log aggregator config (e.g., `datadog.yaml`, `splunk.conf`)
+- [ ] Application logging config (e.g., `logging.conf`, `winston.config.js`)
+- [ ] Docker/compose log settings
+- [ ] Cloud logging setup (CloudWatch, Cloud Logging, etc.)
+- [ ] CI/CD log configuration
+
+**Existing Setup:**
+| Component | Status | Location/Config |
+|-----------|--------|-----------------|
+| App Logs | [Found/Not Found] | [path or "N/A"] |
+| Infra Logs | [Found/Not Found] | [path or "N/A"] |
+| CI/CD Logs | [Found/Not Found] | [platform] |
+| Monitoring | [Found/Not Found] | [service] |
+```
+
+### Step 4.5.2: Ask Integration Preference
+
+```markdown
+I found existing logging setup in your project:
+[LIST FINDINGS]
+
+For AI assistant log access, would you like to:
+
+1. **Integrate with existing** - Use your current logging setup
+   - AI accesses logs through your existing tools/APIs
+   - No additional setup needed
+   
+2. **Enhance existing** - Add AI-specific access methods
+   - Keep your setup, add MCP tool access
+   - May need additional credentials
+   
+3. **Configure separately** - New log access just for AI
+   - Doesn't interfere with existing setup
+   - Parallel access method
+   
+4. **Skip** - No AI log access configuration
+
+Your choice (1-4):
+```
+
+### Step 4.5.3: Research and Configure
+
+Based on user's choice and infrastructure (from Q8-Q10), research and configure appropriate log access methods.
+
+**For "Integrate with existing":**
+- Document existing log access methods
+- Create MCP tool wrappers for existing commands
+- Note any credential requirements
+
+**For "Enhance existing":**
+- Research additional access options
+- Add MCP tools that complement existing setup
+- Document both methods in `log_access_setup.md`
+
+**For "Configure separately":**
+- Follow standard log access setup (see greenfield Step 9.6)
+- Document as additional/parallel access method
+
+### Step 4.5.4: Document Configuration
+
+Create or update `{{DOCS_DIR}}/log_access_setup.md`:
+
+```markdown
+# Log Access Configuration
+
+## Integration with Existing Setup
+
+**Your existing logging:**
+- [Document what was found]
+
+**AI assistant access method:**
+- [Document how AI accesses logs]
+
+## Configured Sources
+
+| Source | Environment | Access Method | Status |
+|--------|-------------|---------------|--------|
+| [source] | [env] | [method] | [status] |
+
+## How to Use
+
+### From AI Assistant
+[Document MCP tool usage]
+
+### Existing Methods (Preserved)
+[Document existing log access if user kept it]
+
+## Credentials Required
+[List any credentials needed for log access]
+```
+
+**Validation:**
+- [ ] Existing logging setup documented
+- [ ] Integration preference recorded
+- [ ] Log access configured per user preference
+- [ ] Documentation created in `log_access_setup.md`
 
 ---
 

@@ -97,6 +97,43 @@ For each detected AI rules file, read the content and identify:
 - What patterns does it mention?
 - What tools/commands does it specify?
 
+### Step 1.3: Detect Existing Infrastructure
+
+Analyze the codebase for infrastructure configuration:
+
+```markdown
+## Infrastructure Detection
+
+### Configuration Files Found
+- [ ] `.env.example` or `.env.template` - Environment variables
+- [ ] `docker-compose.yml` - Container orchestration
+- [ ] `.github/workflows/` or `.gitlab-ci.yml` - CI/CD configuration
+- [ ] `terraform/` or `infra/` - Infrastructure as Code
+- [ ] `vercel.json`, `netlify.toml`, `railway.json` - Platform configs
+- [ ] Cloud provider configs (AWS, GCP, Azure)
+
+### Inferred Environments
+Based on detected files and configs:
+
+| Environment | Evidence | Status |
+|-------------|----------|--------|
+| Development | [file or "assumed localhost"] | [Likely exists] |
+| Testing/CI | [CI config found or "not detected"] | [Exists/Unknown] |
+| Staging | [config found or "not detected"] | [Exists/Unknown] |
+| Production | [config found or "not detected"] | [Exists/Unknown] |
+
+### Hosting Platforms Detected
+- **Frontend:** [Vercel/Netlify/other/unknown]
+- **Backend:** [Railway/Heroku/AWS/other/unknown]
+- **Database:** [managed service or self-hosted]
+
+### CI/CD Pipeline
+- **Platform:** [GitHub Actions/GitLab CI/other/none]
+- **Deployment:** [Automated/Manual/Unknown]
+
+**Note:** This is preliminary detection. Will confirm with user in Phase 2.5.
+```
+
 ---
 
 ## Phase 2: Diff Against FluxFrame
@@ -163,6 +200,101 @@ A difference is **minor** if:
 - Just different wording for same concept
 - Formatting differences
 - Example differences
+
+---
+
+## Phase 2.5: Infrastructure & Environment Assessment
+
+**Purpose:** Confirm detected infrastructure and gather environment strategy information.
+
+### Step 2.5.1: Present Infrastructure Findings
+
+Present the infrastructure detection results from Phase 1.3:
+
+```markdown
+## Infrastructure & Environment Assessment
+
+Based on analyzing your codebase, here's what I found:
+
+### Detected Configuration
+[Show infrastructure detection summary from Phase 1.3]
+
+### Questions to Confirm Setup
+
+I need to confirm your environment strategy to properly configure FluxFrame documentation.
+```
+
+### Step 2.5.2: Ask Infrastructure Questions
+
+**Ask Q8 from project_questionnaire.md:**
+
+```markdown
+### Q8: Environment Map
+
+Which environments do you require for this project, and what is their current status?
+
+1. **Development / Localhost** (Essential for coding)
+   - Status: [Ready / Needs Setup]
+   - Hosting: [e.g., Local Mac/PC, Docker, Dev Container]
+
+2. **Testing / CI** (For automated PR checks)
+   - Status: [Ready / Needs Setup / Not Required]
+   - Platform: [e.g., GitHub Actions, GitLab CI]
+
+3. **Staging / Preview** (For stakeholder review)
+   - Status: [Ready / Needs Setup / Not Required]
+   - Platform: [e.g., Vercel Previews, Heroku Staging, AWS Amplify]
+
+4. **Production** (The live system)
+   - Status: [Ready / Needs Setup]
+   - Platform: [e.g., AWS, GCP, Azure, Vercel, Railway]
+```
+
+**Ask Q9:**
+
+```markdown
+### Q9: Configuration & Secrets Management
+
+How will you manage environment-specific configurations and secrets?
+
+1. **Local .env files** (Standard for most projects)
+2. **Secret Manager** (Vault, AWS Secrets Manager, Doppler)
+3. **SOPS / Encrypted files in Git**
+4. **Platform-native env variables** (Vercel/Heroku dashboard)
+```
+
+**Ask Q10:**
+
+```markdown
+### Q10: Infrastructure as Code (IaC)
+
+Do you plan to use Infrastructure as Code to manage these environments?
+
+1. **Manual / Dashboard-managed** (Best for simple projects)
+2. **Terraform / OpenTofu**
+3. **Pulumi**
+4. **Cloud-specific** (CloudFormation, CDK, Bicep)
+```
+
+### Step 2.5.3: Record Infrastructure Preferences
+
+```markdown
+## Infrastructure Configuration Recorded
+
+| Question | Answer | Notes |
+|----------|--------|-------|
+| Development | [Status/Platform] | [notes] |
+| Testing/CI | [Status/Platform] | [notes] |
+| Staging | [Status/Platform] | [notes] |
+| Production | [Status/Platform] | [notes] |
+| Config Management | [Choice] | [notes] |
+| IaC Tooling | [Choice] | [notes] |
+
+**Impact on Bootstrap:**
+- Environments marked "Needs Setup" will be added to implementation_plan.md
+- Infrastructure section will be populated in technical_status.md
+- infra_patterns.md will be created from template
+```
 
 ---
 
@@ -328,6 +460,28 @@ Compare existing setup to full FluxFrame setup:
 - [x] patterns/ - [exists]
 - [ ] workflows/ - [missing - create]
 - [ ] bug_fixes/ - [exists as fixes/]
+- [ ] infra_patterns.md - [missing - create from template]
+
+### Infrastructure & Environment
+Based on Phase 2.5 assessment:
+
+| Environment | Status from Q8 | Gap Analysis |
+|-------------|----------------|--------------|
+| Development | [Ready/Needs Setup] | [Gap if "Needs Setup"] |
+| Testing/CI | [Ready/Needs Setup/Not Required] | [Gap if "Needs Setup"] |
+| Staging | [Ready/Needs Setup/Not Required] | [Gap if "Needs Setup"] |
+| Production | [Ready/Needs Setup] | [Gap if "Needs Setup"] |
+
+**Infrastructure Gaps to Address:**
+- [ ] Environments marked "Needs Setup" require implementation cycles
+- [ ] Missing IaC configuration (if Q10 chose IaC but not present)
+- [ ] Missing secret management setup (if Q9 chose but not configured)
+
+**Suggested Implementation Cycles for Missing Infrastructure:**
+If environments need setup, suggest adding to implementation_plan.md:
+- Cycle X.X: Set up [Environment] environment on [Platform]
+- Cycle X.X: Configure CI/CD pipeline for [Environment]
+- Cycle X.X: Implement secret management with [Tool]
 
 ### MCP Server
 - [ ] mcp-server.js - [missing - create]
@@ -372,6 +526,309 @@ If MCP server exists but is different:
 1. Compare capabilities
 2. Ask user: merge features or replace?
 3. Implement decision
+
+---
+
+## Phase 5.5: Browser Automation Upgrade (RECOMMENDED for Web Projects)
+
+**This phase is RECOMMENDED for web projects where browser automation is desired.**
+
+**Purpose:**
+Upgrade or configure browser automation capabilities for the AI assistant. For similar workflow upgrades, this involves reviewing existing browser setup (if any) and enhancing with current capabilities.
+
+---
+
+### Step 5.5.1: Check Existing Browser Automation
+
+Review existing AI rules for browser automation guidance:
+
+```markdown
+## Existing Browser Automation Analysis
+
+**Checking current AI rules for browser-related guidance...**
+
+**Found in existing rules:**
+- [ ] Browser automation commands documented
+- [ ] Testing workflow includes browser interaction
+- [ ] Tool-specific browser setup (Chrome, Puppeteer, etc.)
+- [ ] Screenshot/visual testing guidance
+
+**Current Browser Setup:**
+| Tool | Browser Support | Current Config |
+|------|-----------------|----------------|
+| Claude Code | Chrome integration | [Documented/Not found] |
+| Cline | Puppeteer | [Documented/Not found] |
+| Roo Code | Puppeteer | [Documented/Not found] |
+| Other | Manual testing | [Approach or "N/A"] |
+
+**Existing test frameworks detected:**
+- [ ] Playwright
+- [ ] Cypress
+- [ ] Selenium
+- [ ] Puppeteer standalone
+- [ ] None detected
+```
+
+### Step 5.5.2: Research Current Capabilities (RECOMMENDED)
+
+**Browser automation is rapidly evolving.** Offer to research latest capabilities:
+
+```markdown
+Your existing AI rules were created [X time ago]. Browser automation 
+capabilities for AI assistants have likely evolved since then.
+
+Shall I research the latest capabilities for your tools before updating?
+
+Research will cover:
+- Current browser automation features
+- Recent announcements (last 3-6 months)
+- New setup requirements
+- Compatibility with existing test frameworks
+
+Research recommended tools:
+[List user's AI tools from inventory]
+
+Proceed with research? (yes/skip)
+```
+
+**If user chooses research, follow the research process from greenfield Step 9.5:**
+- Search official documentation
+- Check recent announcements
+- Compile research report with findings
+- Save to `{{DOCS_DIR}}/browser_automation_research.md`
+
+### Step 5.5.3: Present Upgrade Options
+
+Based on analysis and research (if performed):
+
+```markdown
+## Browser Automation Upgrade Options
+
+**Current State:**
+[Summarize findings from 5.5.1 and research if performed]
+
+**Upgrade Options:**
+
+1. **Keep existing** - Your current browser setup is sufficient
+   - No changes to browser automation approach
+   - FluxFrame adds other enhancements only
+   
+2. **Enhance existing** - Add new capabilities alongside current setup
+   - Keep your existing test frameworks
+   - Add AI assistant browser access (Chrome/Puppeteer)
+   - Coexist with Playwright/Cypress
+   
+3. **Full upgrade** - Implement comprehensive browser automation
+   - Configure all available browser options
+   - Set up according to research findings
+   - Create detailed browser setup documentation
+   
+4. **Add for first time** - No existing browser automation
+   - Configure based on selected AI tools
+   - Follow greenfield setup process
+   
+5. **Skip** - No browser automation changes in this upgrade
+
+Your choice (1-5):
+```
+
+### Step 5.5.4: Execute Based on Choice
+
+**For "Keep existing" (Option 1):**
+- Document existing approach in technical_status.md
+- No changes to AI rules
+- Note in upgrade summary: "Browser automation: Preserved existing approach"
+
+**For "Enhance existing" (Option 2):**
+- Add browser automation sections to AI rules
+- Document AI assistant browser access alongside existing frameworks
+- Update with research findings if available
+- Preserve existing test framework guidance
+
+**For "Full upgrade" (Option 3):**
+- Review and update existing browser guidance
+- Implement research findings
+- Create comprehensive browser automation documentation
+- Update all AI rules with new capabilities
+
+**For "Add for first time" (Option 4):**
+- Follow project_questionnaire.md browser automation section
+- Implement as greenfield setup
+- Integrate with existing testing approach
+
+**For "Skip" (Option 5):**
+- No changes
+- Can revisit later
+
+### Step 5.5.5: Update AI Rules with Browser Capabilities
+
+If browser automation is enhanced or added, update AGENTS.md and tool-specific rules:
+
+```markdown
+## Browser Automation
+
+**Status:** [Configured/Enhanced/Existing]
+
+**AI Assistant Access:**
+
+### Claude Code (if applicable)
+**Chrome Integration:** [Enabled/Available/Not configured]
+- Requires: Chrome browser + Claude in Chrome extension v1.0.36+
+- Setup: `claude --chrome`
+- Capabilities: Navigate, click, console access, authenticated sessions, GIF recording
+
+### Cline/Roo Code (if applicable)
+**Puppeteer Browser:** [Enabled/Available/Not configured]
+- Headless browser for local testing
+- Capabilities: Navigate, click, screenshots, console logs
+- Best for: Local dev server testing
+
+### Existing Test Frameworks (if applicable)
+**[Framework Name]:** [Playwright/Cypress/etc.]
+- Location: [test directory]
+- Usage: [when to use vs AI browser access]
+- Coexistence: AI assistant can read test results, write new tests
+
+**Quick Reference:**
+| Testing Need | Method | When to Use |
+|--------------|--------|-------------|
+| AI live debugging | Claude Chrome/Puppeteer | During development |
+| Automated tests | [Your framework] | CI/CD pipeline |
+| Visual regression | [Your tool] | Release testing |
+
+See `{{DOCS_DIR}}/browser_automation_setup.md` for detailed configuration.
+```
+
+**Validation:**
+- [ ] Existing browser setup reviewed
+- [ ] Research performed if requested
+- [ ] Upgrade preference recorded
+- [ ] Changes implemented per user choice
+- [ ] AI rules updated if applicable
+- [ ] Coexistence with test frameworks documented
+
+---
+
+## Phase 5.6: Configure Log Access (OPTIONAL)
+
+**This phase is OPTIONAL based on user's Q11 answer (Observability & Log Access).**
+
+**When to Execute:**
+- User chose option 1 (Full setup) or option 2 (Local only) in Q11
+- Skip if user chose option 3 (Later) or option 4 (No)
+
+**Purpose:**
+Configure AI assistant access to logs from various environments for debugging and troubleshooting. For similar workflow upgrades, this may involve enhancing or integrating with existing observability setup.
+
+---
+
+### Step 5.5.1: Check Existing Log Access in Current Rules
+
+Review existing AI rules for log access patterns:
+
+```markdown
+## Existing Log Access Analysis
+
+**Checking current AI rules for log-related guidance...**
+
+**Found in existing rules:**
+- [ ] Log access commands documented
+- [ ] Debugging workflow includes log checking
+- [ ] Environment-specific log locations
+- [ ] Monitoring/alerting integration
+
+**Current Log Guidance:**
+| Aspect | Status | Current Approach |
+|--------|--------|------------------|
+| Local logs | [Documented/Not Found] | [method or "N/A"] |
+| CI/CD logs | [Documented/Not Found] | [method or "N/A"] |
+| Production logs | [Documented/Not Found] | [method or "N/A"] |
+| Error tracking | [Documented/Not Found] | [service or "N/A"] |
+```
+
+### Step 5.5.2: Present Enhancement Options
+
+```markdown
+I analyzed your existing AI rules for log access guidance:
+
+**Current State:**
+[Summarize findings from 5.5.1]
+
+**Enhancement Options:**
+
+1. **Keep existing** - Your current log guidance is sufficient
+   - No changes to log access approach
+   - FluxFrame adds other enhancements only
+   
+2. **Enhance with MCP tools** - Add programmatic log access
+   - Keep your existing guidance
+   - Add MCP tools for AI to directly query logs
+   - Research best methods for your infrastructure
+   
+3. **Full reconfiguration** - Set up comprehensive log access
+   - Review and update log access approach
+   - Configure all environments (from Q8-Q10)
+   - Create detailed log_access_setup.md
+
+4. **Skip** - No log access changes in this upgrade
+
+Your choice (1-4):
+```
+
+### Step 5.5.3: Execute Based on Choice
+
+**For "Keep existing" (Option 1):**
+- Document existing approach in technical_status.md
+- No MCP tool changes
+- Note in upgrade summary: "Log access: Preserved existing approach"
+
+**For "Enhance with MCP tools" (Option 2):**
+- Research log access methods for user's platforms
+- Add MCP tools while preserving existing guidance
+- Create `log_access_setup.md` documenting both approaches
+- Update AI rules to reference new MCP tools
+
+**For "Full reconfiguration" (Option 3):**
+- Follow greenfield Step 9.6 process
+- Replace or augment existing log guidance
+- Create comprehensive `log_access_setup.md`
+- Update all AI rules with new approach
+
+### Step 5.5.4: Update AI Rules with Log Access
+
+If log access is enhanced or reconfigured, add to AGENTS.md and tool-specific rules:
+
+```markdown
+## Log Access
+
+**Status:** [Configured/Enhanced/Existing]
+
+**Available Methods:**
+
+### MCP Tools (if configured)
+- `get_logs` - Query logs from configured sources
+- `get_log_access_status` - Check available log sources
+
+### Manual Methods (existing/preserved)
+[Document any existing log access guidance]
+
+**Quick Reference:**
+| Environment | Access Method | Command/Tool |
+|-------------|---------------|--------------|
+| Local | [method] | [command] |
+| CI/CD | [method] | [command] |
+| Staging | [method] | [command] |
+| Production | [method] | [command] |
+
+See `{{DOCS_DIR}}/log_access_setup.md` for detailed configuration.
+```
+
+**Validation:**
+- [ ] Existing log guidance reviewed
+- [ ] Enhancement preference recorded
+- [ ] Changes implemented per user choice
+- [ ] AI rules updated if applicable
+- [ ] Documentation created/updated
 
 ---
 
