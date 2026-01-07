@@ -1,13 +1,21 @@
-# Scaffolding Workflow for Bootstrap
+# Greenfield Workflow Bootstrap
 
-**Purpose:** Detailed step-by-step workflow for Cline to follow when generating project files during bootstrap.
+**Purpose:** Complete setup for new projects with no existing AI workflow or documentation.
 
-**When to use:** Phase 2 of bootstrap process (File Generation)
+**When to use:** Project was classified as `GREENFIELD` - it has no existing AI rules, structured documentation, or development workflow. This is the standard bootstrap for new projects.
 
-**Prerequisites:**
-- User has provided/confirmed project information
-- All placeholders values are known
-- User has approved setup summary
+**Goal:** Generate complete FluxFrame setup from scratch based on project description.
+
+---
+
+## Prerequisites
+
+Before starting this workflow:
+- ✅ Detection phase complete (see `detection_guide.md`)
+- ✅ Project classified as `GREENFIELD`
+- ✅ User has provided/confirmed project information
+- ✅ All placeholder values are known
+- ✅ User has approved setup summary
 
 ---
 
@@ -631,18 +639,42 @@ See `context_master_guide.md` Section 4 for pattern documentation guidelines.
 
 ---
 
-### Step 10: Generate .clinerules
+### Step 10: Generate AI Rules
 
-**Source:** `clinerules/template.clinerules`
+**Universal Baseline (Always):**
+1. Fill `ai-rules/core/template.agents.md` with project details.
+2. Save as `AGENTS.md` in project root.
 
-**Process:**
-1. Read template
-2. Replace placeholders:
-   - `{{PROJECT_NAME}}` → Project name
-   - `{{DOCS_DIR}}` → Documentation directory
-   - `{{VERIFICATION_RULE}}` → Insert environment verification rule
-   - `{{API_CONTRACT_RULES}}` → Insert approach-specific rules
-3. Save as `.clinerules` in project root
+**Tool-Specific (Based on user selection):**
+
+#### Claude Code (Full):
+1. Generate `CLAUDE.md` from `ai-rules/claude-code/template.claude.md`.
+2. Create `.claude/rules/` directory.
+3. Generate rule files from templates: `api-rules.md`, `frontend-rules.md`, `test-rules.md`.
+
+#### Claude Code (Basic):
+1. Create symlink: `CLAUDE.md` → `AGENTS.md`.
+
+#### Roo Code (Full):
+1. Generate `.roomodes` from `ai-rules/roo-code/template.roomodes.yaml`.
+2. Create `.roo/rules/`, `.roo/rules-code/`, `.roo/rules-architect/`.
+3. Generate rule files from templates within these directories.
+
+#### Roo Code (Basic):
+1. No action needed (Roo auto-detects `AGENTS.md`).
+
+#### Cline (Full):
+1. Create `.clinerules/` directory.
+2. Generate rule files from `ai-rules/cline/clinerules-folder/`: `01-core-rules.md`, `02-patterns.md`, `03-workflows.md`.
+
+#### Cline (Basic):
+1. Create symlink: `.clinerules` → `AGENTS.md`.
+
+#### Antigravity (Full):
+1. Generate `GEMINI.md` from `ai-rules/antigravity/template.gemini.md`.
+
+#### Antigravity (Basic):
+1. Create symlink: `GEMINI.md` → `AGENTS.md`.
 
 **Verification Rule Logic:**
 Based on user's Q8 Answer:

@@ -6,13 +6,13 @@
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
 [![Version](https://img.shields.io/badge/Version-1.0.0-blue)]()
-[![Framework](https://img.shields.io/badge/AI%20Assistants-Cline%20%7C%20Roo-orange)]()
+[![Framework](https://img.shields.io/badge/AI%20Assistants-Claude%20%7C%20Roo%20%7C%20Cline%20%7C%20Cursor-orange)]()
 
 ---
 
 ## What is This?
 
-A **self-bootstrapping framework** for AI-assisted software development that transforms how you build software with AI coding assistants like Cline and Roo.
+A **self-bootstrapping framework** for AI-assisted software development that transforms how you build software with multiple AI coding agents.
 
 **Key Innovation:** Point your AI assistant at this framework, provide a project description, and it will automatically generate a complete, production-ready development environment with documentation, patterns, workflows, and configuration—no manual template copying required.
 
@@ -47,53 +47,59 @@ This framework provides:
 
 ### Prerequisites
 
-- [Cline](https://github.com/cline/cline) or [Roo](https://github.com/RooVetGit/Roo-Cline) VS Code extension installed
-- Basic project idea
+- AI coding assistant: [Cline](https://github.com/cline/cline), [Roo Code](https://github.com/RooVetGit/Roo-Cline), [Claude Code](https://www.anthropic.com/claude-code), or similar
+- A project (new or existing)
+
+### Works for ANY Project State
+
+FluxFrame's **detection-first** bootstrap works whether you have:
+- 🆕 **New project** - No existing workflow or docs
+- 🔄 **Existing AI workflow** - Already using Cline, Claude Code, etc.
+- 📚 **Existing documentation** - ADRs, wikis, bug fix history, etc.
 
 ### 3-Step Setup
 
-**Step 1: Create Project Description**
+**Step 1: Add FluxFrame to Your Project**
 
+Clone or copy FluxFrame into your project (or a sibling directory):
 ```bash
-cat > project_brief.md << 'EOF'
-# My Project Name
+# Option A: Clone as sibling directory
+git clone https://github.com/trylof/fluxframe.git
 
-A web application for [your use case].
-
-**Tech Stack:**
-- Backend: Python (FastAPI)
-- Frontend: React + TypeScript
-- Database: PostgreSQL
-
-**Key Features:**
-- Feature 1
-- Feature 2
-- Feature 3
-EOF
+# Option B: Clone into project
+cd your-project
+git clone https://github.com/trylof/fluxframe.git
 ```
 
-**Step 2: Point AI at Framework**
+**Step 2: Point AI at Bootstrap Instructions**
 
-In Cline/Roo chat:
+In your AI assistant chat:
 ```
-@Cline Read fluxframe/BOOTSTRAP_INSTRUCTIONS.md
-and set up this project using project_brief.md
+Read fluxframe/BOOTSTRAP_INSTRUCTIONS.md and set up FluxFrame for this project.
 ```
 
-**Step 3: Review & Approve**
+**Step 3: Answer Questions & Review**
 
-Cline will:
-1. Ask clarifying questions
-2. Generate complete `project_docs/` directory
-3. Create configured `.clinerules` or `.roorules`
-4. Set up MCP server
-5. Create pattern library structure
-6. Present everything for your approval
+The AI will:
+1. **Detect** what exists in your project (AI rules, docs, patterns)
+2. **Classify** your project (greenfield, similar workflow, or migration)
+3. **Ask** only the questions needed for your situation
+4. **Generate** appropriate configuration
+5. **Present** everything for your approval
 
-**That's it!** Start your first iteration with:
+**That's it!** Start your first cycle:
 ```
-@Cline Let's start Iteration 1.1: [your first feature]
+@Cline Let's start Cycle 1.1: [your first feature]
 ```
+
+### Bootstrap Scenarios
+
+| Your Project Has | Bootstrap Does |
+|------------------|---------------|
+| Nothing (new project) | Full setup from scratch |
+| Existing `.clinerules` or similar | Diff, ask about differences, upgrade |
+| Existing `docs/` with ADRs, wikis | Ask copy/migrate/reference for each |
+| Mix of above | Handles all intelligently |
 
 ---
 
@@ -127,16 +133,14 @@ No `{{PLACEHOLDERS}}` to find/replace. No manual editing. Just review and start 
 
 ## Core Concepts
 
-### 1. Documentation as Source of Truth
+### 1. Universal AI Baseline (AGENTS.md)
 
-**Philosophy:** If it's not documented, it doesn't exist.
+**Philosophy:** One source of truth for all tools.
 
-- All project knowledge in `project_docs/`
-- AI reads same docs as humans
-- Documentation maintained continuously
-- Context master guide is single source of truth
+Every FluxFrame project starts with `AGENTS.md`, an open-standard configuration that works across **Claude Code, Roo Code, Cline, Cursor, Antigravity**, and others.
 
-**Why:** Eliminates "it's in my head" knowledge silos.
+- Consistent instructions across every tool your team uses.
+- Layered architecture: Basic compatibility (symlinks) or Full tool integration.
 
 ### 2. Pattern-Driven Development
 
@@ -243,12 +247,15 @@ Built-in MCP tools:
 fluxframe/
 ├── README.md                          # You are here
 ├── PHILOSOPHY.md                      # Why this works
-├── BOOTSTRAP_INSTRUCTIONS.md          # AI's entry point
+├── BOOTSTRAP_INSTRUCTIONS.md          # AI's unified entry point
 │
 ├── bootstrap/                         # Self-bootstrapping system
-│   ├── project_questionnaire.md
-│   ├── scaffolding_workflow.md
-│   └── validation_checklist.md
+│   ├── detection_guide.md             # How to analyze existing projects
+│   ├── greenfield_workflow.md         # New project setup
+│   ├── similar_workflow.md            # Upgrade existing AI workflow
+│   ├── migration_workflow.md          # Adapt existing documentation
+│   ├── project_questionnaire.md       # Question reference by scenario
+│   └── validation_checklist.md        # Final validation
 │
 ├── doc-templates/                     # Project documentation templates
 │   ├── context_master_guide.template.md
@@ -538,4 +545,5 @@ Recommended: Keep framework directory separate from your project code. Bootstrap
 
 **Framework Version:** 1.0.0  
 **Last Updated:** November 2025  
+**Status:** ✅ Ready for more!
 **Status:** ✅ Ready for more!

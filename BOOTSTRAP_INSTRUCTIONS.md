@@ -1,510 +1,411 @@
-# Bootstrap Instructions for AI Assistants (Cline/Roo)
+# Bootstrap Instructions for AI Assistants
 
-**Purpose:** This document contains step-by-step instructions for your AI assistant (Cline or Roo) to automatically set up a new project using FluxFrame.
+**Purpose:** Unified entry point for AI assistants (Claude/Roo/Cline/Antigravity) to set up FluxFrame for any project - whether new or existing.
 
-**When to use:** When a user wants to start a new project with this framework and says something like:
-- "Set up this project using FluxFrame"
-- "Bootstrap my project with the framework"
-- "Initialize project documentation"
+**When to use:** When a user wants to add FluxFrame to their project. This works for:
+- 🆕 **New projects** with no existing workflow
+- 🔄 **Existing projects** with AI workflows (Cline, Claude Code, etc.)
+- 📚 **Existing projects** with documentation (ADRs, wikis, bug fixes, etc.)
 
-**Target Output:** A fully configured project with:
-- Complete `project_docs/` directory with filled templates
-- Configured `mcp-server.js` for the project
-- Customized `.clinerules` (for Cline) or `.roorules` (for Roo) file
-- Ready to start Cycle/Iteration 1.1
-
-**Note:** The framework works identically for both Cline and Roo. The only difference is the rules filename.
+**Key Innovation:** Detection-first approach - analyze what exists before asking questions.
 
 ---
 
-## Prerequisites
+## How This Works
 
-Before starting, ensure you have:
-1. ✅ User has provided a project description (file or message)
-2. ✅ User has confirmed they want to use this framework
-3. ✅ You have read this entire document
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    BOOTSTRAP PROCESS                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Phase 0: Prerequisites                                         │
+│     ↓                                                           │
+│  Phase 1: DETECTION (scan project, classify)                    │
+│     ↓                                                           │
+│  Phase 2: ROUTE to appropriate workflow                         │
+│     │                                                           │
+│     ├──→ GREENFIELD    → bootstrap/greenfield_workflow.md       │
+│     ├──→ SIMILAR       → bootstrap/similar_workflow.md          │
+│     └──→ MIGRATION     → bootstrap/migration_workflow.md        │
+│     ↓                                                           │
+│  Phase 3: EXECUTE workflow                                      │
+│     ↓                                                           │
+│  Phase 4: VALIDATION & handoff                                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Bootstrap Workflow
+## Phase 0: Prerequisites
 
-### Phase 1: Information Gathering
+Before starting bootstrap, ensure:
 
-**Step 1: Determine AI Assistant**
+1. ✅ User has confirmed they want to use FluxFrame
+2. ✅ You have access to the project directory (can list files)
+3. ✅ User has provided a project brief OR you can analyze existing code
+4. ✅ You have read this entire document
 
-**FIRST QUESTION:** "Which AI coding assistant are you using?"
-- Option 1: Cline
-- Option 2: Roo
+**If user just says "bootstrap" or "set up FluxFrame":**
+- Proceed to Phase 1 (Detection)
+- Detection will reveal what exists
+- Questions will be based on what's missing
 
-**Store answer:** Will determine output filename (`.clinerules` vs `.roorules`)
+---
 
-**Step 2: Read Project Description**
+## Phase 1: Detection
 
-The user will provide project information in one of these formats:
-- A project description file (e.g., `project_brief.md`, `README.md`)
-- Direct message describing the project
-- Existing codebase you should analyze
+**CRITICAL:** Always detect before asking questions. This prevents redundant questions and ensures appropriate workflow.
 
-**Extract these key elements:**
-- **Project Name:** What is this project called?
-- **Project Purpose:** What does it do? (1-2 sentences)
-- **Tech Stack:** Languages, frameworks, databases, infrastructure
-- **Key Features:** 3-5 main capabilities
-- **Architecture Type:** Monolith, microservices, serverless, etc.
-- **Frontend/Backend:** Does it have both, one, or neither?
+### Step 1.1: Scan Project Root
 
-**Step 3: Ask Clarifying Questions**
+Check for these items in the project:
 
-Use the questionnaire from [`bootstrap/project_questionnaire.md`](bootstrap/project_questionnaire.md) to fill gaps.
+**AI Rules (indicates existing workflow):**
+- `.clinerules/` or `.clinerules` (Cline)
+- `AGENTS.md` (Universal)
+- `CLAUDE.md` or `.claude/` (Claude Code)
+- `.roomodes` or `.roo/` (Roo Code)
+- `GEMINI.md` (Antigravity)
+- `.cursorrules` (Cursor)
+- `.github/copilot-instructions.md` (Copilot)
 
-**CRITICAL:** Only ask questions for information NOT in the project description. Don't ask redundant questions.
+**Documentation (indicates existing structure):**
+- `project_docs/` (FluxFrame standard)
+- `docs/` (Common)
+- `documentation/` (Alternative)
+- `wiki/` (Wiki-style)
+- `ADRs/` or `decisions/` (Architecture Decision Records)
 
-**Example good flow:**
+**Change History:**
+- `bug_fixes/` or `fixes/` (Fix documentation)
+- `RFCs/` (Request for Comments)
+- `CHANGELOG.md` (Change log)
+
+**Patterns:**
+- `patterns/` (Pattern library)
+- `conventions/` or `styleguide/` (Coding conventions)
+
+**Project Config:**
+- `package.json`, `pyproject.toml`, `Cargo.toml`, etc.
+- `README.md`
+
+### Step 1.2: Analyze Content (Level B)
+
+For items found, read and understand:
+- What rules/workflows are defined?
+- What documentation structure exists?
+- What's valuable to preserve?
+- How similar to FluxFrame?
+
+See `bootstrap/detection_guide.md` for detailed detection instructions.
+
+### Step 1.3: Classify Scenario
+
+Use this decision tree:
+
 ```
-You: "I see you're building TaskFlow Pro, a task management platform with React + FastAPI. 
-Before I set up the framework, I need to know:
-
-1. How will your API contracts be defined? 
-   - OpenAPI + Pydantic (recommended)
-   - GraphQL Schema  
-   - JSON Schema
-   - Custom approach
-
-2. Is this a production-ready project or a prototype?
-   - Production (Strict rules)
-   - Prototype (Relaxed rules)
-
-3. What's your directory structure preference?
-   - Standard (project_docs/ at root)
-   - Custom (specify path)"
+Has existing AI rules with structured workflows?
+├─ YES → Is structure similar to FluxFrame?
+│        ├─ YES → SIMILAR_WORKFLOW
+│        └─ NO  → Has substantial docs? 
+│                 ├─ YES → MIGRATION
+│                 └─ NO  → GREENFIELD (replace minimal rules)
+└─ NO  → Has substantial documentation?
+         ├─ YES → MIGRATION
+         └─ NO  → GREENFIELD
 ```
 
-**Example bad flow (DON'T DO THIS):**
-```
-You: "What's your project name?"  <- ALREADY IN DESCRIPTION
-You: "What technology are you using?" <- ALREADY IN DESCRIPTION
-You: "Describe your project" <- ALREADY PROVIDED
-```
+**Classification Definitions:**
 
-**Step 4: Confirm Setup**
+| Classification | Characteristics |
+|---------------|-----------------|
+| **GREENFIELD** | No AI rules (or only minimal), no structured docs, fresh start |
+| **SIMILAR_WORKFLOW** | Has AI rules with workflows/patterns, similar to FluxFrame approach |
+| **MIGRATION** | Has documentation structure different from FluxFrame, needs adaptation |
 
-Present a summary for user approval:
+### Step 1.4: Present Detection Results
+
+Show user what you found:
 
 ```markdown
-## Project Setup Summary
+## Project State Detection
 
-**AI Assistant:** {{CLINE_OR_ROO}}
-**Project:** {{PROJECT_NAME}}
-**Purpose:** {{ONE_LINE_PURPOSE}}
-**Stack:** {{TECH_STACK}}
-**API Contracts:** {{CHOSEN_APPROACH}}
-**Directory:** {{DOCS_DIR}}
+### Detected
+- **AI Rules:** [what was found]
+- **Documentation:** [what was found]
+- **Patterns:** [what was found]
+- **Bug Fixes:** [what was found]
+- **Project Info:** [name, stack from config files]
 
-I will create:
-- `{{DOCS_DIR}}/context_master_guide.md` - Your project's source of truth
-- `{{DOCS_DIR}}/technical_status.md` - Living implementation status
-- `{{DOCS_DIR}}/patterns/` - Pattern library structure
-- `.{{ASSISTANT_RULES_FILENAME}}` - AI assistant configuration
-- `mcp-server.js` - Context server for AI assistance
+### Classification: [GREENFIELD / SIMILAR_WORKFLOW / MIGRATION]
 
-Proceed? (yes/no)
+**Reasoning:** [brief explanation]
+
+Shall I proceed with the [classification] workflow?
 ```
 
 Wait for user confirmation before proceeding.
 
 ---
 
-### Phase 2: File Generation
+## Phase 2: Route to Workflow
 
-**Step 5: Create Directory Structure**
+Based on classification, proceed to the appropriate workflow file:
 
-```bash
-mkdir -p {{DOCS_DIR}}/{patterns,workflows,implementation_plans}
-mkdir -p {{DOCS_DIR}}/bug_fixes
-```
+### If GREENFIELD
 
-**Step 6: Generate Core Documents**
+**File:** `bootstrap/greenfield_workflow.md`
 
-Follow this order (dependencies matter):
+**What happens:**
+1. Ask questions about project (only what's missing from detection)
+2. Generate complete FluxFrame setup from scratch
+3. Create all documentation, AI rules, MCP server
 
-**6.1: Create `context_master_guide.md`**
+**Questions to ask (if not detected):**
+- Project name and purpose
+- Technology stack
+- AI tools to use
+- API contract approach (if applicable)
+- Verification environment
 
-Source: [`doc-templates/context_master_guide.template.md`](doc-templates/context_master_guide.template.md)
+### If SIMILAR_WORKFLOW
 
-**Placeholder filling rules:**
-- `{{PROJECT_NAME}}` → Actual project name
-- `{{PROJECT_PURPOSE}}` → One-line purpose
-- `{{TECH_STACK}}` → Comma-separated tech list
-- `{{DOCS_DIR}}` → Chosen documentation directory
-- `{{API_CONTRACT_APPROACH}}` → Chosen API contract method
-- Keep ALL universal principle sections UNCHANGED
-- Adapt examples to project domain where marked `{{EXAMPLE}}`
+**File:** `bootstrap/similar_workflow.md`
 
-**6.2: Create `technical_status.md`**
+**What happens:**
+1. Inventory existing setup
+2. Diff against FluxFrame templates
+3. For each significant difference, ask user: keep/replace/merge
+4. Preserve user customizations
+5. Add missing FluxFrame components
+6. Create backup before changes
 
-Source: [`doc-templates/technical_status.template.md`](doc-templates/technical_status.template.md)
+**Key principle:** Default is REPLACE, but identify differences first and ask about each.
 
-**Initial state should be:**
-- Status: "🏗️ BOOTSTRAP - Project initialized"
-- Current Capabilities: "None - awaiting Cycle 1.1"
-- Next Steps: "Define and implement Cycle 1.1"
-- Recently Changed: "Framework bootstrapped on {{TODAY_DATE}}"
+### If MIGRATION
 
-**6.3: Create `implementation_plan.md`**
+**File:** `bootstrap/migration_workflow.md`
 
-Source: [`doc-templates/implementation_plan.template.md`](doc-templates/implementation_plan.template.md)
+**What happens:**
+1. Deep analysis of existing documentation
+2. Map to FluxFrame equivalents
+3. For each category, ask user: copy/migrate/reference
+4. Execute migration based on preferences
+5. Generate FluxFrame configuration
+6. Establish AI workflow
+7. Create backup before changes
 
-**Initial content:**
-- Include Cycle 1.1 placeholder
-- Reference key features from project description
-- Mark as "📋 PLANNING"
-
-**6.4: Create Pattern Library Structure**
-
-Create files:
-- `{{DOCS_DIR}}/patterns/README.md` - From template
-- `{{DOCS_DIR}}/patterns/api_patterns.md` - Empty with header
-- `{{DOCS_DIR}}/patterns/ui_patterns.md` - Empty with header (if frontend exists)
-- `{{DOCS_DIR}}/patterns/data_patterns.md` - Empty with header
-
-**6.5: Create API Contract Standards** (if applicable)
-
-If user chose OpenAPI, GraphQL, JSON Schema, or Custom:
-
-Create `{{DOCS_DIR}}/api_contract_standards.md` using:
-[`doc-templates/api_contract_standards.template.md`](doc-templates/api_contract_standards.template.md)
-
-Fill with chosen approach details.
-
-**6.6: Create Workflow Documentation** (optional, can be done later)
-
-If user wants workflow docs now, create:
-- `{{DOCS_DIR}}/workflows/README.md`
-- Other workflow docs as needed
-
-Otherwise, note in technical_status.md: "Workflows: To be documented as features are built"
+**Key principle:** Preserve existing valuable content, integrate with FluxFrame.
 
 ---
 
-**Step 7: Generate MCP Server Configuration**
+## Phase 3: Execute Workflow
 
-**7.1: Create `mcp-server.js`**
+Follow the detailed steps in the appropriate workflow file.
 
-Source: [`mcp-server/template-mcp-server.js`](mcp-server/template-mcp-server.js)
+**Common elements across all workflows:**
 
-**Configuration:**
-```javascript
-const PROJECT_DOCS_DIR = path.join(__dirname, '{{DOCS_DIR}}');
-const PROJECT_NAME = '{{PROJECT_NAME}}';
+### AI Tools Selection
+
+Ask early (if not detected):
+```
+Which AI coding tools will you use with this project?
+
+1. Claude Code (Anthropic's CLI tool)
+2. Roo Code (VS Code extension with modes)
+3. Cline (VS Code extension)
+4. Google Antigravity
+5. Multiple (specify which)
+6. Other / Universal AGENTS.md only
 ```
 
-**7.2: Create `package.json`** (if doesn't exist)
+For each selected tool, determine integration level:
+- **Full integration** - Tool-specific config with all features
+- **Basic** - Symlink to AGENTS.md
 
-```json
-{
-  "name": "{{PROJECT_NAME_SLUG}}",
-  "version": "0.1.0",
-  "type": "module",
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.5.0"
-  }
-}
+### Documentation Location
+
+```
+Where should project documentation live?
+
+1. Standard: `project_docs/` at root (recommended)
+2. Use existing: `[detected_path]/`
+3. Custom: Specify your preferred path
 ```
 
-**7.3: Install Dependencies**
+### Verification Environment
 
-```bash
-npm install
+```
+How will changes be verified before marking complete?
+
+1. Localhost - Run locally (e.g., localhost:3000)
+2. Preview Environment - CI creates ephemeral previews
+3. Staging Server - Deploy to specific staging URL
+4. Production - Deploy directly (with feature flags)
 ```
 
 ---
 
-**Step 8: Generate AI Assistant Rules File**
+## Phase 4: Validation & Handoff
 
-**Determine filename based on AI assistant:**
-- If Cline → Create `.clinerules`
-- If Roo → Create `.roorules`
+After workflow execution, validate:
 
-**Source:** [`ai-rules/template.clinerules`](ai-rules/template.clinerules) or [`ai-rules/template.roorules`](ai-rules/template.roorules)
+### Universal Checklist
 
-**Note:** Both templates have identical content - only filename differs.
+- [ ] AGENTS.md created with project context
+- [ ] Tool-specific rules created (based on selection)
+- [ ] Documentation structure in place
+- [ ] MCP server configured and tested
+- [ ] All paths consistent across files
+- [ ] No placeholders remaining
 
-**Placeholder filling:**
-- `{{PROJECT_NAME}}` → Actual project name
-- `{{DOCS_DIR}}` → Documentation directory path
-- `{{PROJECT_TYPE_PROTOTYPE}}` → Set to `true` if user selected Prototype, `false` (or omit) if Production
-- `{{API_CONTRACT_RULES}}` → Insert API contract enforcement rules based on chosen approach
-
-**If OpenAPI approach:**
-```
-**For API Development (MANDATORY):**
-- ALL new endpoints MUST use Pydantic response models
-- ALL endpoints MUST have `response_model` parameter
-- Frontend MUST use `apiClient` 
-- NO direct fetch calls in components
-- Reference: `{{DOCS_DIR}}/api_contract_standards.md`
-```
-
-**If GraphQL approach:**
-```
-**For API Development (MANDATORY):**
-- ALL new queries/mutations MUST have schema definitions
-- Schema-first development required
-- All resolvers must match schema
-- Reference: `{{DOCS_DIR}}/api_contract_standards.md`
-```
-
-**If JSON Schema or Custom:**
-```
-**For API Development (MANDATORY):**
-- ALL API responses MUST have documented contracts
-- Contracts defined in `{{DOCS_DIR}}/api_contract_standards.md`
-- Validation required before deployment
-- Reference: `{{DOCS_DIR}}/api_contract_standards.md`
-```
-
----
-
-### Phase 3: Validation & Handoff
-
-**Step 9: Validate Generated Files**
-
-Check all files were created:
-```
-Required files:
-✅ {{DOCS_DIR}}/context_master_guide.md
-✅ {{DOCS_DIR}}/technical_status.md
-✅ {{DOCS_DIR}}/implementation_plan.md
-✅ {{DOCS_DIR}}/patterns/README.md
-✅ .{{ASSISTANT_RULES_FILENAME}} (.clinerules or .roorules)
-✅ mcp-server.js
-✅ package.json
-
-Optional files (if created):
-⬜ {{DOCS_DIR}}/api_contract_standards.md
-⬜ {{DOCS_DIR}}/workflows/README.md
-```
-
-**Step 10: Test MCP Server**
-
-```bash
-node mcp-server.js
-```
-
-Should start without errors. If errors, fix configuration.
-
-**Step 11: Present Summary to User**
+### Present Summary
 
 ```markdown
-# ✅ FluxFrame Bootstrap Complete!
+## FluxFrame Bootstrap Complete!
 
-I've set up FluxFrame for {{PROJECT_NAME}}:
+### Configuration Created
 
-## Created Files
+**Documentation:** `[docs_path]/`
+- context_master_guide.md - Single source of truth
+- technical_status.md - Project status
+- implementation_plan.md - Roadmap
+- patterns/ - Pattern library
+- workflows/ - Development protocols
+- bug_fixes/ - Change documentation
 
-### Core Documentation (`{{DOCS_DIR}}/`)
-- ✅ `context_master_guide.md` - Your project's source of truth
-- ✅ `technical_status.md` - Current implementation status  
-- ✅ `implementation_plan.md` - Development roadmap
-- ✅ `patterns/README.md` - Pattern library (empty, ready for patterns)
-{{#if api_contract_standards}}
-- ✅ `api_contract_standards.md` - {{API_APPROACH}} contract standards
-{{/if}}
+**AI Rules:**
+- AGENTS.md - Universal baseline
+- [Tool-specific files based on selection]
 
-### Configuration Files
-- ✅ `.{{ASSISTANT_RULES_FILENAME}}` - AI assistant rules and protocols
-- ✅ `mcp-server.js` - Context server configured for your project
-- ✅ `package.json` - MCP dependencies
+**MCP Server:** `mcp-server.js`
 
-## Next Steps
+### [If applicable] What Was Preserved
+- [List preserved customizations]
+- [List preserved documentation]
 
-1. **Review the documentation:**
-   - Read `{{DOCS_DIR}}/context_master_guide.md` to understand the framework
-   - Check `{{DOCS_DIR}}/technical_status.md` for current state
+### [If applicable] Backup Location
+`.fluxframe-backup/[timestamp]/`
 
-2. **Configure your IDE to use MCP:**
-   - Add `mcp-server.js` to your {{CLINE_OR_ROO}} MCP servers configuration
-   - Restart {{CLINE_OR_ROO}} to load the new server
+### Next Steps
 
-3. **Start developing:**
-   - Define your Cycle 1.1 in `implementation_plan.md`
-   - Use AI assistant to start development with full context
+1. Review generated documentation
+2. Test MCP server: `npm run mcp`
+3. Define Cycle 1.1 in implementation_plan.md
+4. Start developing with FluxFrame workflow!
 
-## Framework Features Now Available
+### Quick Reference
 
-✅ **Documentation-First Development** - All changes tracked in docs
-✅ **Pattern Library** - Reusable solutions as you build
-✅ **MCP Integration** - AI has project context via tools
-✅ **Change Request Protocol** - Systematic bug fixing
-✅ **API Contract Enforcement** - {{API_APPROACH}} contracts required
-✅ **Development Cycle Methodology** - Methodical feature delivery
-
-## Try It Out
-
-Ask me: "Read the context master guide and explain how development cycles work"
-
-I'll use the MCP server to access your project documentation and explain!
-
----
-
-**Questions?** Ask about any part of the setup or read [`PHILOSOPHY.md`](PHILOSOPHY.md) to understand why this approach works.
+- **Start a cycle:** Define in implementation_plan.md, follow cycle_workflow.md
+- **Fix a bug:** Use change_request_protocol.md
+- **Add a pattern:** Document in patterns/ following template
+- **Update status:** Keep technical_status.md current
 ```
 
 ---
 
-## Common Issues & Solutions
+## Target Output
 
-### Issue: User doesn't have project description
-
-**Solution:** Walk them through creating one:
-
-```markdown
-Let's create a project description. I'll ask some questions:
-
-1. **Project name?** (e.g., "TaskFlow Pro")
-2. **What does it do?** (1-2 sentences)
-3. **Technology stack?** (e.g., "React, FastAPI, PostgreSQL")
-4. **Key features?** (List 3-5 main capabilities)
-
-I'll use this to set up everything else.
-```
-
-### Issue: User wants custom directory structure
-
-**Solution:** Ask for preferred paths and use those in templates:
+A successfully bootstrapped project will have:
 
 ```
-You: "Where should documentation live?"
-User: "I want it in docs/project instead of project_docs"
-You: "Got it, using docs/project for all documentation"
-```
-
-Then use `docs/project` for `{{DOCS_DIR}}` placeholder.
-
-### Issue: User has existing documentation
-
-**Solution:** Offer to migrate or integrate:
-
-```
-I see you have existing docs in [location]. I can:
-1. Keep your docs and add framework files alongside
-2. Migrate your content into framework templates
-3. Create framework in separate directory
-
-Which approach?
-```
-
-### Issue: MCP server won't start
-
-**Common causes:**
-1. `package.json` missing or wrong type
-2. Path to `{{DOCS_DIR}}` incorrect
-3. Missing dependencies
-
-**Fix:**
-```bash
-# Ensure module type
-echo '{"type": "module"}' >> package.json
-
-# Install deps
-npm install @modelcontextprotocol/sdk
-
-# Test
-node mcp-server.js
+[project root]/
+├── [docs_location]/
+│   ├── context_master_guide.md      # Single source of truth
+│   ├── technical_status.md          # Real-time project state
+│   ├── implementation_plan.md       # Roadmap & cycles
+│   ├── api_contract_standards.md    # API enforcement (if applicable)
+│   ├── patterns/                    # Pattern library
+│   │   ├── README.md
+│   │   └── [domain]_patterns.md
+│   ├── workflows/                   # Development protocols
+│   │   ├── README.md
+│   │   ├── cycle_workflow.md
+│   │   └── change_request_protocol.md
+│   └── bug_fixes/                   # Change documentation
+│
+├── AGENTS.md                        # Universal AI baseline
+├── [tool-specific rules]            # Based on selection
+├── mcp-server.js                    # Context provider
+└── package.json                     # With MCP dependency
 ```
 
 ---
 
-## Advanced: Partial Bootstrap
+## Quick Reference: Questions by Scenario
 
-User might only want some parts of framework. Support this:
+### GREENFIELD Questions
 
-**Question:** "Do you want the full framework or specific components?"
-**Options:**
-1. Full framework (recommended for new projects)
-2. Documentation only (no MCP/Cline integration)
-3. MCP + .clinerules only (existing docs)
-4. Custom selection
+| Question | When to Ask |
+|----------|-------------|
+| Project name | Not in package.json/README |
+| Project purpose | Not clear from description |
+| Tech stack | Not detectable from files |
+| Architecture type | Not clear from structure |
+| API contract approach | Has backend/API |
+| AI tools | Always |
+| Verification environment | Always |
+| Docs location | Always (offer default) |
 
-Adjust file creation based on choice.
+### SIMILAR_WORKFLOW Questions
 
----
+| Question | When to Ask |
+|----------|-------------|
+| Keep/replace/merge | For each significant rule difference |
+| Missing components | For each FluxFrame feature not present |
+| Preserve customizations | When custom rules detected |
 
-## Remember
+### MIGRATION Questions
 
-1. **Read project description FIRST** - Don't ask redundant questions
-2. **Fill ALL placeholders** - No `{{PLACEHOLDER}}` should remain
-3. **Test MCP server** - Ensure it starts successfully
-4. **Present clear summary** - User should understand what was created
-5. **Offer next steps** - Guide user on how to proceed
-
-**The goal: User should be able to start developing immediately after bootstrap.**
-
----
-
-## Validation Checklist
-
-Before presenting final summary to user, verify:
-
-- [ ] All `{{PLACEHOLDERS}}` replaced with actual values
-- [ ] No references to "CultureFit" or other real projects
-- [ ] MCP server tested and working
-- [ ] `.{{ASSISTANT_RULES_FILENAME}}` has correct paths
-- [ ] API contract standards match chosen approach
-- [ ] Correct rules file generated (.clinerules for Cline, .roorules for Roo)
-- [ ] All required files created
-- [ ] File paths are correct for user's OS
-- [ ] No template syntax remaining in generated files
+| Question | When to Ask |
+|----------|-------------|
+| Copy/migrate/reference | For each documentation category |
+| Docs location | If existing location differs from FluxFrame standard |
+| AI tools | Always |
+| Handle existing rules | If minimal rules exist |
 
 ---
 
-## Example Complete Flow
+## Troubleshooting
 
-```
-User: "Set up the framework for my project. It's called TaskFlow Pro,
-a task management SaaS with React frontend and FastAPI backend."
+### Detection finds nothing but project has files
 
-AI: "Perfect! I'll set up FluxFrame for TaskFlow Pro.
-First, which AI assistant are you using? (Cline or Roo)
+Check if you have permission to read the project directory. Ask user to confirm file locations.
 
-User: "Cline"
+### User wants to start over despite existing setup
 
-AI: "Great! Now I just need to know:
+Classify as GREENFIELD but:
+1. Suggest backup first
+2. Confirm user wants to replace existing
+3. Proceed with greenfield workflow
 
-1. How will your API contracts be defined?
-   - OpenAPI + Pydantic (recommended for FastAPI+React)
-   - GraphQL Schema
-   - JSON Schema
-   - Custom approach
+### Existing rules conflict with FluxFrame
 
-2. Where should documentation live?
-   - Standard: project_docs/ at root
-   - Custom: specify path"
+Follow SIMILAR_WORKFLOW approach:
+1. Identify each conflict
+2. Ask user preference
+3. Document why FluxFrame recommends its approach
+4. Respect user's final decision
 
-User: "Use OpenAPI, standard location is fine"
+### User's documentation is scattered
 
-AI: "Perfect! Setting up now...
+In MIGRATION workflow:
+1. Map all locations
+2. Ask if consolidation is desired
+3. Can reference multiple locations if user prefers
 
-[Creates all files]
+---
 
-✅ Framework Bootstrap Complete!
+## Related Files
 
-I've set up everything for TaskFlow Pro:
-- AI Assistant: Cline (.clinerules generated)
-- Documentation in project_docs/
-- OpenAPI contract standards configured
-- MCP server ready
-- validate_api_contracts() tool available for endpoint validation
-
-Next: Define Cycle 1.1 in implementation_plan.md and start building!"
-```
+- `bootstrap/detection_guide.md` - Detailed detection instructions
+- `bootstrap/greenfield_workflow.md` - New project setup
+- `bootstrap/similar_workflow.md` - Upgrade existing workflow
+- `bootstrap/migration_workflow.md` - Adapt existing documentation
+- `bootstrap/project_questionnaire.md` - Question reference
+- `bootstrap/validation_checklist.md` - Final validation
 
 ---
 
 **End of Bootstrap Instructions**
-
-When you complete bootstrap, update `technical_status.md` with:
-```
-Status: ✅ FRAMEWORK READY
-Last Updated: {{TODAY}}
-Next: Define Cycle 1.1

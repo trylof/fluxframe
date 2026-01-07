@@ -1,7 +1,7 @@
 # {{PROJECT_NAME}}: The Context Master Guide
 
 <!-- 
-INSTRUCTIONS FOR CLINE:
+INSTRUCTIONS FOR AI ASSISTANT:
 This template creates the "mind" of your project - the single source of truth for vision, architecture, and implementation.
 Fill {{PLACEHOLDERS}} based on the project questionnaire responses.
 Keep universal principles intact - these are proven best practices.
@@ -22,11 +22,11 @@ This approach ensures that all team members, technical and non-technical, are al
 
 This directory contains the essential guides for understanding and building the {{PROJECT_NAME}} platform. All key documents referenced below are located in the `{{DOCS_DIR}}` directory.
 
-<!-- CLINE: Customize this section based on which documents the project actually needs -->
+<!-- AI ASSISTANT: Customize this section based on which documents the project actually needs -->
 
 ### 2.1 System Workflows & Architecture
 
-<!-- CLINE: If project includes workflow documentation, keep this section. Otherwise remove. -->
+<!-- AI ASSISTANT: If project includes workflow documentation, keep this section. Otherwise remove. -->
 
 **Comprehensive workflow documentation**
 
@@ -58,14 +58,14 @@ Located in `{{DOCS_DIR}}/workflows/`:
 
 ### A. The Vision & Architecture: `{{TECH_BLUEPRINT_FILE}}`
 
-<!-- CLINE: Default filename is 'techblueprint.md' or 'architecture.md' -->
+<!-- AI ASSISTANT: Default filename is 'techblueprint.md' or 'architecture.md' -->
 
 *   **What it is:** The strategic north star. It defines the "why" behind the project, the overall system architecture, the core {{ARCHITECTURE_CONCEPTS}}, and the guiding technical principles.
 *   **How to use it:** Read this first to understand the project's goals and the high-level technical design. All major architectural decisions must be reflected here.
 
 ### B. The Ground Truth (Domain Knowledge): `{{DOMAIN_EXPERTISE_FILE}}`
 
-<!-- CLINE: Optional - only if project has specialized domain expertise to codify -->
+<!-- AI ASSISTANT: Optional - only if project has specialized domain expertise to codify -->
 <!-- Example: For M&A tool, this might be 'human_workflow_org_values_in_mna_dd.md' -->
 <!-- For generic projects, this might be 'business_requirements.md' or 'domain_model.md' -->
 
@@ -74,19 +74,22 @@ Located in `{{DOCS_DIR}}/workflows/`:
 
 ### C. The "How" - Implementation Roadmap: `{{IMPLEMENTATION_PLAN_FILE}}`
 
-<!-- CLINE: Default filename is 'implementation_plan.md' -->
+<!-- AI ASSISTANT: Default filename is 'implementation_plan.md' -->
 
 *   **What it is:** The detailed, phased technical plan for building the system. It translates the {{TECH_BLUEPRINT_FILE}} vision and domain expertise into a concrete, step-by-step engineering plan.
 *   **How to use it:** This is the primary guide for development cycles. It defines the domain models, technology choices, and phased deliverables. It must be updated to reflect progress and any deviations from the original plan.
 
 ### D. The Current State - Technical Status: `technical_status.md`
 
-*   **What it is:** Real-time documentation of the current implementation state, architecture status, and development cycle progress. It tracks what's been built, what's working, current technical debt, and immediate next steps.
-*   **How to use it:** This is the **primary reference for development status**. It must be updated after every cycle completion and shows exactly what functionality is available, what's been tested, and what requires attention. **This is different from the README, which focuses on getting started - this document tracks what's actually implemented.**
+*   **What it is:** Real-time documentation of the current implementation state, architecture status, and development cycle progress. It follows a **Modular Architecture**: the master file tracks current work, while finished cycles are archived in the `tech-status/` directory.
+*   **How to use it:** This is the **primary reference for development status**. It must be updated after every cycle completion. When a cycle is finished, its detailed implementation records are moved to `tech-status/archived_cycle_X.md` to keep the master file concise and optimized for AI context.
+*   **Key components:**
+    - `technical_status.md`: Master file (Current architecture + Active cycle)
+    - `tech-status/`: Directory for archived cycle details and deep history.
 
 ### E. The Quality Assurance Framework: `{{TESTS_DIR}}/` Directory
 
-<!-- CLINE: Default is 'tests/' directory -->
+<!-- AI ASSISTANT: Default is 'tests/' directory -->
 
 *   **What it is:** A comprehensive, living testing framework that ensures quality and reliability across all development cycles. Contains {{TEST_TYPES}}.
 *   **How to use it:** **MANDATORY for every cycle completion**. Tests must be run and pass before any cycle is marked complete. The testing framework evolves with the project and provides regression testing for all previous functionality.
@@ -165,7 +168,7 @@ Located in `{{DOCS_DIR}}/workflows/`:
 
 ### G. The Unknowns - Stakeholder Questions: `open_questions.md`
 
-<!-- CLINE: Optional - include if project has stakeholder involvement -->
+<!-- AI ASSISTANT: Optional - include if project has stakeholder involvement -->
 
 *   **What it is:** A living list of strategic questions that the development team cannot answer alone. These are questions about business logic, user experience, and priorities that require input from project leadership or clients.
 *   **How to use it:** The development team adds questions here as they arise to avoid making assumptions. The project lead is responsible for driving these questions to resolution and ensuring the answers are then reflected in the other context documents.
@@ -182,7 +185,7 @@ Located in `{{DOCS_DIR}}/workflows/`:
 
 ### I. API Contract Standard
 
-<!-- CLINE: Customize based on chosen API contract approach (OpenAPI/GraphQL/JSON Schema/Custom) -->
+<!-- AI ASSISTANT: Customize based on chosen API contract approach (OpenAPI/GraphQL/JSON Schema/Custom) -->
 <!-- See ai-assisted-dev-framework/doc-templates/api_contract_standards.template.md -->
 
 *   **What it is:** The **MANDATORY** standard for all API development going forward. Establishes contract-first design with {{API_CONTRACT_APPROACH}}.
@@ -204,7 +207,7 @@ Located in `{{DOCS_DIR}}/workflows/`:
 
 ### J. Additional Domain-Specific Documents
 
-<!-- CLINE: Add any project-specific documents here -->
+<!-- AI ASSISTANT: Add any project-specific documents here -->
 <!-- Examples: dashboard_architecture.md, ai_assistant_design.md, data_model.md -->
 
 *   **[{{CUSTOM_DOC_1}}](./{{CUSTOM_DOC_1}})** - {{CUSTOM_DOC_1_DESCRIPTION}}
@@ -237,10 +240,10 @@ After any significant change—a feature is built, an architectural decision is 
 9. **Ninth:** Update other relevant project documents as needed
 
 **FINAL Alignment Check:**
-10. **Verify Protocol Alignment:** Check that `.clinerules` workflow protocol matches `context_master_guide.md` content
-    - Compare the "Before starting code work" and "Before marking work complete" protocols
-    - Raise concerns if workflow descriptions have diverged
-    - Update `.clinerules` if the master guide workflow has changed (with user approval for {{DOCS_DIR}}/ files)
+10. **Verify Protocol Alignment:** Check that your AI agent configuration (e.g., `AGENTS.md`, `.clinerules`, `.roomodes`) matches the `context_master_guide.md` content.
+    - Compare the "Before starting code work" and "Before marking work complete" protocols.
+    - Raise concerns if workflow descriptions have diverged.
+    - Update your rules if the master guide workflow has changed.
 
 ### **🚨 CRITICAL ALIGNMENT RULE: Test Data Must Match Implementation**
 
@@ -388,11 +391,12 @@ When a change request is made (bug, refinement, requirement change, misinterpret
    - Testing performed
 
 8. **Update Technical Status (`technical_status.md`):**
-   - **ALWAYS UPDATE** - Add to "Recently Fixed/Changed" section
-   - Remove from "Known Issues" if listed
-   - Update "Current Capabilities" if functionality changed
-   - Update "Technical Debt" if debt was addressed
-   - Update component status if state changed
+   - **ALWAYS UPDATE** - Add to "Recently Fixed/Changed" section.
+   - **ARCHIVE** - If an entry is older than 1 month, move it to `tech-status/change_history.md`.
+   - Remove from "Known Issues" if listed.
+   - Update "Current Capabilities" if functionality changed.
+   - Update "Technical Debt" if debt was addressed.
+   - Update component status if state changed.
 
 9. **Update Pattern Library (`patterns/`) if applicable:**
    - Did change reveal anti-pattern? Document it
@@ -553,7 +557,7 @@ This Context Master Guide is the foundation of {{PROJECT_NAME}}'s development di
 
 ---
 
-<!-- CLINE FINAL CHECKLIST:
+<!-- AI ASSISTANT FINAL CHECKLIST:
 - [ ] All {{PLACEHOLDERS}} replaced with project-specific values
 - [ ] Removed optional sections not applicable to this project
 - [ ] Added project-specific sections as needed

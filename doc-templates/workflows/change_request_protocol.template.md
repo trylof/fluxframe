@@ -283,7 +283,7 @@ start_change_request(
 ### 11. Update Additional Context (If Applicable)
 
 **Update when:**
-- Queryable data changed (AI assistant context)
+- Queryable data changed (AI context)
 - API contracts modified
 - Configuration options changed
 - System capabilities altered
@@ -350,7 +350,7 @@ close_change_request(
 ### Development Cycles (New Features)
 - Use `cycle_workflow.md`
 - Use MCP tools for validation
-- Document progressively during build
+- Document progressively during results delivery
 - ✅ Standard workflow
 
 ### Change Requests (Fixes/Refinements)

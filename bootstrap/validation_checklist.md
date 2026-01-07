@@ -18,10 +18,19 @@ Run through this checklist systematically. Fix any issues before showing results
 ✓ {{DOCS_DIR}}/technical_status.md  
 ✓ {{DOCS_DIR}}/implementation_plan.md
 ✓ {{DOCS_DIR}}/patterns/README.md
-✓ .clinerules
+✓ AGENTS.md (Universal AI baseline)
 ✓ mcp-server.js
 ✓ package.json
 ✓ node_modules/ (directory with dependencies)
+```
+
+**Tool-Specific (Based on selection):**
+```
+✓ CLAUDE.md and .claude/rules/ (Claude Code Full)
+✓ .roomodes and .roo/rules/ (Roo Code Full)
+✓ .clinerules/ Folder (Cline Full)
+✓ GEMINI.md (Antigravity Full)
+✓ Symlinks for basic compatibility (if chosen)
 ```
 
 **Conditional Files:**

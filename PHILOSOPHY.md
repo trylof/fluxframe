@@ -20,7 +20,7 @@ Most software projects treat documentation as an afterthought—something to wri
 
 **Knowledge Preservation:** Developers leave. Context gets lost. But well-maintained documentation ensures that institutional knowledge survives turnover and time.
 
-**AI Collaboration:** AI assistants like Cline can only help you if they understand your project. Documentation provides that context. Without it, every AI interaction starts from zero.
+**AI Collaboration:** AI assistants can only help you if they understand your project. Documentation provides that context. Without it, every AI interaction starts from zero.
 
 **Decision Clarity:** Future you (or your team) will thank past you for documenting *why* certain approaches were chosen, not just *what* was built.
 
@@ -59,24 +59,17 @@ A **Pattern Library** is your team's collective intelligence, captured and index
 
 **This is how you scale from a small project to an enterprise platform without accumulating technical debt.**
 
-### Pattern Status Levels
-
-- **Canonical:** Reference implementation, use exactly as documented
-- **Established:** Proven pattern, use consistently
-- **Mandatory:** Must be used in all applicable cases
-- **Needs Harmonization:** Inconsistencies exist, standardization required
-
 ---
 
-## 3. MCP + AI Assistant: Tool-Driven Discipline
+## 3. Tool-Driven Discipline (MCP + AI Agents)
 
 ### What is MCP?
 
 The Model Context Protocol (MCP) allows AI assistants to access tools and resources that extend their capabilities. In this framework, MCP servers provide AI access to your project documentation and enforce development workflows.
 
-### Why MCP + Cline Works
+### Why It Works
 
-**Single Source of Truth:** The AI reads the same documentation humans read. No separate "AI context" to maintain.
+**Single Source of Truth:** The AI reads the same documentation humans read via `AGENTS.md` and `project_docs/`. No separate "AI context" to maintain.
 
 **Tool-Driven Discipline:** Instead of hoping the AI remembers project rules, MCP tools enforce them:
 - `check_pattern_exists()` prevents reinventing wheels
@@ -85,8 +78,6 @@ The Model Context Protocol (MCP) allows AI assistants to access tools and resour
 - `validate_completion()` ensures work meets standards
 
 **Context Consistency:** Humans and AI work from identical information. No drift between what the team knows and what the AI knows.
-
-**Workflow Enforcement:** MCP tools guide the AI through your development process, ensuring steps aren't skipped.
 
 ### The Power of AI with Context
 
@@ -109,7 +100,7 @@ Large features are overwhelming. Where do you start? When are you "done"? How do
 
 ### The Solution: Development Cycles/Iterations
 
-Break work into **sequential, testable increments** where each cycle:
+Break work into **testable increments** where each cycle:
 - Has clear inputs and outputs
 - Is independently testable
 - Builds on previous cycles
@@ -128,7 +119,6 @@ Break work into **sequential, testable increments** where each cycle:
 - Implement with real components (no stubs)
 - Make results visible to users
 - Align tests with implementation
-- Run and pass ALL tests
 
 **AFTER a cycle:**
 - Update technical status
@@ -136,64 +126,19 @@ Break work into **sequential, testable increments** where each cycle:
 - Update context (AI Assistant knowledge)
 - Verify completion criteria
 
-**A cycle isn't complete until it's tested, documented, and validated.**
-
-### Why This Matters
-
-- **Confidence:** You always know what works and what doesn't
-- **Regression Prevention:** Tests ensure old functionality stays working
-- **Clear Progress:** Each cycle is shippable, even if more cycles remain
-- **Risk Reduction:** Problems discovered early, not at "the end"
-
 ---
 
 ## 5. Change Requests: Systematic Fixes
 
-### The Anti-Pattern
+### The anti-pattern: "Quick Fixes"
 
-Developer sees bug → writes quick fix → mark as done → move on
-
-**This creates:**
-- Undocumented changes
-- Unknown side effects
-- Lost knowledge about why
-- Repeated bugs
+Developer sees bug → writes quick fix → mark as done → move on. This creates technical debt and lost knowledge.
 
 ### The Systematic Approach
 
-**Phase 1: Analysis** (Understand before changing)
-1. Classify the change (bug/refinement/requirement shift)
-2. Check patterns (is this a pattern violation?)
-3. Analyze root cause (WHY not just WHAT)
-4. Document hypothesis
+**Analysis -> Iteration -> Documentation (ONLY AFTER CONFIRMED)**
 
-**Phase 2: Iteration** (Fix and validate)
-1. Make change
-2. Test
-3. Get user confirmation
-4. Iterate if needed
-
-**Phase 3: Documentation** (ONLY after confirmed)
-1. Document the change
-2. Update technical status
-3. Update patterns if applicable
-4. Update workflows if logic changed
-
-### Why Wait to Document?
-
-**Because you might be wrong.** If you document before user confirms the fix works, you'll either:
-- Document a broken solution
-- Have to redo documentation
-- Create drift between docs and reality
-
-Documentation after validation ensures accuracy.
-
-### Why This Matters
-
-- **Knowledge Preservation:** Future you knows why this was fixed this way
-- **Pattern Discovery:** Changes often reveal missing patterns
-- **Root Cause Learning:** Understanding WHY prevents recurrence
-- **Systematic Thinking:** Prevents rushed, poorly-considered fixes
+Documentation after validation ensures accuracy. It prevents documenting broken or abandoned solutions.
 
 ---
 
@@ -203,160 +148,53 @@ Documentation after validation ensures accuracy.
 
 **Tests must match what you actually built, not what you planned to build.**
 
-### The Problem
-
-You plan to build Feature X. You implement Feature Y (because requirements shifted). But your tests still validate Feature X.
-
-**Result:** Tests pass but don't test reality.
-
-### The Discipline
-
-Before declaring any work complete:
-1. **Do test documents match actual inputs?**
-2. **Do test instructions match actual workflows?**
-3. **Do expected outputs match actual displays?**
-4. **Can a user follow tests using the real application?**
-
-If any answer is "no," update tests BEFORE marking complete.
-
-### Why This Matters
-
-- **Tests as Specification:** Tests document what your system ACTUALLY does
-- **Drift Detection:** Misaligned tests reveal documentation drift
-- **Confidence:** Aligned tests give real confidence
-- **Future Proof:** Next developer knows what system really does
-
-**The Goal:** A new team member should be able to understand your system purely from tests and documentation.
+Tests document what your system ACTUALLY does. If requirements shift during implementation, tests must shift too before completion.
 
 ---
 
 ## 7. API Contracts: Explicit Agreements
 
-### The Problem
-
-Frontend and backend developers work in parallel. Frontend assumes API returns `{id, name}`. Backend actually returns `{userId, fullName}`.
-
-**Result:** Integration fails late. Time wasted. Frustration.
-
 ### The Solution: Contract-First Development
 
-Define the API contract BEFORE implementation:
-- **OpenAPI:** Pydantic models + auto-generated TypeScript types
-- **GraphQL:** Schema as contract
-- **JSON Schema:** Explicit response structures
-- **Custom:** Whatever you choose, but EXPLICIT
-
-### The Discipline
-
-**Before creating ANY endpoint:**
-1. Define the contract
-2. Generate types (if using OpenAPI/GraphQL)
-3. THEN implement
-4. Validate against contract
+Define the API contract BEFORE implementation. Whether it's **OpenAPI, GraphQL, or JSON Schema**, it must be explicit.
 
 **If endpoint doesn't match contract → Reject it.**
-
-### Why This Matters
-
-- **Runtime Validation:** Backend validates responses match contract
-- **Compile-Time Checking:** Frontend catches type errors before runtime
-- **Self-Documentation:** Contract IS the documentation
-- **Breaking Change Detection:** Type changes fail fast
-- **Frontend-Backend Alignment:** Both sides work from same agreement
-
-**Without contracts, integration is hope-based. With contracts, it's guaranteed.**
 
 ---
 
 ## 8. Rule Enforcement for ALL Interactions
 
-### The Critical Insight
+### The Insight
 
-Rules aren't just for "big features." They apply to **every interaction:**
+Rules apply to **every interaction**, not just big features:
 - Bug fixes
 - Simple changes
 - Refactoring
 - Documentation updates
-- Any code modification
 
-### Why This Matters
-
-**Consistency:** Good practices aren't situational. They apply always.
-
-**Discipline:** Skipping rules "just this once" creates technical debt.
-
-**Quality:** Small changes done wrong create big problems.
+**Consistency is not situational.**
 
 ### The Universal Session Protocol
 
-**Every chat session with Cline MUST start with:**
-1. Get context (what's the current state?)
-2. Check patterns (what solutions exist?)
-3. Determine type (new feature, bug, or change?)
-
-**Before ANY code changes:**
-1. Check pattern library
-2. Follow existing patterns OR plan new pattern
-3. Understand the "why" before the "what"
-
-**This applies whether you're:**
-- Building a new feature
-- Fixing a typo
-- Refactoring code
-- Updating docs
+**Every chat session MUST start by:**
+1. Gathering context.
+2. Checking patterns.
+3. Determining task type.
 
 ---
 
 ## The Compound Effect
 
-Each principle alone provides value. Together, they create a **compound effect**:
-
-1. **Documentation** gives AI context
-2. **MCP tools** enforce workflows using that context
-3. **Patterns** prevent reinvention
-4. **Cycles** ensure methodical progress
-5. **Change protocols** preserve knowledge
-6. **Test alignment** validates reality
-7. **API contracts** prevent integration failures
-8. **Rule enforcement** maintains discipline
+1. **Documentation** gives AI context.
+2. **MCP tools** enforce workflows.
+3. **Patterns** prevent reinvention.
+4. **Cycles** ensure progress.
+5. **Change protocols** preserve knowledge.
+6. **Test alignment** validates reality.
+7. **API contracts** prevent integration failures.
+8. **Rule enforcement** maintains discipline.
 
 The result: **Faster development, fewer bugs, easier onboarding, scalable architecture.**
-
----
-
-## This Framework Is For You If...
-
-✅ You're tired of losing context between sessions
-✅ You want AI assistance that actually helps (not just generic code)
-✅ You're building something that will grow over time
-✅ You value quality and maintainability
-✅ You work with (or plan to work with) other developers
-✅ You want to move fast WITHOUT breaking things
-
----
-
-## This Framework Might Not Be For You If...
-
-❌ You're building a one-off prototype you'll throw away
-❌ You don't care about documentation
-❌ You prefer ad-hoc development
-❌ You're the only developer and always will be
-❌ You don't use AI assistants for coding
-
----
-
-## The Investment vs Return
-
-**Investment:** Time upfront to document, create patterns, write tests
-
-**Return:** 
-- 10x faster subsequent development (pattern reuse)
-- Fewer bugs (systematic approach)
-- Easier onboarding (documented patterns)
-- AI that actually helps (has context)
-- Sustainable scaling (no architectural drift)
-
-The framework pays for itself after the 2nd or 3rd development cycle.
 
 ---
 
@@ -364,6 +202,3 @@ The framework pays for itself after the 2nd or 3rd development cycle.
 
 Ready to adopt this approach? See [`README.md`](./README.md) for bootstrapping instructions.
 
-**Remember:** You don't have to adopt everything at once. Start with documentation + patterns, then add MCP, then development cycles, then the rest.
-
-**The framework adapts to your needs. You're not adopting a rigid methodology—you're building a system that works for you.**

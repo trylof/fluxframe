@@ -192,7 +192,7 @@ Each phase has mandatory steps that ensure quality, consistency, and knowledge p
 #### 8. Update Additional Context (if applicable)
 
 **Examples:**
-- Context catalog (if using AI assistant)
+- Context catalog (if applicable)
 - Workflow documentation (if conceptual logic changed)
 - API contract docs (if new endpoints added)
 - Custom project-specific docs
@@ -361,7 +361,7 @@ Following this workflow consistently:
 
 **Every cycle. Every time. No exceptions.**
 
-This is how you build maintainable, scalable systems with AI assistance.
+This is how you build maintainable, scalable systems with AI-guided development.
 
 ---
 

@@ -1,28 +1,56 @@
 # Project Questionnaire for Bootstrap
 
-**Purpose:** This document guides the AI assistant (Cline or Roo) in gathering necessary information to bootstrap a new project with FluxFrame.
+**Purpose:** This document guides AI assistants in gathering necessary information to bootstrap FluxFrame, adapted for each scenario type.
 
-**When to use:** During Phase 1 of bootstrap workflow (Information Gathering)
+**When to use:** After detection phase, during information gathering for the appropriate workflow.
 
-**Important:** Only ask questions for information NOT already provided by the user. If the user gave you a comprehensive project description, don't ask redundant questions.
+**Key Principle:** Detection-first, then ask only what's missing. Questions vary by scenario:
+- **GREENFIELD:** Full questionnaire (what's not detected)
+- **SIMILAR_WORKFLOW:** Focused on upgrade preferences
+- **MIGRATION:** Focused on import/migration preferences
+
+**Important:** Only ask questions for information NOT already detected or provided by the user.
 
 ---
 
-## Q0: AI Assistant Selection (ALWAYS ASK FIRST)
+## AI Coding Tools Selection
 
-**This MUST be the first question:**
+**Ask early in the process:**
 ```
-Which AI coding assistant are you using?
+Which AI coding tools will you use with this project? (Select all that apply)
 
-1. Cline (VS Code extension)
-2. Roo (VS Code extension)
+1. **Claude Code** (Anthropic's CLI tool)
+2. **Roo Code** (VS Code extension with modes)
+3. **Cline** (VS Code extension)
+4. **Google Antigravity**
+5. **Cursor / GitHub Copilot / Other** (Uses universal AGENTS.md)
 ```
 
-**Answer determines output filename:**
-- Cline → Generate `.clinerules`
-- Roo → Generate `.roorules`
+### Integration Level Selection
 
-**Note:** Both assistants use identical configuration content. Only the filename differs.
+**For each selected tool, choose integration level:**
+
+**Claude Code:**
+- **Full integration** (CLAUDE.md with imports + .claude/rules/)
+- **Basic** (Symlink to AGENTS.md)
+- **Skip**
+
+**Roo Code:**
+- **Full integration** (.roomodes + .roo/rules/ directories)
+- **Basic** (AGENTS.md auto-detected, no custom modes)
+- **Skip**
+
+**Cline:**
+- **Full integration** (.clinerules/ folder with rule organization)
+- **Basic** (Symlink to AGENTS.md)
+- **Skip**
+
+**Antigravity:**
+- **Full integration** (GEMINI.md with methodology)
+- **Basic** (Symlink to AGENTS.md)
+- **Skip**
+
+**Note:** AGENTS.md is always generated as the universal baseline.
 
 ---
 
@@ -517,3 +545,122 @@ Proceed? (yes/no)
 5. **Confirm before generating**
 
 **Quality over quantity:** Better to ask 2 good questions than 9 redundant ones.
+
+---
+
+## Scenario-Specific Questions
+
+### SIMILAR_WORKFLOW Scenario Questions
+
+When the project has existing AI rules with structured workflows:
+
+**Q-SW1: Rule Differences**
+For each significant difference between existing rules and FluxFrame:
+```
+I found a difference in [CATEGORY]:
+
+**Your rule:** [existing rule content]
+**FluxFrame:** [FluxFrame approach]
+
+Options:
+1. Keep yours - Preserve your custom rule
+2. Use FluxFrame - Replace with FluxFrame standard
+3. Merge - Combine both approaches
+
+Your choice?
+```
+
+**Q-SW2: Missing Components**
+```
+Your setup is missing these FluxFrame components:
+- [List missing items]
+
+Should I add them? (yes/no for each, or "yes to all")
+```
+
+**Q-SW3: Preserve Customizations**
+```
+I found these custom rules that aren't in FluxFrame:
+- [List custom rules]
+
+These will be preserved in a "Project-Specific Rules" section.
+Anything to modify? (or "looks good")
+```
+
+---
+
+### MIGRATION Scenario Questions
+
+When the project has existing documentation in different structure:
+
+**Q-M1: Documentation Import Preference**
+For each documentation category found:
+```
+### Your Decision: [Category Name]
+
+I found: [description of what exists]
+
+Options:
+1. **Copy** - Keep originals, copy content into FluxFrame docs
+2. **Migrate** - Move content to FluxFrame structure (original gets redirect note)
+3. **Reference** - Keep originals, FluxFrame docs link to them
+
+Your choice for [Category]?
+```
+
+**Q-M2: Documentation Location**
+```
+Your current documentation is in: [detected_path]/
+FluxFrame standard is: project_docs/
+
+Options:
+1. Use FluxFrame standard (create project_docs/)
+2. Use your location ([detected_path]/) for FluxFrame docs
+3. Keep both, link between them
+
+Your choice?
+```
+
+**Q-M3: Bug Fix/Change History**
+```
+I found [N] bug fix/change documents in [location].
+
+Options:
+1. Import into FluxFrame bug_fixes/ directory
+2. Keep in place, reference from FluxFrame
+3. Archive and start fresh with FluxFrame format
+
+Your choice?
+```
+
+**Q-M4: Existing Minimal AI Rules**
+```
+I found existing AI rules: [file]
+
+Content appears [minimal/project-specific].
+
+Options:
+1. Replace with FluxFrame rules
+2. Incorporate into FluxFrame structure
+3. Keep separate (may cause conflicts)
+
+Your choice?
+```
+
+---
+
+## Question Matrix by Scenario
+
+| Question | GREENFIELD | SIMILAR_WORKFLOW | MIGRATION |
+|----------|------------|------------------|-----------|
+| Project name | If not detected | Usually detected | Usually detected |
+| Project purpose | If not detected | If not in docs | If not in docs |
+| Tech stack | If not detected | Usually detected | Usually detected |
+| Architecture | If not clear | Usually detected | Usually detected |
+| AI tools | Always | Usually detected | Always |
+| API contracts | If has backend | If not in rules | If has backend |
+| Docs location | Always (offer default) | Keep existing | Ask preference |
+| Verification env | Always | If not in rules | Always |
+| Rule differences | N/A | For each diff | N/A |
+| Import preferences | N/A | N/A | For each category |
+| Keep/replace rules | N/A | For each diff | If minimal rules |

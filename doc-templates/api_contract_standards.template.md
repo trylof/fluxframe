@@ -1,7 +1,7 @@
 # API Contract Standards - {{PROJECT_NAME}}
 
 <!-- 
-INSTRUCTIONS FOR CLINE:
+INSTRUCTIONS FOR AI ASSISTANT:
 This document defines HOW frontend and backend communicate.
 It's mandatory from DAY 1 - no "we'll add contracts later"
 Choose ONE approach during bootstrap and enforce it consistently.
@@ -46,7 +46,7 @@ This prevents integration failures and type mismatches.
 
 ## 2. Chosen Approach: {{API_CONTRACT_APPROACH}}
 
-<!-- CLINE: Keep only the section matching the chosen approach, delete others -->
+<!-- AI ASSISTANT: Keep only the section matching the chosen approach, delete others -->
 
 {{#if API_APPROACH_OPENAPI}}
 ### OpenAPI + Pydantic + Auto-Generated TypeScript
@@ -461,7 +461,7 @@ export interface {{EXAMPLE_RESPONSE}} {
 - ✅ {{ADDITIONAL_GATE_1}}
 - ✅ {{ADDITIONAL_GATE_2}}
 
-**In .clinerules:**
+**In your AI Assistant rules (e.g., AGENTS.md):**
 - Contract-first workflow enforced
 - Direct fetch() calls rejected
 - Manual type definitions flagged
@@ -474,7 +474,7 @@ export interface {{EXAMPLE_RESPONSE}} {
 
 ## 6. Migration Strategy (If Adding Contracts to Existing Project)
 
-<!-- CLINE: Include if bootstrapping a project with existing uncontracted endpoints -->
+<!-- AI ASSISTANT: Include if bootstrapping a project with existing uncontracted endpoints -->
 
 **Phase 1: Foundation**
 1. Set up contract infrastructure ({{INFRASTRUCTURE_SETUP}})
@@ -542,11 +542,11 @@ API contracts are not optional. They are the foundation of reliable frontend-bac
 Every endpoint. Every time. No exceptions.
 
 <!-- 
-CLINE CUSTOMIZATION CHECKLIST:
+AI ASSISTANT CUSTOMIZATION CHECKLIST:
 - [ ] Choose API contract approach (OpenAPI/GraphQL/JSON Schema/Custom)
 - [ ] Delete unused approach sections
 - [ ] Fill all {{PLACEHOLDERS}} for chosen approach
-- [ ] Define enforcement rules in .clinerules
+- [ ] Define enforcement rules in AGENTS.md
 - [ ] Add to MCP server tools if needed
 - [ ] Update context_master_guide.md reference
 - [ ] Create pattern documentation in patterns/

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * MCP Server for Project Documentation
- * Smart reader that extracts relevant sections from the SINGLE source of truth
+ * FluxFrame MCP Server for Project Documentation
+ * Smart reader that extracts relevant sections from the SINGLE source of truth.
+ * Supports multiple AI coding agents (Claude, Roo, Cline, Cursor, etc.)
  *
  * This is a TEMPLATE file. During bootstrap, placeholders will be replaced with actual project values.
  *
@@ -781,9 +782,8 @@ Test scenarios performed:
 
 - [x] \`${suggestedFileName}\` - This change documentation
 - [x] \`technical_status.md\` - Recently Fixed/Changed section
-- [ ] \`architectural_patterns_and_templates.md\` - Pattern update (if applicable)
+- [ ] \`patterns/\` - Pattern update (if applicable)
 - [ ] \`workflows/\` - Workflow documentation (if applicable)
-- [ ] \`context_catalog.json\` - AI Assistant context (if applicable)
 
 ## Related Issues
 

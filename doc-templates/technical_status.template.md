@@ -1,27 +1,28 @@
 # Technical Status & Architecture State
 
 <!-- 
-INSTRUCTIONS FOR CLINE:
+INSTRUCTIONS FOR AI ASSISTANT:
 This document is the REAL-TIME state of the project. Update it after EVERY development cycle completion.
-It's different from README (which is for getting started) - this tracks what's ACTUALLY implemented.
-Bootstrap: Create initial version with "Not Started" status for all planned cycles.
-Ongoing: Update after each cycle with what's built, what's working, and what's broken.
+IMPORTANT: To prevent this file from becoming too large, follow the Modular Technical Status Architecture pattern:
+1. When a development cycle is completed, move its detailed "Implementation Status" and "Key Features" to a new file: `{{DOCS_DIR}}/tech-status/archived_cycle_{{NUMBER}}.md`
+2. Replace the detailed section in THIS file with a summary and a link to the archive.
+3. Keep ONLY the current active cycle and the most recent architecture changes in this master file.
 -->
 
 **Last Updated:** {{CURRENT_DATE}}  
 **Current {{CYCLE_TYPE}}:** {{CURRENT_CYCLE_NUMBER}} ({{CURRENT_CYCLE_NAME}}) - {{STATUS_EMOJI_AND_TEXT}}
 
-<!-- CLINE: Update status section whenever major architectural changes happen -->
+<!-- AI ASSISTANT: Update status section whenever major architectural changes happen -->
 **🚀 MAJOR ARCHITECTURAL CHANGES ({{CHANGE_DATE}}):**
 - **{{CHANGE_CATEGORY_1}}:** {{CHANGE_DESCRIPTION_1}}
 - **{{CHANGE_CATEGORY_2}}:** {{CHANGE_DESCRIPTION_2}}
-<!-- CLINE: Add more as needed. Common categories: Architecture Pivot, Infrastructure Overhaul, Framework Migration, etc. -->
+<!-- AI ASSISTANT: Add more as needed. Common categories: Architecture Pivot, Infrastructure Overhaul, Framework Migration, etc. -->
 
 ---
 
 ## 🏗️ Current Architecture Overview
 
-<!-- CLINE: Customize based on actual stack -->
+<!-- AI ASSISTANT: Customize based on actual stack -->
 ### Production Environment
 - **Frontend:** {{FRONTEND_FRAMEWORK}} deployed on {{FRONTEND_PLATFORM}}
 - **Backend:** {{BACKEND_FRAMEWORK}} deployed on {{BACKEND_PLATFORM}}
@@ -29,7 +30,7 @@ Ongoing: Update after each cycle with what's built, what's working, and what's b
 - **Auth:** {{AUTH_PROVIDER}}
 - **CI/CD:** {{CICD_PLATFORM}}
 
-<!-- CLINE: Optional - add if project uses specific architectural approaches -->
+<!-- AI ASSISTANT: Optional - add if project uses specific architectural approaches -->
 ### Architecture Approach
 - **{{ARCHITECTURE_PATTERN_1}}:** {{PATTERN_DESCRIPTION_1}}
 - **{{ARCHITECTURE_PATTERN_2}}:** {{PATTERN_DESCRIPTION_2}}
@@ -39,15 +40,20 @@ Ongoing: Update after each cycle with what's built, what's working, and what's b
 ## 📊 {{CYCLE_TYPE}} Progress Tracking
 
 <!-- 
-CLINE INSTRUCTIONS:
-- Create one subsection for each development cycle
-- Use status emojis: ✅ COMPLETE | 🚧 IN PROGRESS | 📋 PLANNING | ⏳ UPCOMING | ⚠️ SUPERSEDED
-- Update status immediately when cycle state changes
-- Keep completed cycles for reference (shows project evolution)
-- Add new cycles as they are planned
+AI ASSISTANT INSTRUCTIONS:
+- Create one subsection for each development cycle.
+- Use status emojis: ✅ COMPLETE | 🚧 IN PROGRESS | 📋 PLANNING | ⏳ UPCOMING | ⚠️ SUPERSEDED.
+- ARCHIVING RULE: When a cycle is ✅ COMPLETE, move its full details to the `tech-status/` directory and leave a summary link here.
 -->
 
-### ✅ **{{CYCLE_TYPE}} {{CYCLE_NUMBER_1}}: {{CYCLE_NAME_1}}** 
+### ✅ **{{CYCLE_TYPE}} {{CYCLE_NUMBER_1}}: {{CYCLE_NAME_1}}** (Archived)
+- **Status:** COMPLETE
+- **Archive:** [View Detailed Implementation & Files](./tech-status/archived_cycle_{{CYCLE_NUMBER_1}}.md)
+- **Summary:** {{BRIEF_SUMMARY_OF_ACHIEVEMENT}}
+
+---
+
+### ✅ **{{CYCLE_TYPE}} {{CYCLE_NUMBER_X}}: {{CYCLE_NAME_X}}** 
 - **Status:** {{CYCLE_STATUS_1}}
 - **Completed:** {{COMPLETION_DATE_1}}
 - **Target Output:** {{CYCLE_OUTPUT_DESCRIPTION_1}}
@@ -105,7 +111,7 @@ CLINE INSTRUCTIONS:
 
 ### ⏳ **Upcoming {{CYCLE_TYPE_PLURAL}}**
 
-<!-- CLINE: List future planned work in order -->
+<!-- AI ASSISTANT: List future planned work in order -->
 
 **{{CYCLE_NUMBER_4}}: {{CYCLE_NAME_4}}**
 - {{SHORT_DESCRIPTION_4}}
@@ -115,14 +121,14 @@ CLINE INSTRUCTIONS:
 - {{SHORT_DESCRIPTION_5}}
 - **Dependencies:** {{DEPENDENCY_CYCLES_5}}
 
-<!-- CLINE: Add more as roadmap expands -->
+<!-- AI ASSISTANT: Add more as roadmap expands -->
 
 ---
 
 ## 🎯 Current Capabilities (What Actually Works)
 
 <!-- 
-CLINE: This section answers "What can the system do RIGHT NOW?"
+AI ASSISTANT: This section answers "What can the system do RIGHT NOW?"
 Update whenever capabilities are added or removed.
 Be specific and accurate - users rely on this for current state.
 -->
@@ -151,7 +157,7 @@ Be specific and accurate - users rely on this for current state.
 ## 🔧 Recently Fixed/Changed
 
 <!-- 
-CLINE: CRITICAL - Update this section immediately after every bug fix or change.
+AI ASSISTANT: CRITICAL - Update this section immediately after every bug fix or change.
 This tracks what was broken and how it was fixed.
 Follows Change Request Protocol from context_master_guide.md Section 5.
 
@@ -182,7 +188,7 @@ Format:
 - **Change ID:** {{MCP_CHANGE_ID}}
 - **Commit:** {{GIT_COMMIT_HASH}}
 
-<!-- CLINE: Repeat for each recent change, newest first -->
+<!-- AI ASSISTANT: Repeat for each recent change, newest first -->
 
 ### {{RECENT_DATE_2}}
 
@@ -194,13 +200,13 @@ Format:
 ## 🚧 Technical Debt & Known Issues
 
 <!-- 
-CLINE: Maintain three priority levels - High/Medium/Low
+AI ASSISTANT: Maintain three priority levels - High/Medium/Low
 Move items between sections as priorities change
 Delete items when resolved (move to Recently Fixed section)
 -->
 
 ### ✅ Recently Fixed ({{FIX_DATE_RANGE}})
-<!-- CLINE: Use strikethrough for fixed items, keep for 2 weeks then remove -->
+<!-- AI ASSISTANT: Use strikethrough for fixed items, keep for 2 weeks then remove -->
 1. ~~**{{FIXED_ISSUE_1}}:**~~ ✅ FIXED - {{FIX_SUMMARY_1}}
 2. ~~**{{FIXED_ISSUE_2}}:**~~ ✅ FIXED - {{FIX_SUMMARY_2}}
 
@@ -221,7 +227,7 @@ Delete items when resolved (move to Recently Fixed section)
 ## 📚 Architectural Patterns & Reusability
 
 <!-- 
-CLINE: Reference the patterns/ directory.
+AI ASSISTANT: Reference the patterns/ directory.
 This section provides quick access to established patterns.
 Update when new patterns are added or pattern status changes.
 -->
@@ -239,7 +245,7 @@ Canonical reference library for established patterns and templates. **Check this
 | **{{PATTERN_2_NAME}}** | ✅ {{PATTERN_2_STATUS}} | {{PATTERN_2_USE_CASE}} |
 | **{{PATTERN_3_NAME}}** | ⚠️ {{PATTERN_3_STATUS}} | {{PATTERN_3_USE_CASE}} |
 
-<!-- CLINE: Common statuses: Canonical, Established, Mandatory, Needs Harmonization, Experimental, Deprecated -->
+<!-- AI ASSISTANT: Common statuses: Canonical, Established, Mandatory, Needs Harmonization, Experimental, Deprecated -->
 
 ### **{{PRIMARY_PATTERN_CATEGORY}} Standard ({{STANDARD_DATE}})**
 
@@ -262,7 +268,7 @@ Canonical reference library for established patterns and templates. **Check this
 
 ### **Harmonization Backlog**
 
-<!-- CLINE: Track inconsistencies that need standardization -->
+<!-- AI ASSISTANT: Track inconsistencies that need standardization -->
 
 | Area | Priority | Estimated Effort |
 |------|----------|------------------|
@@ -278,7 +284,7 @@ This is how we maintain architectural consistency and prevent technical debt as 
 
 ## 📋 Version History & Milestones
 
-<!-- CLINE: Optional section - include if project uses semantic versioning or release tracking -->
+<!-- AI ASSISTANT: Optional section - include if project uses semantic versioning or release tracking -->
 
 ### {{VERSION_NUMBER}} ({{RELEASE_DATE}})
 - **Milestone:** {{MILESTONE_NAME}}
@@ -288,13 +294,13 @@ This is how we maintain architectural consistency and prevent technical debt as 
   - {{DELIVERABLE_3}}
 - **{{CYCLE_TYPE_PLURAL}} Completed:** {{CYCLES_IN_RELEASE}}
 
-<!-- CLINE: Repeat for each major version/milestone -->
+<!-- AI ASSISTANT: Repeat for each major version/milestone -->
 
 ---
 
 ## 🎯 Success Metrics
 
-<!-- CLINE: Optional section - include if project tracks quantitative success metrics -->
+<!-- AI ASSISTANT: Optional section - include if project tracks quantitative success metrics -->
 
 ### Development Velocity
 - **{{CYCLE_TYPE_PLURAL}} Completed:** {{TOTAL_CYCLES_COMPLETE}}
@@ -313,12 +319,22 @@ This is how we maintain architectural consistency and prevent technical debt as 
 
 ---
 
+---
+
+## 📂 Historical Records
+
+- **Completed Cycles:** [Browse tech-status/ directory](./tech-status/)
+- **Change History:** [Full history of fixes & refinements](./tech-status/change_history.md)
+
+---
+
 <!-- 
-CLINE MAINTENANCE CHECKLIST:
+AI ASSISTANT MAINTENANCE CHECKLIST:
 After EVERY development cycle completion, update:
 - [ ] Current Cycle number and status at top
-- [ ] Progress Tracking section with new status
-- [ ] Current Capabilities if functionality added
+- [ ] ARCHIVE completed cycle details to `tech-status/` 
+- [ ] Update summary and link in Progress Tracking section
+- [ ] Recent Capabilities if functionality added
 - [ ] Recently Fixed/Changed if bugs were addressed
 - [ ] Technical Debt if new issues identified
 - [ ] Patterns section if new patterns established

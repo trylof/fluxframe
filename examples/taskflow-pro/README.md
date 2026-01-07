@@ -34,7 +34,8 @@ This example demonstrates:
 taskflow-pro/
 ├── README.md                    # This file
 ├── project_brief.md             # Input to bootstrap process
-├── .clinerules                  # Generated Cline configuration
+├── AGENTS.md                    # Universal AI baseline
+├── CLAUDE.md                    # Claude Code extension
 │
 ├── project_docs/                # Generated documentation
 │   ├── context_master_guide.md # Master guide (filled template)
@@ -61,20 +62,20 @@ See [`project_brief.md`](project_brief.md) - a simple description of:
 
 ### 2. Bootstrap Process
 
-An AI assistant (Cline/Roo) would read:
+An AI assistant (e.g., Claude Code, Roo Code, Cline) would read:
 ```
 ai-assisted-dev-framework/BOOTSTRAP_INSTRUCTIONS.md
 ```
 
 And use the project brief to:
 - Fill all document templates
-- Generate `.clinerules` configuration
+- Generate `AGENTS.md` and tool-specific configuration
 - Create pattern library structure
 - Set up MCP server configuration
 
 ### 3. Generated Output
 
-Everything in `project_docs/` and the `.clinerules` file were generated from templates by filling in TaskFlow Pro-specific details.
+Everything in `project_docs/` and the configuration files were generated from templates by filling in TaskFlow Pro-specific details.
 
 ---
 
@@ -136,7 +137,7 @@ The three example patterns show:
 
 ### 3. API Contract Enforcement
 
-The `.clinerules` file enforces:
+The `AGENTS.md` file enforces:
 - Every endpoint must have Pydantic response model
 - Frontend must use auto-generated TypeScript types
 - No direct fetch() calls
@@ -205,7 +206,7 @@ This example does NOT include:
 
 From `ai-assisted-dev-framework/`:
 - ✅ Filled templates from `doc-templates/`
-- ✅ Generated `.clinerules` from `ai-rules/template.clinerules`
+- ✅ Generated `AGENTS.md` from `ai-rules/core/template.agents.md`
 - ✅ Pattern documentation following `pattern-library-system/`
 - ✅ Workflow from `development-cycles/`
 - ✅ Methodology from `PHILOSOPHY.md`
@@ -230,8 +231,8 @@ A: See any of the [`patterns/`](patterns/) files
 **Q: What should be in technical_status.md?**  
 A: See [`project_docs/technical_status.md`](project_docs/technical_status.md)
 
-**Q: How should .clinerules be configured?**  
-A: See [`.clinerules`](.clinerules)
+**Q: How should AI rules be configured?**  
+A: See [`AGENTS.md`](AGENTS.md) and [`CLAUDE.md`](CLAUDE.md)
 
 **Q: What level of detail in a project brief?**  
 A: See [`project_brief.md`](project_brief.md)

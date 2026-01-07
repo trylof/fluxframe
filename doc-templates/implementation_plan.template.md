@@ -1,7 +1,7 @@
 # {{PROJECT_NAME}} — Implementation Plan (Development Cycle Roadmap)
 
 <!-- 
-INSTRUCTIONS FOR CLINE:
+INSTRUCTIONS FOR AI ASSISTANT:
 This is your project's roadmap - the strategic plan for building the system incrementally.
 Replace {{PLACEHOLDERS}} based on project questionnaire responses.
 "Development Cycle" or "Iteration" NOT "Steel Thread" or "Sprint"
@@ -14,7 +14,7 @@ Keep the output-focused methodology intact.
 
 ## 1) Objectives and Non-Goals
 
-<!-- CLINE: Define what you're building and what you're explicitly NOT building -->
+<!-- AI ASSISTANT: Define what you're building and what you're explicitly NOT building -->
 
 - **Objectives**
   - {{OBJECTIVE_1}}
@@ -31,7 +31,7 @@ Keep the output-focused methodology intact.
 
 ## 2) Success Criteria (Initial Phases)
 
-<!-- CLINE: Define what "done" looks like for early cycles -->
+<!-- AI ASSISTANT: Define what "done" looks like for early cycles -->
 
 - **Phase A → B**
   - **Inputs:** {{INPUT_DESCRIPTION_PHASE_AB}}
@@ -45,7 +45,7 @@ Keep the output-focused methodology intact.
 
 ## 3) Domain Model ({{PRIMARY_DOMAIN}})
 
-<!-- CLINE: Define the core entities and relationships in your system -->
+<!-- AI ASSISTANT: Define the core entities and relationships in your system -->
 
 - **{{DOMAIN_CONCEPT_1}}**
   - {{DOMAIN_DESCRIPTION_1}}
@@ -56,10 +56,10 @@ Keep the output-focused methodology intact.
   - `{{ENTITY_2}}`: { {{ENTITY_2_FIELDS}} }
   - `{{ENTITY_3}}`: { {{ENTITY_3_FIELDS}} }
   - `{{ENTITY_4}}`: { {{ENTITY_4_FIELDS}} }
-  <!-- CLINE: Add more entities as needed -->
+  <!-- AI ASSISTANT: Add more entities as needed -->
 
 - **{{DATA_STORE_TYPE}} Mapping** (if applicable)
-  <!-- CLINE: For graph databases, define relationships. For SQL, define foreign keys. For NoSQL, define document structure. -->
+  <!-- AI ASSISTANT: For graph databases, define relationships. For SQL, define foreign keys. For NoSQL, define document structure. -->
   
   {{RELATIONSHIP_CATEGORY_1}}:
   - `(:{{NODE_TYPE_1}})-[:{{RELATIONSHIP_TYPE_1}}]->(:{{NODE_TYPE_2}})`
@@ -71,7 +71,7 @@ Keep the output-focused methodology intact.
 
 ## 4) Inputs and Feasibility
 
-<!-- CLINE: What data/inputs does your system process? -->
+<!-- AI ASSISTANT: What data/inputs does your system process? -->
 
 - **Short-run feasible inputs**
   - {{INPUT_SOURCE_1}}
@@ -84,7 +84,7 @@ Keep the output-focused methodology intact.
 
 ## 5) Architecture Overview ({{SYSTEM_NAME}})
 
-<!-- CLINE: High-level architecture - how the system works -->
+<!-- AI ASSISTANT: High-level architecture - how the system works -->
 
 {{ARCHITECTURE_DESCRIPTION}}
 
@@ -102,7 +102,7 @@ Keep the output-focused methodology intact.
    - **Goal:** {{PHASE_3_GOAL}}
    - **Process:** {{PHASE_3_PROCESS_DESCRIPTION}}
 
-<!-- CLINE: Add more phases as needed -->
+<!-- AI ASSISTANT: Add more phases as needed -->
 
 4. **Persistence & Serving**
    - Persist {{DATA_ENTITIES}} to {{DATABASE_TECHNOLOGY}}
@@ -116,7 +116,7 @@ Keep the output-focused methodology intact.
 
 ## 6) {{TECHNICAL_APPROACH_NAME}} — Principles
 
-<!-- CLINE: Core technical principles that guide implementation decisions -->
+<!-- AI ASSISTANT: Core technical principles that guide implementation decisions -->
 
 - **{{PRINCIPLE_1_NAME}}:** {{PRINCIPLE_1_DESCRIPTION}}
 - **{{PRINCIPLE_2_NAME}}:** {{PRINCIPLE_2_DESCRIPTION}}
@@ -129,7 +129,7 @@ Keep the output-focused methodology intact.
 
 ## 7) Technology Choices (initial, pluggable)
 
-<!-- CLINE: Specific technologies - should be swappable via abstractions -->
+<!-- AI ASSISTANT: Specific technologies - should be swappable via abstractions -->
 
 - **{{TECH_CATEGORY_1}}:** {{TECH_CHOICE_1}} {{FALLBACK_OPTION_1}}
 - **{{TECH_CATEGORY_2}}:** {{TECH_CHOICE_2}} {{INTEGRATION_DETAILS_2}}
@@ -139,7 +139,7 @@ Keep the output-focused methodology intact.
 
 ## 8) Phased Plan (Output-Focused Development Cycles)
 
-<!-- CLINE: The heart of the plan - incremental delivery -->
+<!-- AI ASSISTANT: The heart of the plan - incremental delivery -->
 
 This plan breaks the work into small, iterative development cycles. Each cycle is designed to produce a tangible, visible change in the application's output, allowing for rapid feedback and continuous progress.
 
@@ -156,7 +156,7 @@ Each Development Cycle is only considered **COMPLETE** when ALL of these criteri
 
 **Rule: No cycle is complete until users can see the results in the application and the documentation reflects the current technical state.**
 
-<!-- CLINE: Define each development cycle below. Use consistent format. -->
+<!-- AI ASSISTANT: Define each development cycle below. Use consistent format. -->
 
 ---
 
@@ -198,7 +198,7 @@ Each Development Cycle is only considered **COMPLETE** when ALL of these criteri
 - [ ] {{TASK_1_2_2}}
 - [ ] {{TASK_1_2_3}}
 
-<!-- CLINE: Add technical implementation details if helpful -->
+<!-- AI ASSISTANT: Add technical implementation details if helpful -->
 
 #### **{{CYCLE_TYPE}} 1.2: Technical Implementation Details**
 
@@ -219,13 +219,13 @@ Each Development Cycle is only considered **COMPLETE** when ALL of these criteri
 
 ### {{CYCLE_TYPE}} 1.3: {{CYCLE_1_3_NAME}} {{STATUS_EMOJI_1_3}}
 
-<!-- CLINE: If a cycle is superseded/deprecated, mark clearly -->
+<!-- AI ASSISTANT: If a cycle is superseded/deprecated, mark clearly -->
 *   **Status:** ⚠️ SUPERSEDED
 *   **Action:** {{SUPERSEDED_REASON_1_3}}
 
 ---
 
-<!-- CLINE: Continue with more cycles as needed -->
+<!-- AI ASSISTANT: Continue with more cycles as needed -->
 
 ### {{CYCLE_TYPE}} 1.4: {{CYCLE_1_4_NAME}}
 <!-- Same structure as 1.1/1.2 -->
@@ -233,13 +233,13 @@ Each Development Cycle is only considered **COMPLETE** when ALL of these criteri
 ### {{CYCLE_TYPE}} 1.5: {{CYCLE_1_5_NAME}}
 <!-- Same structure -->
 
-<!-- CLINE: Add as many cycles as needed for the roadmap -->
+<!-- AI ASSISTANT: Add as many cycles as needed for the roadmap -->
 
 ---
 
 ## 9) {{INTEGRATION_PHILOSOPHY_NAME}} (If Applicable)
 
-<!-- CLINE: If project has specific design philosophies (e.g., "Dashboard-First", "API-First"), document here -->
+<!-- AI ASSISTANT: If project has specific design philosophies (e.g., "Dashboard-First", "API-First"), document here -->
 
 **{{PHILOSOPHY_NAME}}:** {{PHILOSOPHY_DESCRIPTION}}
 
@@ -265,7 +265,7 @@ From {{STARTING_CYCLE}} onward, **EVERY new feature must:**
 
 ## 10) Risks & Mitigations
 
-<!-- CLINE: Identify technical and project risks with mitigation strategies -->
+<!-- AI ASSISTANT: Identify technical and project risks with mitigation strategies -->
 
 | Risk | Mitigation Strategy |
 |------|---------------------|
@@ -278,7 +278,7 @@ From {{STARTING_CYCLE}} onward, **EVERY new feature must:**
 
 ## 11) Future Phases ({{CYCLE_TYPE}} 2.0+)
 
-<!-- CLINE: Optional - longer-term vision beyond initial roadmap -->
+<!-- AI ASSISTANT: Optional - longer-term vision beyond initial roadmap -->
 
 ### Advanced Capabilities (Post-{{MILESTONE_VERSION}})
 
@@ -290,7 +290,7 @@ From {{STARTING_CYCLE}} onward, **EVERY new feature must:**
 
 ## 12) Alignment with Project Documents
 
-<!-- CLINE: Critical - ensure this plan stays in sync with other docs -->
+<!-- AI ASSISTANT: Critical - ensure this plan stays in sync with other docs -->
 
 This implementation plan MUST align with:
 - **`{{TECH_BLUEPRINT_FILE}}`** - Overall system architecture and vision
@@ -307,7 +307,7 @@ This implementation plan MUST align with:
 ---
 
 <!-- 
-CLINE FINAL CHECKLIST:
+AI ASSISTANT FINAL CHECKLIST:
 - [ ] All {{PLACEHOLDERS}} replaced with project-specific values
 - [ ] Cycle numbering is sequential and consistent
 - [ ] Each cycle has clear inputs, outputs, and focus

@@ -6,7 +6,7 @@
 
 ## Purpose
 
-This questionnaire helps Cline determine the appropriate API contract approach for your project during bootstrap. The chosen approach will be enforced via `.clinerules` and documented in `api_contract_standards.md`.
+This questionnaire helps determine the appropriate API contract approach for your project during bootstrap. The chosen approach will be enforced via your AI agent configuration (e.g., `AGENTS.md`) and documented in `api_contract_standards.md`.
 
 ---
 
@@ -270,7 +270,7 @@ Proceed with this approach? (yes/no/show alternatives)"
 
 **Files created:**
 - `project_docs/api_contract_standards.md` (OpenAPI version)
-- `.clinerules` (with OpenAPI enforcement rules)
+- `AGENTS.md` (with OpenAPI enforcement rules)
 - `backend/models/api_responses.py` (example Pydantic models)
 - `frontend/lib/apiClient.ts` (typed API client template)
 - `frontend/types/api.ts` (placeholder for generated types)
@@ -285,7 +285,7 @@ Proceed with this approach? (yes/no/show alternatives)"
 
 **Files created:**
 - `project_docs/api_contract_standards.md` (GraphQL version)
-- `.clinerules` (with GraphQL enforcement rules)
+- `AGENTS.md` (with GraphQL enforcement rules)
 - `schema.graphql` (example schema)
 - `frontend/generated/graphql.ts` (placeholder)
 - Configuration for code generation
@@ -298,7 +298,7 @@ Proceed with this approach? (yes/no/show alternatives)"
 
 **Files created:**
 - `project_docs/api_contract_standards.md` (JSON Schema version)
-- `.clinerules` (with JSON Schema rules)
+- `AGENTS.md` (with JSON Schema rules)
 - `schemas/` directory with examples
 - Validation setup
 
@@ -308,7 +308,7 @@ Proceed with this approach? (yes/no/show alternatives)"
 
 ### If Custom Selected:
 
-**Cline prompts:**
+**AI Agent prompts:**
 ```
 "You've chosen a custom API contract approach.
 Please provide:
@@ -322,7 +322,7 @@ I'll document your answers in api_contract_standards.md"
 
 **Files created:**
 - `project_docs/api_contract_standards.md` (custom approach documented)
-- `.clinerules` (with custom rules user defined)
+- `AGENTS.md` (with custom rules user defined)
 
 ---
 

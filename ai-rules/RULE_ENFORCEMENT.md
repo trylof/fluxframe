@@ -6,7 +6,7 @@
 
 ## The Core Insight
 
-**Rules aren't just for "big features." They apply to EVERY interaction with Cline:**
+**Rules aren't just for "big features." They apply to EVERY interaction with your AI coding assistant:**
 
 - ✅ Bug fixes
 - ✅ Simple changes
@@ -88,22 +88,9 @@ After 50 "small changes":
 - Refactoring
 - EVERYTHING
 
-**Why:** Without context, even "simple" changes cause problems
+**Why:** Without context, even "simple" changes cause problems.
 
-**Example:**
-```
-Without context:
-"Fix the login bug"
-[Changes auth.js]
-[Breaks admin login - didn't know about separate auth path]
-
-With context:
-"Fix the login bug"
-[Checks implementation status]
-[Sees: "Admin uses separate auth flow - see patterns/"]
-[Checks pattern]
-[Fixes correctly for both paths]
-```
+---
 
 ### 2. Pattern Checking
 
@@ -119,23 +106,9 @@ MCP: check_pattern_exists(feature_description)
 - Refactoring code
 - "Quick changes"
 
-**Why:** Prevents reinventing wheels and violating established patterns
+**Why:** Prevents reinventing wheels and violating established patterns.
 
-**Example:**
-```
-Task: "Add loading spinner to button"
-
-Without pattern check:
-[Writes inline CSS]
-[Uses setTimeout]
-[Creates 5th different loading implementation]
-
-With pattern check:
-[Checks patterns]
-[Finds: "Loading States Pattern - use <LoadingButton> component"]
-[Reuses established component]
-[Consistent with rest of app]
-```
+---
 
 ### 3. Documentation After Validation
 
@@ -147,23 +120,9 @@ With pattern check:
 - All refactoring
 - Even "trivial" fixes
 
-**Why:** Prevents documenting wrong solutions
+**Why:** Prevents documenting wrong solutions.
 
-**Example:**
-```
-Wrong order:
-[Make change]
-[Document change]
-[User reports: "Still broken"]
-[Fix again]
-[Document is now wrong]
-
-Right order:
-[Make change]
-[Get user confirmation]
-[THEN document]
-[Documentation is accurate]
-```
+---
 
 ### 4. Complete Documentation Updates
 
@@ -176,64 +135,10 @@ Right order:
 - EVERYTHING
 
 **Mandatory updates:**
-- technical_status.md (ALWAYS)
-- patterns/ (if applicable)
-- workflows/ (if conceptual logic changed)
+- `technical_status.md` (ALWAYS)
+- `patterns/` (if applicable)
+- `workflows/` (if conceptual logic changed)
 - Other project docs (as needed)
-
-**Why:** Incomplete docs = incomplete knowledge
-
----
-
-## Common "Exception" Requests
-
-### "It's just a typo"
-
-**Seems harmless, but:**
-- Typo in variable name? Might be referenced elsewhere
-- Typo in documentation? Needs tracking for search/replace
-- Typo in config? Could break deployment
-
-**Apply rules:  **
-- Check if typo fix affects patterns
-- Update documentation
-- Validate no side effects
-
-### "Emergency production fix"
-
-**High pressure, but:**
-- Emergency fixes ESPECIALLY need documentation
-- Root cause MUST be understood
-- Quick fix without understanding → recurs
-
-**Apply rules:**
-- Maybe expedited, but NOT skipped
-- Document immediately (while fresh)
-- Plan proper fix if emergency was bandaid
-
-### "I'm just experimenting"
-
-**Exploration mode, but:**
-- Experiments that work become code
-- Undocumented experiments = future confusion
-- "Temporary" code becomes permanent
-
-**Apply rules:**
-- If experiment works → document it
-- If experiment fails → document why
-- Pattern library benefits from both
-
-### "It's just refactoring"
-
-**Seems internal-only, but:**
-- Refactoring changes code structure
-- Might affect patterns
-- Needs documentation for future devs
-
-**Apply rules:**
-- Check if refactor establishes new pattern
-- Document architectural decision
-- Update affected docs
 
 ---
 
@@ -251,16 +156,7 @@ Right order:
 1. **Consistency compounds** - 100 rule-following changes >>> 100 ad-hoc changes
 2. **Future you thanks you** - 3 months later, you'll need that documentation
 3. **Team scales** - Rules enable collaboration at scale
-4. **AI needs context** - Cline is only as good as the docs
-
-### The Truth
-
-**Skipping rules feels faster in the moment.**  
-**Following rules IS faster in aggregate.**
-
-After 10 changes:
-- With rules: 10× documented, consistent changes
-- Without rules: 10× inconsistent changes + time cleaning up
+4. **AI needs context** - Your assistant is only as good as the docs
 
 ---
 
@@ -273,9 +169,9 @@ After 10 changes:
 - `validate_change_resolution` - Requires user confirmation first
 - `validate_cycle_completion` - Checks ALL criteria
 
-### 2. Clinerules Configuration
+### 2. Configuration (`AGENTS.md` & Tool-Specific)
 
-**Rules embedded in .clinerules:**
+**Rules embedded in your AI config:**
 - Session start protocol (mandatory)
 - Pattern checking (before any code change)
 - Documentation sequence (after validation)
@@ -286,141 +182,6 @@ After 10 changes:
 - "Did you check patterns?"
 - "Update technical_status.md"
 - "Wait for my confirmation first"
-
-### 4. Self-Enforcement
-
-**Cline learns discipline:**
-- Consistent reinforcement
-- Validation tools
-- Clear guidance
-
----
-
-## Benefits of Universal Rule Application
-
-### For Individual Developers
-
-- **Confidence** - Know your changes are sound
-- **Speed** - Reuse patterns, don't reinvent
-- **Protection** - Rules prevent common mistakes
-
-### For Teams
-
-- **Consistency** - Everyone follows same practices
-- **Knowledge Sharing** - Patterns documented and reused
-- **Onboarding** - New devs learn from patterns
-
-### For Codebase
-
-- **Maintainability** - Future changes easier
-- **Reliability** - Fewer surprise bugs
-- **Scalability** - Architecture stays coherent
-
-### For AI Assistance
-
-- **Context** - Cline always has current state
-- **Patterns** - Cline reuses proven solutions
-- **Quality** - Cline maintains standards
-
----
-
-## Real-World Scenarios
-
-### Scenario 1: "Quick CSS Fix"
-
-**Without Rules:**
-```
-User: "Button needs more padding"
-Cline: [Adds inline style]
-Done!
-
-Result:
-- Works ✓
-- But now 3 different padding approaches exist
-- Inconsistent with design system
-- Pattern violated
-```
-
-**With Rules:**
-```
-User: "Button needs more padding"
-Cline: [Checks patterns]
-Cline: Found "UI Styling Pattern - use design tokens"
-Cline: [Updates design token, applies throughout]
-Cline: [Updates pattern doc with new token]
-
-Result:
-- Works ✓
-- Consistent with system ✓
-- Pattern reinforced ✓
-- Other buttons also improved ✓
-```
-
-### Scenario 2: "Authentication Bug"
-
-**Without Rules:**
-```
-User: "Login broken"
-Cline: [Adds random fix]
-Cline: "Try now"
-User: "Still broken"
-Cline: [Adds another fix]
-...repeat 3x...
-
-Result:
-- Eventually works
-- Nobody knows why
-- Technical debt += multiple attempted fixes
-```
-
-**With Rules:**
-```
-User: "Login broken"
-Cline: [Checks implementation status]
-Cline: [Checks auth patterns]
-Cline: [Starts change request, analyzes root cause]
-Cline: "The JWT validation is failing because..."
-Cline: [Makes targeted fix]
-User: "That works!"
-Cline: [Documents root cause, solution, updates status]
-
-Result:
-- Works ✓
-- Team understands why ✓
-- Knowledge preserved ✓
-- Won't recur ✓
-```
-
-### Scenario 3: "Variable Rename"
-
-**Without Rules:**
-```
-User: "Rename 'data' to 'userData'"
-Cline: [Find & replace]
-Done!
-
-Result:
-- Renamed ✓
-- But broke API contract
-- Frontend expects 'data'
-- Production down ✗
-```
-
-**With Rules:**
-```
-User: "Rename 'data' to 'userData'"
-Cline: [Checks patterns - finds API contract pattern]
-Cline: "This variable is in API response. Need to:"
-Cline: "1. Update Pydantic model"
-Cline: "2. Regenerate frontend types"
-Cline: "3. Update all consumers"
-Cline: "Proceed?"
-
-Result:
-- Complete change ✓
-- No breakage ✓
-- Process followed ✓
-```
 
 ---
 
@@ -445,7 +206,6 @@ Result:
 - You don't know which "tiny change" will cause problems
 - Consistency only works if it's always applied
 - Documentation only helps if it's complete
-- Patterns only scale if they're followed
 - Future you will thank present you
 
 **Rules aren't bureaucracy. They're how you build software that lasts.**
@@ -453,6 +213,7 @@ Result:
 ---
 
 **Related Documents:**
-- `template.clinerules` - The actual rules
+- `AGENTS.md` - The actual baseline rules
 - `CUSTOMIZATION_GUIDE.md` - How to adapt for your project
-- `../development-cycles/cycle_workflow.md` - Full workflow details
+- `README.md` - Architecture overview
+
