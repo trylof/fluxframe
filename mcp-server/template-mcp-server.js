@@ -304,6 +304,55 @@ class ProjectDocsMCPServer {
               required: ['endpoints_modified'],
             },
           },
+          {
+            name: 'get_logs',
+            description: 'Retrieve logs from configured sources. Setup status and available sources are documented in log_access_setup.md. Use for debugging errors, tracing issues, and understanding system behavior.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                source: {
+                  type: 'string',
+                  enum: ['app', 'cicd', 'database', 'infra', 'docker', 'file'],
+                  description: 'Log source type: app (application logs), cicd (CI/CD pipeline), database (DB logs), infra (infrastructure), docker (container logs), file (log files)',
+                },
+                environment: {
+                  type: 'string',
+                  enum: ['local', 'test', 'staging', 'production'],
+                  description: 'Environment to query logs from',
+                },
+                query: {
+                  type: 'string',
+                  description: 'Search query or filter pattern (grep-style or platform-specific)',
+                },
+                lines: {
+                  type: 'number',
+                  description: 'Number of log lines to retrieve (default: 100)',
+                },
+                since: {
+                  type: 'string',
+                  description: 'Time range: "1h", "30m", "2h", or ISO timestamp',
+                },
+                service: {
+                  type: 'string',
+                  description: 'Specific service/container name (for multi-service setups)',
+                },
+                level: {
+                  type: 'string',
+                  enum: ['all', 'error', 'warn', 'info', 'debug'],
+                  description: 'Filter by log level',
+                },
+              },
+              required: ['source'],
+            },
+          },
+          {
+            name: 'get_log_access_status',
+            description: 'Check which log sources are configured and their current access status. Use this to understand what log access is available before attempting to query logs.',
+            inputSchema: {
+              type: 'object',
+              properties: {},
+            },
+          },
         ],
       };
     });
@@ -342,6 +391,12 @@ class ProjectDocsMCPServer {
         
         case 'validate_api_contracts':
           return await this.validateAPIContracts(args.endpoints_modified);
+        
+        case 'get_logs':
+          return await this.getLogs(args);
+        
+        case 'get_log_access_status':
+          return await this.getLogAccessStatus();
         
         default:
           throw new Error(`Unknown tool: ${name}`);
@@ -1047,6 +1102,243 @@ This check applies to:
         {
           type: 'text',
           text: checklist,
+        },
+      ],
+    };
+  }
+
+  async getLogs(args) {
+    const { source, environment, query, lines, since, service, level } = args;
+    
+    // Try to read log access configuration
+    let logConfig = null;
+    try {
+      const configPath = path.join(PROJECT_DOCS_DIR, 'log_access_setup.md');
+      const configContent = await fs.readFile(configPath, 'utf-8');
+      logConfig = configContent;
+    } catch (err) {
+      // Config file doesn't exist
+    }
+
+    if (!logConfig) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `⚠️ LOG ACCESS NOT CONFIGURED\n\n` +
+                  `Log access has not been set up for this project.\n\n` +
+                  `**To configure log access:**\n` +
+                  `1. During bootstrap: Answer Q11 (Observability & Log Access) with option 1 or 2\n` +
+                  `2. After bootstrap: Create \`${PROJECT_DOCS_DIR}/log_access_setup.md\` with your configuration\n\n` +
+                  `**Manual log checking guidance:**\n` +
+                  `For source "${source}" in "${environment || 'local'}" environment:\n\n` +
+                  this.getManualLogGuidance(source, environment || 'local'),
+          },
+        ],
+      };
+    }
+
+    // Parse configuration to find the appropriate log access method
+    const sourceConfig = this.parseLogSourceConfig(logConfig, source, environment || 'local');
+    
+    if (!sourceConfig || sourceConfig.status !== 'configured') {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `⚠️ LOG SOURCE NOT CONFIGURED\n\n` +
+                  `Source: ${source}\n` +
+                  `Environment: ${environment || 'local'}\n\n` +
+                  `This log source is not configured in log_access_setup.md.\n\n` +
+                  `**Manual log checking guidance:**\n` +
+                  this.getManualLogGuidance(source, environment || 'local') +
+                  `\n\n**To add this source:**\n` +
+                  `Update \`${PROJECT_DOCS_DIR}/log_access_setup.md\` with configuration for ${source} logs.`,
+          },
+        ],
+      };
+    }
+
+    // Build the log query information
+    const queryInfo = {
+      source,
+      environment: environment || 'local',
+      method: sourceConfig.method,
+      command: sourceConfig.command,
+      lines: lines || 100,
+      since: since || '1h',
+      query: query || '',
+      service: service || '',
+      level: level || 'all',
+    };
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `📋 LOG QUERY READY\n\n` +
+                `**Source:** ${queryInfo.source}\n` +
+                `**Environment:** ${queryInfo.environment}\n` +
+                `**Method:** ${queryInfo.method}\n\n` +
+                `**Command to execute:**\n\`\`\`bash\n${this.buildLogCommand(queryInfo)}\n\`\`\`\n\n` +
+                `**Parameters:**\n` +
+                `- Lines: ${queryInfo.lines}\n` +
+                `- Since: ${queryInfo.since}\n` +
+                `- Filter: ${queryInfo.query || '(none)'}\n` +
+                `- Service: ${queryInfo.service || '(all)'}\n` +
+                `- Level: ${queryInfo.level}\n\n` +
+                `⚠️ **Note:** Execute this command in the terminal to retrieve logs.\n` +
+                `The AI assistant cannot execute shell commands directly for security reasons.`,
+        },
+      ],
+    };
+  }
+
+  parseLogSourceConfig(configContent, source, environment) {
+    // Simple parser - looks for source configuration in markdown tables
+    const lines = configContent.split('\n');
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      // Look for table rows that match source and environment
+      if (line.includes('|') && line.toLowerCase().includes(source.toLowerCase())) {
+        const cells = line.split('|').map(c => c.trim());
+        // Check if environment matches
+        if (cells.some(c => c.toLowerCase().includes(environment.toLowerCase()))) {
+          // Found a match - try to extract method
+          const methodCell = cells.find(c => 
+            c.includes('docker') || c.includes('aws') || c.includes('gcloud') || 
+            c.includes('kubectl') || c.includes('gh ') || c.includes('tail')
+          );
+          
+          if (methodCell) {
+            return {
+              status: 'configured',
+              method: methodCell,
+              command: methodCell,
+            };
+          }
+        }
+      }
+    }
+    
+    return null;
+  }
+
+  buildLogCommand(queryInfo) {
+    const { source, environment, method, lines, since, query, service, level } = queryInfo;
+    
+    // Build command based on source type
+    switch (source) {
+      case 'docker':
+        let dockerCmd = `docker logs`;
+        if (service) dockerCmd += ` ${service}`;
+        else dockerCmd += ` <container_name>`;
+        dockerCmd += ` --tail ${lines}`;
+        if (since) dockerCmd += ` --since ${since}`;
+        if (query) dockerCmd += ` 2>&1 | grep "${query}"`;
+        return dockerCmd;
+        
+      case 'file':
+        let tailCmd = `tail -n ${lines}`;
+        if (query) tailCmd += ` <log_file> | grep "${query}"`;
+        else tailCmd += ` <log_file>`;
+        return tailCmd;
+        
+      case 'cicd':
+        if (method && method.includes('gh')) {
+          return `gh run view --log`;
+        }
+        return `# Check your CI/CD platform for logs\n# ${method || 'Configure CI/CD log access'}`;
+        
+      case 'app':
+        if (environment === 'local') {
+          return `# Check application output in terminal\n# Or: tail -f logs/app.log`;
+        }
+        return `# ${method || 'Configure app log access for ' + environment}`;
+        
+      case 'database':
+        return `# Database logs vary by type\n# PostgreSQL: tail -f /var/log/postgresql/\n# MySQL: tail -f /var/log/mysql/`;
+        
+      case 'infra':
+        if (method && method.includes('kubectl')) {
+          return `kubectl logs ${service || '<pod_name>'} --tail=${lines}`;
+        }
+        return `# ${method || 'Configure infrastructure log access'}`;
+        
+      default:
+        return `# Configure log access for source: ${source}`;
+    }
+  }
+
+  getManualLogGuidance(source, environment) {
+    const guidance = {
+      docker: `**Docker logs:**\n\`\`\`bash\ndocker logs <container_name> --tail 100\ndocker logs -f <container_name>  # follow mode\n\`\`\``,
+      
+      file: `**File logs:**\n\`\`\`bash\ntail -n 100 <log_file>\ntail -f <log_file>  # follow mode\ngrep "ERROR" <log_file>  # filter errors\n\`\`\``,
+      
+      cicd: `**CI/CD logs:**\n- GitHub Actions: \`gh run view --log\` or check Actions tab\n- GitLab CI: Check Pipelines in GitLab UI\n- CircleCI: \`circleci <command>\` or web UI`,
+      
+      app: environment === 'local' 
+        ? `**Local app logs:**\n- Check terminal output where app is running\n- Look for log files in \`logs/\` directory\n- Use \`npm run dev 2>&1 | tee app.log\` to capture`
+        : `**${environment} app logs:**\n- AWS: \`aws logs tail <log-group>\`\n- GCP: \`gcloud logging read\`\n- Azure: \`az monitor log-analytics\``,
+      
+      database: `**Database logs:**\n- PostgreSQL: \`/var/log/postgresql/\` or \`pg_stat_statements\`\n- MySQL: \`/var/log/mysql/\` or slow query log\n- MongoDB: \`db.currentOp()\` or profiler`,
+      
+      infra: `**Infrastructure logs:**\n- Kubernetes: \`kubectl logs <pod>\`\n- AWS: CloudWatch Logs\n- Docker: \`docker compose logs\``,
+    };
+    
+    return guidance[source] || `No specific guidance for "${source}" logs. Check your platform documentation.`;
+  }
+
+  async getLogAccessStatus() {
+    // Try to read log access configuration
+    let logConfig = null;
+    try {
+      const configPath = path.join(PROJECT_DOCS_DIR, 'log_access_setup.md');
+      logConfig = await fs.readFile(configPath, 'utf-8');
+    } catch (err) {
+      // Config file doesn't exist
+    }
+
+    if (!logConfig) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `📋 LOG ACCESS STATUS: NOT CONFIGURED\n\n` +
+                  `Log access has not been set up for this project.\n\n` +
+                  `**Available options:**\n\n` +
+                  `1. **Configure during bootstrap:**\n` +
+                  `   - Answer Q11 (Observability & Log Access) with option 1 (full) or 2 (local)\n\n` +
+                  `2. **Configure manually:**\n` +
+                  `   - Create \`${PROJECT_DOCS_DIR}/log_access_setup.md\`\n` +
+                  `   - Document your log sources and access methods\n\n` +
+                  `3. **Use manual guidance:**\n` +
+                  `   - The \`get_logs\` tool will provide manual instructions\n` +
+                  `   - User can copy-paste commands to retrieve logs\n\n` +
+                  `**Potential log sources** (based on typical setups):\n` +
+                  `- Local: Docker logs, file logs, app console\n` +
+                  `- CI/CD: GitHub Actions, GitLab CI, etc.\n` +
+                  `- Cloud: CloudWatch, Cloud Logging, Azure Monitor\n` +
+                  `- Database: Query logs, slow query logs\n\n` +
+                  `See \`greenfield_workflow.md\` Step 9.6 for setup instructions.`,
+          },
+        ],
+      };
+    }
+
+    // Parse and summarize the configuration
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `📋 LOG ACCESS STATUS: CONFIGURED\n\n` +
+                `Configuration file: \`${PROJECT_DOCS_DIR}/log_access_setup.md\`\n\n` +
+                `**Current Configuration:**\n\n${logConfig}\n\n` +
+                `**Usage:**\n` +
+                `Use \`get_logs\` tool with appropriate source and environment parameters.\n\n` +
+                `Example: \`get_logs(source="docker", environment="local", lines=100)\``,
         },
       ],
     };

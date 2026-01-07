@@ -647,6 +647,267 @@ See `context_master_guide.md` Section 4 for pattern documentation guidelines.
 
 ---
 
+### Step 9.5: Research Browser Automation Capabilities (RECOMMENDED)
+
+**This step is RECOMMENDED for web projects where browser automation is desired.**
+
+**Why Research:**
+Browser automation capabilities are evolving rapidly. Features documented today may be outdated within months. Research ensures the user gets the most current capabilities.
+
+**When to Offer Research:**
+- User selected browser automation
+- User selected emerging tools (Cursor, Antigravity, OpenAI tools)
+- User asked about browser features
+
+**Research Process:**
+
+```markdown
+## Browser Automation Research
+
+Before finalizing your browser setup, I can research the current capabilities 
+of your selected tools. This field evolves rapidly.
+
+**Selected tools to research:**
+- [LIST USER'S TOOLS]
+
+**Research will cover:**
+- Current browser automation features
+- Recent announcements (last 3-6 months)
+- Setup requirements
+- Known limitations
+
+Proceed with research? (yes/skip)
+```
+
+**If User Chooses Research:**
+
+1. **Search Official Documentation:**
+   - Claude Code: `code.claude.com/docs` (look for Chrome/browser sections)
+   - Cursor: `cursor.com/docs`, `cursor.com/changelog`
+   - Cline: GitHub releases, VS Code marketplace
+   - Roo Code: GitHub releases (roo-cline)
+   - Antigravity/Gemini: Google AI docs, Google I/O announcements
+   - OpenAI: `platform.openai.com`, OpenAI blog
+
+2. **Search for Recent Announcements:**
+   - Tool's official blog/changelog
+   - Twitter/X announcements from official accounts
+   - Major tech news (for significant feature launches)
+
+3. **Community Sources (verify carefully):**
+   - Reddit (r/cursor, r/ClaudeAI, etc.)
+   - GitHub issues/discussions
+
+4. **Compile Research Report:**
+
+```markdown
+## Browser Capabilities Research Results
+
+**Research Date:** [TODAY'S DATE]
+**Tools Researched:** [LIST]
+
+---
+
+### Claude Code
+**Browser Status:** ✅ Chrome Integration (Beta)
+**Current Capabilities:** [as documented]
+**Recent Changes:** [any found]
+**Setup Requirements:** 
+- Chrome browser
+- Claude in Chrome extension v1.0.36+
+- Claude Code v2.0.73+
+- Paid Claude plan
+**Recommendation:** [Enable/Disable based on user's needs]
+
+---
+
+### Cursor
+**Browser Status:** [RESEARCH RESULT]
+**Current Capabilities:** [findings]
+**Recent Changes:** [findings]
+**Setup Requirements:** [findings]
+**Recommendation:** [based on findings]
+
+---
+
+### [Other Selected Tools...]
+
+---
+
+## Summary
+
+Based on current research:
+| Tool | Browser Support | Recommendation |
+|------|-----------------|----------------|
+| Claude Code | ✅ Full | Enable Chrome |
+| Cursor | [status] | [recommendation] |
+| ... | ... | ... |
+
+**Recommended Configuration:**
+[Based on research, provide specific recommendations]
+
+Proceed with these settings? (yes/modify)
+```
+
+**Store Research Results:**
+- Save to `{{DOCS_DIR}}/browser_automation_research.md`
+- Include research date for future reference
+- Can be re-run periodically to check for updates
+
+---
+
+### Step 9.6: Configure Log Access (OPTIONAL)
+
+**This step is OPTIONAL based on user's Q11 answer (Observability & Log Access).**
+
+**When to Execute:**
+- User chose option 1 (Full setup) or option 2 (Local only) in Q11
+- Skip if user chose option 3 (Later) or option 4 (No)
+
+**Purpose:**
+Configure AI assistant access to logs from various environments for debugging and troubleshooting.
+
+---
+
+#### If User Chose Option 1 (Full Setup):
+
+**Step 9.6.1: Research Log Access Options**
+
+Based on user's infrastructure answers (Q8-Q10), research available log access methods:
+
+```markdown
+## Log Access Research
+
+Based on your infrastructure setup, I'll research the best ways to access logs:
+
+**Your Environments:**
+| Environment | Platform | Research Focus |
+|-------------|----------|----------------|
+| Development | {{DEV_PLATFORM}} | Local log access methods |
+| Testing/CI | {{TEST_PLATFORM}} | CI/CD log APIs |
+| Staging | {{STAGING_PLATFORM}} | Cloud logging access |
+| Production | {{PROD_PLATFORM}} | Cloud logging access |
+
+**Additional Sources:**
+| Source | Your Setup | Research Focus |
+|--------|------------|----------------|
+| CI/CD | {{CICD_PLATFORM}} | Pipeline log APIs |
+| Database | {{DATABASE_TECHNOLOGY}} | Query/error log access |
+| Monitoring | {{MONITORING_SETUP}} | APM/observability APIs |
+
+Researching now...
+```
+
+**Step 9.6.2: Research by Platform Type**
+
+Research approaches vary by platform. For each platform the user has:
+
+**Cloud Providers:**
+- AWS: CloudWatch Logs, `aws logs` CLI, IAM permissions needed
+- GCP: Cloud Logging, `gcloud logging` CLI, service account needed
+- Azure: Azure Monitor, `az monitor` CLI, RBAC permissions needed
+
+**CI/CD Platforms:**
+- GitHub Actions: `gh run view --log`, API tokens
+- GitLab CI: API access, personal access tokens
+- CircleCI: API v2, project tokens
+- Jenkins: Script console access, API tokens
+
+**Containerization:**
+- Docker: `docker logs`, local access
+- Kubernetes: `kubectl logs`, cluster access, service account
+
+**Log Aggregators:**
+- Datadog: API key, log query API
+- Splunk: API access, search commands
+- ELK/OpenSearch: API queries, authentication
+- Grafana Loki: LogQL, API access
+
+**Databases:**
+- PostgreSQL: `pg_stat_statements`, log files
+- MySQL: slow query log, error log
+- MongoDB: profiler, `db.currentOp()`
+
+**Step 9.6.3: Document Configuration**
+
+Create `{{DOCS_DIR}}/log_access_setup.md` from template with researched configuration.
+
+**Step 9.6.4: Configure MCP Tools**
+
+Update MCP server configuration with log access settings based on research.
+
+---
+
+#### If User Chose Option 2 (Local Only):
+
+Configure minimal local log access:
+
+```markdown
+## Local Log Access Configuration
+
+Setting up local development log access:
+
+**Docker Logs** (if using Docker):
+- Command: `docker logs -f <container_name>`
+- MCP tool: `get_logs` with source="docker"
+
+**File Logs** (if using file logging):
+- Location: [Ask user or detect from project]
+- Command: `tail -f <log_file>`
+- MCP tool: `get_logs` with source="file"
+
+**Application Console** (stdout/stderr):
+- Captured during development server run
+- MCP tool: Available during active sessions
+
+This minimal setup requires no additional credentials.
+```
+
+---
+
+#### If User Chose Option 3 (Later) or Option 4 (No):
+
+**For Option 3 (Later):**
+Add to `implementation_plan.md`:
+
+```markdown
+### Future: Log Access Configuration
+
+**Status:** 📋 PLANNED (User deferred during bootstrap)
+
+**When to implement:** Any future development cycle
+
+**What to configure:**
+- Environment log access (from Q8 answers)
+- CI/CD log access (from Q9 answers)
+- Database log access (if applicable)
+
+**To set up:** Re-run log access configuration step or add manually.
+```
+
+**For Option 4 (No):**
+Document in AI rules that manual log checking is expected:
+
+```markdown
+## Log Access
+
+Log access is not configured for this project. When debugging:
+- Request user to provide relevant log excerpts
+- Guide user on where to find logs for each environment
+- Describe what log patterns to look for
+```
+
+---
+
+**Validation:**
+- [ ] Log access choice recorded
+- [ ] If full/local: Configuration documented in `log_access_setup.md`
+- [ ] If full/local: MCP tools configured appropriately
+- [ ] If deferred: Added to implementation_plan.md
+- [ ] If declined: Manual guidance documented in AI rules
+
+---
+
 ### Step 10: Generate AI Rules
 
 **Universal Baseline (Always):**
@@ -659,6 +920,11 @@ See `context_master_guide.md` Section 4 for pattern documentation guidelines.
 1. Generate `CLAUDE.md` from `ai-rules/claude-code/template.claude.md`.
 2. Create `.claude/rules/` directory.
 3. Generate rule files from templates: `api-rules.md`, `frontend-rules.md`, `test-rules.md`.
+4. If browser automation enabled:
+   - Add Chrome integration section to CLAUDE.md
+   - Include setup instructions for `--chrome` flag
+   - Document Chrome extension requirements
+   - Reference research results if available
 
 #### Claude Code (Basic):
 1. Create symlink: `CLAUDE.md` → `AGENTS.md`.

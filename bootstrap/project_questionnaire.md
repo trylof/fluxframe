@@ -54,6 +54,271 @@ Which AI coding tools will you use with this project? (Select all that apply)
 
 ---
 
+## Browser Automation & Live Testing
+
+**Ask early for web projects:**
+
+```
+Does your AI assistant need to interact with a browser for testing, debugging, or automation?
+
+Browser automation enables the AI to:
+- **Live debugging** - Read console errors/logs and fix code
+- **Visual verification** - Check UI renders correctly
+- **Web app testing** - Test forms, flows, interactions
+- **Authenticated access** - Work with apps you're logged into
+- **Data extraction** - Scrape/read structured data from pages
+- **Task automation** - Fill forms, navigate workflows
+- **Session recording** - Create GIF demos of interactions
+
+Would you like browser automation? (yes/no/need more info)
+```
+
+### Browser Automation by Tool
+
+**If user wants browser automation, explain capabilities per tool:**
+
+**Claude Code (Chrome Integration - Beta):**
+```
+Claude Code has native Chrome integration (requires --chrome flag):
+
+Prerequisites:
+- Google Chrome browser
+- Claude in Chrome extension (v1.0.36+)
+- Claude Code CLI (v2.0.73+)
+- Paid Claude plan (Pro/Team/Enterprise)
+
+Capabilities:
+✅ Navigate pages, click, type, scroll
+✅ Read console logs and errors
+✅ Interact with authenticated web apps
+✅ Record GIFs of interactions
+✅ Chain browser + terminal workflows
+
+Limitations:
+⚠️ Chrome only (not Brave/Arc/other Chromium)
+⚠️ WSL not supported
+⚠️ Requires visible browser window (no headless)
+⚠️ Modal dialogs (alerts) require manual dismissal
+
+Setup:
+1. Run: claude --chrome
+2. Use /chrome command to verify connection
+3. Enable by default via /chrome menu (increases context usage)
+
+Do you want Chrome integration for Claude Code? (yes/no/default-on)
+```
+
+**Cline/Roo Code (Puppeteer Browser):**
+```
+Cline and Roo Code use Puppeteer for browser automation:
+
+Capabilities:
+✅ Launch browser at URL
+✅ Click at coordinates
+✅ Type text
+✅ Scroll pages
+✅ Take screenshots
+✅ Read console logs
+
+Limitations:
+⚠️ Headless browser (separate from your logged-in session)
+⚠️ Cannot access authenticated sites (no shared login state)
+⚠️ Click requires coordinate calculation from screenshots
+⚠️ One browser action per turn (must wait for screenshot)
+
+Best for:
+- Testing local development servers
+- Verifying UI rendering
+- Automated screenshot capture
+- Non-authenticated page interactions
+
+Do you want Puppeteer browser actions? (yes/no)
+```
+
+**Cursor:**
+```
+Cursor's browser capabilities are evolving rapidly.
+
+Known capabilities (verify current):
+- May have Composer Agent browser features
+- Can generate Playwright/Cypress test code
+- Some versions support webpage preview
+
+⚠️ This is a fast-moving area - capabilities change frequently.
+
+Shall I research Cursor's current browser features? (yes/skip)
+```
+
+**OpenAI Codex / ChatGPT:**
+```
+OpenAI tools' browser capabilities:
+
+ChatGPT:
+- Web browsing plugin (for research, not automation)
+- Code interpreter can generate test code
+- No direct browser control
+
+Codex:
+- Primarily code generation
+- Can write Playwright/Cypress tests
+- No direct browser automation
+
+Shall I research current OpenAI browser capabilities? (yes/skip)
+```
+
+**Google Antigravity / Gemini:**
+```
+Google's AI browser capabilities are evolving rapidly.
+
+Antigravity/Gemini may support:
+- Web actions through Google AI extensions
+- Integration with Chrome via Gemini
+- Agentic browsing capabilities
+
+⚠️ This area changes frequently - Google announces new features regularly.
+
+Shall I research current Gemini/Antigravity browser features? (yes/skip)
+```
+
+### ⚠️ IMPORTANT: Research Step for Emerging Capabilities
+
+**This is a rapidly evolving field.** Before finalizing browser automation setup:
+
+```
+Browser automation capabilities change frequently. Shall I research the latest 
+capabilities for your selected tools before we finalize setup?
+
+This will help ensure you get the most current features available.
+
+Research options:
+1. **Yes, research all selected tools** - I'll check latest docs/announcements
+2. **Research specific tools only** - Specify which ones
+3. **Skip research** - Use documented capabilities (may be outdated)
+
+Your choice (1-3):
+```
+
+**If user chooses research (recommended):**
+
+The AI assistant should:
+1. Search for latest documentation for each selected tool
+2. Check for recent feature announcements (last 3-6 months)
+3. Look for community reports of new browser capabilities
+4. Report findings before finalizing configuration
+
+**Research Sources by Tool:**
+
+| Tool | Primary Source | Secondary Sources |
+|------|----------------|-------------------|
+| Claude Code | code.claude.com/docs | Anthropic blog, changelog |
+| Cursor | cursor.com/docs | Reddit r/cursor, changelog |
+| Cline | Cline GitHub releases | VS Code marketplace |
+| Roo Code | Roo-cline GitHub | VS Code marketplace |
+| Antigravity | Google AI documentation | Google I/O announcements |
+| OpenAI | platform.openai.com | OpenAI blog, Twitter |
+
+**Research Output Format:**
+
+```markdown
+## Browser Capabilities Research Results
+
+**Research Date:** [DATE]
+**Tools Researched:** [LIST]
+
+### [Tool Name]
+**Current Browser Capabilities:**
+- [Capability 1]
+- [Capability 2]
+
+**Recent Changes (last 6 months):**
+- [Change 1 with date]
+- [Change 2 with date]
+
+**Setup Requirements:**
+- [Requirement 1]
+- [Requirement 2]
+
+**Recommendation:** [Enable/Disable/Conditional]
+
+---
+
+### Summary
+Based on research, recommended browser automation setup:
+- [Tool 1]: [Config]
+- [Tool 2]: [Config]
+
+Proceed with these settings? (yes/modify)
+```
+
+### Browser Automation Level Selection
+
+**Based on tool selection and user preference:**
+
+```
+Choose your browser automation approach:
+
+1. **Full Integration** - Enable for all supported tools
+   - Claude Code: --chrome flag, Chrome extension
+   - Cline/Roo: Puppeteer enabled
+   
+2. **Claude Code Only** - Use Chrome integration
+   - Requires Chrome + extension setup
+   - Best for authenticated testing
+   
+3. **Puppeteer Only** - Use headless browser
+   - Works with Cline/Roo Code
+   - Best for local dev testing
+   
+4. **None** - Disable browser automation
+   - AI describes expected behavior
+   - Manual testing required
+
+Your choice (1-4):
+```
+
+### Browser Automation Configuration
+
+**If user chooses options 1-3:**
+
+```
+Browser testing preferences:
+
+1. **Primary testing URL:**
+   - localhost:3000 (default for dev servers)
+   - localhost:8000 (Python/FastAPI default)
+   - Custom URL: _______________
+
+2. **Default browser window size:**
+   - 900x600 (Puppeteer default)
+   - 1280x720 (HD)
+   - 1920x1080 (Full HD)
+   - Custom: _______________
+
+3. **Auto-launch behavior:**
+   - Ask before launching browser
+   - Auto-launch for testing tasks
+   - Never auto-launch
+
+4. **Screenshot storage:**
+   - Don't save (view only)
+   - Save to project_docs/screenshots/
+   - Save to tests/screenshots/
+   - Custom path: _______________
+```
+
+### Browser Automation Impact
+
+**How this affects generated files:**
+
+| Choice | Generated Config | Notes |
+|--------|------------------|-------|
+| Claude Chrome | CLAUDE.md: Chrome section | Instructions for --chrome setup |
+| Puppeteer | AGENTS.md: Browser section | Puppeteer usage patterns |
+| Full | Both above | Multi-tool browser support |
+| None | Testing section | Manual testing instructions |
+
+---
+
 ## Question Flow Strategy
 
 **Step 1: Analyze What You Already Have**
@@ -303,9 +568,125 @@ Do you plan to use Infrastructure as Code to manage these environments?
 
 ---
 
+## Observability & Log Access (ALWAYS ASK)
+
+### Q11: AI Assistant Log Access
+
+**Ask:**
+```
+Would you like your AI coding assistant to have access to logs from your 
+environments for debugging and troubleshooting?
+
+**What this enables:**
+- AI reads error logs to diagnose issues directly
+- AI checks CI/CD failures without you copy-pasting output
+- AI queries slow database queries and connection issues
+- AI monitors application health across environments
+
+**Examples of how this helps:**
+- "Check the production logs for that 500 error"
+- "What caused the last CI build to fail?"
+- "Find any slow queries in the last hour"
+- "What's in the container logs for the API service?"
+
+**Pros:**
+✅ Faster debugging (AI can see actual errors, stack traces)
+✅ Reduced context switching (no copy-pasting logs)
+✅ AI can correlate errors across services
+✅ Works across all environments you configure
+
+**Cons / Considerations:**
+⚠️ Requires credential setup for each log source
+⚠️ May have security implications (AI accessing prod logs)
+⚠️ Some platforms may need API keys / service accounts
+⚠️ Not all log sources have easy programmatic access
+
+**Prerequisites (depends on your setup):**
+- CLI tools for your platform (aws cli, gcloud, gh cli, docker, etc.)
+- API keys or credentials for log services (Datadog, Splunk, etc.)
+- Network access to log sources
+
+**Options:**
+1. **Yes, full setup** - Configure all available log sources
+2. **Yes, local only** - Just local dev logs (Docker, file tails - quickest)
+3. **Later** - Skip now, can add during any development cycle
+4. **No** - AI will guide manual log checking instead
+
+Your choice (1-4):
+```
+
+### Q11-Follow-up: Log Source Selection (If user chose option 1 or 3)
+
+**Only ask if user chose option 1 (full setup):**
+
+```
+Based on your infrastructure setup (from Q8-Q10), here are your potential log sources:
+
+**Environments:**
+| Environment | Platform | Potential Log Access |
+|-------------|----------|---------------------|
+| Development | {{DEV_PLATFORM}} | [To be researched/configured] |
+| Testing/CI | {{TEST_PLATFORM}} | [To be researched/configured] |
+| Staging | {{STAGING_PLATFORM}} | [To be researched/configured] |
+| Production | {{PROD_PLATFORM}} | [To be researched/configured] |
+
+**Additional Log Sources:**
+| Source Type | Your Setup | Potential Access |
+|-------------|------------|-----------------|
+| CI/CD Pipeline | {{CICD_PLATFORM}} | [To be researched/configured] |
+| Database | {{DATABASE_TECHNOLOGY}} | [To be researched/configured] |
+| Monitoring/APM | {{MONITORING_SETUP}} | [To be researched/configured] |
+
+Which log sources would you like to configure?
+1. **All available** - Research & configure everything above
+2. **Select specific** - Choose which sources to include
+3. **Start minimal** - Begin with easiest setup, expand later
+
+Your choice (1-3):
+```
+
+**If user chose "Select specific" (option 2):**
+Present a checklist of all environments/sources from their Q8-Q10 answers.
+
+### Q11-Research: Log Access Research (If user wants configuration)
+
+**Ask:**
+```
+Log access capabilities vary by platform and evolve frequently.
+
+Would you like me to research the current best practices for your specific setup?
+
+**What I'll research:**
+- CLI tools available for your platforms
+- MCP integrations (community or official)
+- API access requirements and setup steps
+- Security best practices
+
+**Your platforms to research:**
+- {{PROD_PLATFORM}} (Production hosting)
+- {{CICD_PLATFORM}} (CI/CD)
+- {{DATABASE_TECHNOLOGY}} (Database)
+- {{MONITORING_SETUP}} (Monitoring, if configured)
+
+Options:
+1. **Yes, research now** - I'll look up current options before configuring
+2. **Skip research** - Use standard approaches, configure manually if needed
+3. **Defer** - Document what we have, research later
+
+Your choice (1-3):
+```
+
+**Impact of Log Access Questions:**
+- **Option 1 (Full setup):** Creates `log_access_setup.md`, adds MCP tools configuration, researches platform-specific access methods
+- **Option 2 (Local only):** Configures basic local log access (Docker logs, file tails)
+- **Option 3 (Later):** Documents the opportunity in implementation_plan.md for future cycle
+- **Option 4 (No):** No log access configuration, AI provides manual checking guidance
+
+---
+
 ## Optional Questions (Ask only if relevant)
 
-### Q11: Key Features (if not provided)
+### Q12: Key Features (if not provided)
 
 **Ask if:**
 - User gave minimal description
@@ -328,7 +709,7 @@ For example:
 
 ---
 
-### Q12: Team Size
+### Q13: Team Size
 
 **Usually DON'T ask** - Framework works for any size
 

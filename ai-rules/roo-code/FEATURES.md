@@ -156,6 +156,88 @@ Roo Code can use different AI models for different modes.
 - Use more capable models for complex work
 - Balance speed vs capability per task
 
+## Browser Automation (Puppeteer)
+
+Roo Code includes browser automation capabilities via Puppeteer, similar to Cline.
+
+### How It Works
+
+Roo Code uses a Puppeteer-controlled browser to:
+1. Launch a browser at a specified URL
+2. Take screenshots after each action
+3. Wait for confirmation before the next action
+4. Execute clicks, typing, scrolling based on screenshot analysis
+
+### Capabilities
+
+| Action | Description |
+|--------|-------------|
+| **launch** | Open browser at a URL |
+| **click** | Click at x,y coordinates |
+| **type** | Type text |
+| **scroll_down/up** | Scroll page |
+| **close** | Close browser |
+
+### Key Characteristics
+
+- **Headless browser** - Separate from your sessions
+- **Screenshot-driven** - Each action returns a screenshot
+- **Coordinate-based** - Clicks require x,y from screenshots
+- **Sequential** - One action per turn
+- **900x600 viewport** - Fixed resolution
+
+### Mode Integration
+
+Browser actions are enabled per mode via the `browser` group:
+
+```yaml
+groups:
+  - read
+  - edit
+  - command
+  - browser    # ← Enables browser automation
+  - mcp
+```
+
+**FluxFrame Mode Defaults:**
+- ✅ Code Mode - Browser enabled (for testing implementations)
+- ✅ Debug Mode - Browser enabled (for visual debugging)
+- ❌ Architect Mode - Browser disabled (planning only)
+- ❌ Pattern Mode - Browser disabled (documentation only)
+- ❌ Review Mode - Browser disabled (code review only)
+
+### Best Use Cases
+
+1. **Testing local dev servers**
+   ```
+   Launch browser at localhost:3000 and verify the component renders
+   ```
+
+2. **Visual verification**
+   ```
+   Check if the form validation messages appear correctly
+   ```
+
+3. **Interactive debugging**
+   ```
+   Open the page and check console for errors
+   ```
+
+### Comparison with Claude Code Chrome
+
+| Feature | Roo Code (Puppeteer) | Claude Code (Chrome) |
+|---------|---------------------|---------------------|
+| Browser Type | Headless | Your Chrome browser |
+| Authentication | None | Your logged-in sessions |
+| Console Access | Yes | Yes (full) |
+| GIF Recording | ❌ | ✅ |
+| Mode-Restricted | ✅ (per mode) | N/A |
+
+**Choose Puppeteer for:** Local testing, mode-controlled access
+**Choose Claude Chrome for:** Authenticated apps, demos
+
+---
+
 ## Features NOT Used by FluxFrame
 
 Some Roo Code features aren't leveraged by FluxFrame defaults:

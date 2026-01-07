@@ -25,10 +25,53 @@ FluxFrame uses a layered architecture to support multiple AI coding agents while
 | Tool | Primary File | Unique Features |
 |------|--------------|-----------------|
 | **AGENTS.md** | `./AGENTS.md` | Universal baseline (60k+ repos) |
-| **Claude Code** | `./CLAUDE.md` | File imports, path-targeted rules |
-| **Roo Code** | `./AGENTS.md` (auto) | Custom modes, tool restrictions |
-| **Cline** | `./.clinerules/` | Folder mode, rule toggle UI |
+| **Claude Code** | `./CLAUDE.md` | File imports, path-targeted rules, Chrome integration |
+| **Roo Code** | `./AGENTS.md` (auto) | Custom modes, tool restrictions, Puppeteer browser |
+| **Cline** | `./.clinerules/` | Folder mode, rule toggle UI, Puppeteer browser |
 | **Antigravity** | `./GEMINI.md` | Workflows |
+
+## Browser Automation
+
+AI coding tools can interact with browsers for testing, debugging, and automation. This is particularly useful for web development workflows.
+
+| Tool | Browser Type | Key Capability |
+|------|--------------|----------------|
+| **Claude Code** | Chrome (your browser) | Authenticated sessions, GIF recording |
+| **Cline** | Puppeteer (headless) | Screenshot-driven testing |
+| **Roo Code** | Puppeteer (headless) | Screenshot-driven testing |
+| **Cursor** | None | Use external test frameworks |
+| **Antigravity** | Evolving | Check latest docs |
+
+### Browser Automation Patterns
+
+**Claude Code Chrome Integration:**
+- Uses your actual Chrome browser with logged-in sessions
+- Can access authenticated apps (Gmail, Notion, etc.)
+- Requires `--chrome` flag and Chrome extension
+- Records GIFs for demos
+
+**Puppeteer (Cline/Roo Code):**
+- Headless browser, separate from your sessions
+- Screenshot-based interaction (coordinate clicking)
+- Best for local dev server testing
+- No authenticated access
+
+### When to Use Browser Automation
+
+✅ **Use browser automation for:**
+- Verifying UI implementations
+- Testing forms and user flows
+- Debugging with console logs
+- Creating demo recordings (Claude)
+- Automated visual checks
+
+❌ **Don't use browser automation for:**
+- Unit testing (use test frameworks)
+- API testing (use HTTP clients)
+- Performance testing (use specialized tools)
+- CI/CD (use Playwright/Cypress)
+
+See **FEATURE_MATRIX.md** for detailed browser capability comparison.
 
 ## Directory Structure
 

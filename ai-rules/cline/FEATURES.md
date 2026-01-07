@@ -129,6 +129,104 @@ When connected, these tools are available:
 - Consistent workflow enforcement
 - Documentation validation
 
+## Browser Automation (Puppeteer)
+
+Cline includes browser automation capabilities via Puppeteer, allowing it to interact with web pages during development and testing.
+
+### How It Works
+
+Cline uses a Puppeteer-controlled browser to:
+1. Launch a browser at a specified URL
+2. Take screenshots after each action
+3. Wait for your confirmation before the next action
+4. Execute clicks, typing, scrolling based on screenshot analysis
+
+### Capabilities
+
+| Action | Description |
+|--------|-------------|
+| **launch** | Open browser at a URL (first action required) |
+| **click** | Click at x,y coordinates |
+| **type** | Type text (after clicking a text field) |
+| **scroll_down** | Scroll down one page height |
+| **scroll_up** | Scroll up one page height |
+| **close** | Close browser (final action required) |
+
+### Key Characteristics
+
+- **Headless browser** - Separate from your logged-in sessions
+- **Screenshot-driven** - Each action returns a screenshot
+- **Coordinate-based** - Clicks require x,y coordinates from screenshots
+- **Sequential** - One action per turn, wait for response
+- **Fixed resolution** - 900x600 pixel viewport
+
+### Limitations
+
+- **No authenticated access** - Cannot access your logged-in sessions
+- **No shared state** - Each session is fresh
+- **Coordinate clicking** - Must analyze screenshots to find click targets
+- **One action at a time** - Cannot batch multiple actions
+- **No GIF recording** - Screenshots only
+
+### Best Use Cases
+
+1. **Testing local dev servers**
+   ```
+   Launch browser at localhost:3000, click the login button, 
+   and verify the form appears
+   ```
+
+2. **Verifying UI rendering**
+   ```
+   Open the dashboard page and take a screenshot to verify layout
+   ```
+
+3. **Form interaction testing**
+   ```
+   Fill out the contact form and submit, verify success message
+   ```
+
+4. **Visual regression checks**
+   ```
+   Navigate to each main page and capture screenshots for review
+   ```
+
+### FluxFrame Integration
+
+For web development workflows, browser automation enables:
+- Verification step in development cycles
+- Visual confirmation of implemented features
+- Interactive testing without leaving the IDE
+- Screenshot documentation of completed work
+
+### Example Workflow
+
+```
+1. Implement new feature component
+2. Run: npm run dev
+3. "Launch browser at localhost:3000"
+4. [Screenshot received, analyze]
+5. "Click on navigation item at 450,50"
+6. [Screenshot received, verify feature loads]
+7. "Close browser"
+8. Continue with next implementation step
+```
+
+### Comparison with Claude Code Chrome
+
+| Feature | Cline (Puppeteer) | Claude Code (Chrome) |
+|---------|-------------------|---------------------|
+| Browser Type | Headless | Your Chrome browser |
+| Authentication | None | Your logged-in sessions |
+| Click Method | Coordinates from screenshot | Native selectors |
+| Console Access | Yes (logs) | Yes (full console) |
+| GIF Recording | ❌ | ✅ |
+| Multi-tab | ❌ | ✅ |
+| Visible Window | No | Yes (required) |
+
+**Choose Cline Puppeteer for:** Local development testing, simple verifications
+**Choose Claude Chrome for:** Authenticated apps, complex workflows, demos
+
 ## Features NOT Used by FluxFrame
 
 Some Cline features aren't leveraged by FluxFrame defaults:

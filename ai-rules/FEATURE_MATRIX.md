@@ -8,18 +8,96 @@ This document compares the capabilities of AI coding tools supported by FluxFram
 |---------|:---------:|:-----------:|:--------:|:-----:|:------:|:-----------:|
 | **Basic Instructions** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Nested Directory Rules** | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ |
-| **File Imports** | ❌ | ✅ `@file` | ❌ | ❌ | ❌ |
-| **Path-Specific Rules** | ❌ | ✅ glob | ❌ | ❌ | ❌ |
-| **Multiple Personas/Modes** | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Tool Permission Restrictions** | ❌ | ❌ | ✅ regex | ❌ | ❌ |
-| **Mode-Specific Rules** | ❌ | ❌ | ✅ dirs | ❌ | ❌ |
-| **Rule Toggle UI** | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **Folder-Based Rules** | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **Model Per Mode** | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Workflow Automation** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Enterprise Hierarchy** | ❌ | ✅ 4-level | ❌ | ❌ | ❌ |
+| **File Imports** | ❌ | ✅ `@file` | ❌ | ❌ | ❌ | ❌ |
+| **Path-Specific Rules** | ❌ | ✅ glob | ❌ | ❌ | ❌ | ❌ |
+| **Multiple Personas/Modes** | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| **Tool Permission Restrictions** | ❌ | ❌ | ✅ regex | ❌ | ❌ | ❌ |
+| **Mode-Specific Rules** | ❌ | ❌ | ✅ dirs | ❌ | ❌ | ❌ |
+| **Rule Toggle UI** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Folder-Based Rules** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Model Per Mode** | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| **Workflow Automation** | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| **Enterprise Hierarchy** | ❌ | ✅ 4-level | ❌ | ❌ | ❌ | ❌ |
 | **MCP Support** | N/A | ✅ | ✅ | ✅ | ✅ | ❌ |
 | **Auto-Detects AGENTS.md** | N/A | ❌ | ✅ | ❌ | ✅ | ❌ |
+
+---
+
+## Browser Automation Comparison
+
+Browser automation allows AI assistants to directly interact with web browsers for testing, debugging, and automation tasks.
+
+| Capability | Claude Code | Roo Code | Cline | Cursor | Antigravity |
+|------------|:-----------:|:--------:|:-----:|:------:|:-----------:|
+| **Browser Integration** | ✅ Chrome | ✅ Puppeteer | ✅ Puppeteer | ❌ | ⚠️ Evolving |
+| **Navigate Pages** | ✅ | ✅ | ✅ | ❌ | ⚠️ |
+| **Click/Type/Scroll** | ✅ | ✅ | ✅ | ❌ | ⚠️ |
+| **Screenshots** | ✅ | ✅ | ✅ | ❌ | ⚠️ |
+| **Console Log Access** | ✅ | ✅ | ✅ | ❌ | ⚠️ |
+| **Authenticated Sessions** | ✅ | ❌ | ❌ | ❌ | ⚠️ |
+| **Record GIFs** | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **DOM Inspection** | ✅ | ⚠️ via screenshot | ⚠️ via screenshot | ❌ | ⚠️ |
+| **Network Request Access** | ✅ | ❌ | ❌ | ❌ | ⚠️ |
+| **Visible Browser Window** | ✅ Required | ❌ Headless | ❌ Headless | N/A | ⚠️ |
+| **Multi-Tab Support** | ✅ | ❌ | ❌ | ❌ | ⚠️ |
+
+### Legend
+- ✅ = Fully supported
+- ⚠️ = Partial/evolving support
+- ❌ = Not supported
+
+### Browser Integration Types
+
+**Claude Code - Chrome Integration (Beta)**
+- Uses Chrome browser via Claude in Chrome extension
+- Shares your browser's login state (authenticated access)
+- Requires visible browser window
+- Can chain browser + terminal workflows
+- Records GIFs for demos
+- Prerequisites: Chrome, Claude extension v1.0.36+, Claude Code v2.0.73+, paid Claude plan
+
+**Cline/Roo Code - Puppeteer Browser**
+- Headless browser (separate from your sessions)
+- Coordinate-based clicking from screenshots
+- One action per turn (wait for screenshot response)
+- Cannot access authenticated sites
+- Best for local dev server testing
+
+**Cursor/GitHub Copilot**
+- No native browser automation
+- Use with testing frameworks (Playwright, Cypress)
+- AI writes test code, you run tests
+
+**Cursor**
+- Evolving rapidly with Composer Agent features
+- May have webpage preview and browser interaction
+- Can generate Playwright/Cypress test code
+- Check cursor.com/docs for current capabilities
+
+**OpenAI (Codex/ChatGPT)**
+- ChatGPT has web browsing (research, not automation)
+- Codex generates test code but no direct browser control
+- Check platform.openai.com for current features
+
+**Antigravity/Gemini**
+- Browser capabilities evolving rapidly
+- Google AI extensions may enable web actions
+- Agentic browsing features emerging
+- Check Google AI documentation for current features
+
+---
+
+### ⚠️ This Table May Be Outdated
+
+**Browser automation is a rapidly evolving field.** The capabilities listed above may have changed.
+
+**During FluxFrame bootstrap, the AI assistant should:**
+1. Offer to research current browser capabilities
+2. Check official documentation for each selected tool
+3. Look for recent feature announcements
+4. Update configuration based on findings
+
+See `bootstrap/project_questionnaire.md` for the research workflow
 
 ## Tool-by-Tool Breakdown
 
