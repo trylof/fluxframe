@@ -7,7 +7,44 @@
 - 🔄 **Existing projects** with AI workflows (Cline, Claude Code, etc.)
 - 📚 **Existing projects** with documentation (ADRs, wikis, bug fixes, etc.)
 
-**Key Innovation:** Detection-first approach - analyze what exists before asking questions.
+**Key Innovation:** MCP-powered state management ensures the bootstrap process is followed step-by-step without missing anything.
+
+---
+
+## 🌟 RECOMMENDED: MCP-Guided Bootstrap
+
+**New in FluxFrame:** Use the Bootstrap MCP Server for reliable, state-tracked setup.
+
+### Why Use MCP Approach?
+
+The traditional approach of following markdown instructions risks:
+- ❌ Skipping steps accidentally
+- ❌ Losing context mid-process
+- ❌ No progress tracking across sessions
+- ❌ Unclear what's been done
+
+**MCP Solution:**
+- ✅ Tracks progress automatically
+- ✅ Validates each step before moving on
+- ✅ Persists state across sessions
+- ✅ Tells AI exactly what to do next
+
+### Quick Start with MCP
+
+1. **User sets up MCP server** - Follow `bootstrap/MCP_SETUP_GUIDE.md`
+2. **AI uses bootstrap tools** - Call `get_bootstrap_state`, `get_next_step`, `complete_step`
+3. **Progress tracked automatically** - State saved in `.fluxframe-bootstrap-state.json`
+4. **Resume anytime** - Pick up exactly where you left off
+
+**See:** `bootstrap/MCP_SETUP_GUIDE.md` for complete setup instructions.
+
+---
+
+## Alternative: Manual Bootstrap (Legacy)
+
+**If MCP is not available**, follow the manual process below.
+
+**Note:** This approach requires careful tracking and is error-prone. MCP approach is strongly recommended.
 
 ---
 

@@ -43,7 +43,44 @@ This framework provides:
 
 ---
 
-## Quick Start (Self-Bootstrapping)
+## 🌟 NEW: MCP-Powered Bootstrap
+
+**FluxFrame now includes an MCP (Model Context Protocol) server that ensures reliable, step-by-step bootstrap with automatic progress tracking.**
+
+### Why Use MCP Bootstrap?
+
+**Traditional markdown instructions risk:**
+- ❌ Skipping steps accidentally
+- ❌ Losing context mid-process  
+- ❌ No progress tracking across sessions
+
+**MCP Bootstrap guarantees:**
+- ✅ Every step tracked and validated
+- ✅ Progress persists across sessions
+- ✅ Resume anytime from where you left off
+- ✅ AI knows exactly what to do next
+
+### Quick Start with MCP (5 minutes)
+
+```bash
+# 1. Clone and install
+git clone https://github.com/trylof/fluxframe.git
+cd fluxframe
+npm install
+
+# 2. Configure MCP server (see bootstrap/MCP_SETUP_GUIDE.md)
+# 3. Tell your AI: "Bootstrap FluxFrame using the MCP server"
+# 4. Done! ✅
+```
+
+**See:** [`QUICKSTART.md`](QUICKSTART.md) for complete beginner-friendly guide  
+**See:** [`bootstrap/MCP_SETUP_GUIDE.md`](bootstrap/MCP_SETUP_GUIDE.md) for MCP configuration
+
+---
+
+## Alternative: Manual Bootstrap
+
+**If MCP is not available**, you can use the traditional approach:
 
 ### Prerequisites
 
