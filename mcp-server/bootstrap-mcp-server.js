@@ -567,7 +567,7 @@ class BootstrapServer {
       "4.2": "Test: node mcp-server.js starts without errors. Show output to user.",
       "4.3": "Show user summary of generated files. Ask them to review key files. Confirm they approve before cleanup.",
       "5.1": "Present list of template files to remove (ai-rules/, bootstrap/, doc-templates/, etc.) and files to keep (project files). Get approval.",
-      "5.2": "Execute cleanup: rm -rf for template directories. Keep .fluxframe-bootstrap-state.json for reference.",
+      "5.2": "Execute cleanup: rm -rf ai-rules/ bootstrap/ doc-templates/ mcp-server/ pattern-library-system/ development-cycles/ testing-framework/ examples/ BOOTSTRAP_INSTRUCTIONS.md RESTRUCTURE_PLAN.md. The user's project now has its own mcp-server.js (created in step 3.4). Optionally keep .fluxframe-bootstrap-state.json as a record, or delete it too.",
       "5.3": "Replace README.md with project-specific content. Include FluxFrame methodology mention and links to docs.",
       "6.1": "Show complete summary: what was created, what was preserved, backup location, configuration details.",
       "6.2": "CRITICAL: Guide user to add their project's mcp-server.js to their AI assistant's MCP settings. Provide tool-specific instructions.",
