@@ -7,44 +7,76 @@
 - 🔄 **Existing projects** with AI workflows (Cline, Claude Code, etc.)
 - 📚 **Existing projects** with documentation (ADRs, wikis, bug fixes, etc.)
 
-**Key Innovation:** MCP-powered state management ensures the bootstrap process is followed step-by-step without missing anything.
+---
+
+## Gate 1: Dependencies Installed
+
+**Before anything else, verify FluxFrame dependencies are installed.**
+
+### Check for node_modules
+
+Look for `node_modules/` directory in the FluxFrame folder, or check if `node_modules/@modelcontextprotocol` exists.
+
+**If node_modules is missing or incomplete:**
+
+1. Inform user: "FluxFrame dependencies aren't installed yet. Let me run npm install for you."
+2. Run `npm install` in the FluxFrame directory
+3. Wait for completion and verify success
+4. Proceed to Gate 2
+
+**If npm install fails:**
+- Check if Node.js is installed (`node --version`)
+- If Node.js is missing, guide user to install it from nodejs.org
+- After Node.js is installed, retry `npm install`
 
 ---
 
-## 🌟 RECOMMENDED: MCP-Guided Bootstrap
+## Gate 2: MCP Verification Required
 
-**New in FluxFrame:** Use the Bootstrap MCP Server for reliable, state-tracked setup.
+**After dependencies are installed, verify MCP is configured.**
 
-### Why Use MCP Approach?
+### Verification Step
 
-The traditional approach of following markdown instructions risks:
-- ❌ Skipping steps accidentally
-- ❌ Losing context mid-process
-- ❌ No progress tracking across sessions
-- ❌ Unclear what's been done
+Attempt to call `get_bootstrap_state`.
 
-**MCP Solution:**
-- ✅ Tracks progress automatically
+**If the call succeeds:** MCP is configured. Proceed to Phase 0.
+
+**If the call fails or the tool is not available:**
+
+Do NOT just point user at documentation. Guide them interactively:
+
+1. **Explain what's needed:** "To bootstrap FluxFrame, I need access to the MCP tools. Let me guide you through setting this up - it takes about 2 minutes."
+
+2. **Check prerequisites with user:**
+   - "Do you have Node.js installed? Run `node --version` to check."
+   - "Have you run `npm install` in the FluxFrame directory?"
+
+3. **Guide MCP configuration step-by-step:**
+   - Ask which AI tool they're using (Claude Code, Cline, Roo Code, Cursor, etc.)
+   - Provide the exact config file location for their tool
+   - Show them the exact JSON to add (with paths they need to fill in)
+   - Explain each path they need to customize
+   - If they're unsure about paths, help them figure it out
+
+4. **Walk through the restart:**
+   - "Now save the config file and completely restart [their AI tool]"
+   - "Start a new conversation and ask me to verify MCP is working"
+
+5. **After restart, verify together:**
+   - Try `get_bootstrap_state` again
+   - If it works: "MCP is configured. Let's proceed with bootstrap."
+   - If still fails: Troubleshoot with user (wrong paths? restart needed? permissions?)
+
+**Key principle:** The user should not need to read documentation. You guide them through every step, waiting for confirmation before proceeding. If something requires manual action (clicking in UI, editing config files outside the project), explain exactly what to do and wait for them to confirm completion.
+
+**Why MCP is required:**
+- ✅ Tracks progress automatically - no steps skipped
 - ✅ Validates each step before moving on
 - ✅ Persists state across sessions
-- ✅ Tells AI exactly what to do next
+- ✅ Ensures required questions are asked
+- ✅ Prevents assumptions - AI must follow the guided process
 
-### Quick Start with MCP
-
-1. **User sets up MCP server** - Follow `bootstrap/MCP_SETUP_GUIDE.md`
-2. **AI uses bootstrap tools** - Call `get_bootstrap_state`, `get_next_step`, `complete_step`
-3. **Progress tracked automatically** - State saved in `.fluxframe-bootstrap-state.json`
-4. **Resume anytime** - Pick up exactly where you left off
-
-**See:** `bootstrap/MCP_SETUP_GUIDE.md` for complete setup instructions.
-
----
-
-## Alternative: Manual Bootstrap (Legacy)
-
-**If MCP is not available**, follow the manual process below.
-
-**Note:** This approach requires careful tracking and is error-prone. MCP approach is strongly recommended.
+**Do NOT follow manual markdown instructions.** The MCP server ensures the bootstrap process is reliable and complete.
 
 ---
 
@@ -76,17 +108,41 @@ The traditional approach of following markdown instructions risks:
 
 ---
 
-## Phase 0: Prerequisites
+## Phase 0: MCP Verification (REQUIRED)
 
-Before starting bootstrap, ensure:
+**This phase MUST be completed before any other bootstrap activity.**
 
-1. ✅ User has confirmed they want to use FluxFrame
-2. ✅ You have access to the project directory (can list files)
-3. ✅ User has provided a project brief OR you can analyze existing code
-4. ✅ You have read this entire document
+### Step 0.1: Verify MCP Connection
+
+Call `get_bootstrap_state` to verify MCP is configured.
+
+**If successful:** You will receive the current bootstrap state. Continue to Step 0.2.
+
+**If failed:** STOP. See "STOP: MCP Verification Required" section above.
+
+### Step 0.2: Confirm Prerequisites
+
+Once MCP is verified, ensure:
+
+1. ✅ MCP tools are available (`get_bootstrap_state` succeeded)
+2. ✅ User has confirmed they want to use FluxFrame
+3. ✅ You have access to the project directory (can list files)
+4. ✅ User has provided a project brief OR you can analyze existing code
+
+### Step 0.3: Use MCP Tools Throughout Bootstrap
+
+From this point forward, use MCP tools to guide the process:
+- `get_next_step` - Get instructions for the current step
+- `complete_step` - Mark a step as done
+- `validate_step` - Check if step requirements are met
+- `update_bootstrap_info` - Save project information as you gather it
+- `log_decision` - Record user decisions with reasoning
+
+**Do NOT skip steps or make assumptions.** The MCP server tracks progress and ensures completeness.
 
 **If user just says "bootstrap" or "set up FluxFrame":**
-- Proceed to Phase 1 (Detection)
+- First verify MCP (Step 0.1)
+- Then proceed to Phase 1 (Detection)
 - Detection will reveal what exists
 - Questions will be based on what's missing
 

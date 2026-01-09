@@ -512,9 +512,39 @@ Choose option (1-2):
 
 ---
 
-## Infrastructure & Environment Strategy (ALWAYS ASK)
+## Infrastructure & Environment Strategy (MANDATORY - CANNOT BE SKIPPED)
 
-### Q8: Environment Map
+**CRITICAL ENFORCEMENT RULES:**
+
+These questions (Q8, Q9, Q10, Q11) are **MANDATORY for ALL scenarios** (GREENFIELD, SIMILAR_WORKFLOW, MIGRATION). You MUST ask them regardless of:
+- What you detect in the codebase
+- What the user has mentioned
+- What existing configuration you find
+
+**Why These Cannot Be Skipped:**
+- Infrastructure decisions affect deployment, CI/CD, and team workflows
+- Detected configs may be outdated, incomplete, or aspirational
+- User may have different plans than what code suggests
+- These affect multiple generated documents (technical_status.md, implementation_plan.md, patterns)
+
+**If You Detect Existing Configuration:**
+Still ask the question, but phrase it as confirmation:
+```
+I detected [what you found]. Is this accurate for your current setup, or has it changed?
+```
+
+**If User Declines to Answer:**
+Explain why it matters and ask again:
+```
+This question affects [specific impact]. Without this information, I'll need to:
+- Leave the infrastructure section incomplete
+- Skip generating infra_patterns.md
+- Not include environment details in your docs
+
+Would you prefer to answer now, or should I leave these sections for you to fill in later?
+```
+
+### Q8: Environment Map (MANDATORY)
 
 **Ask:**
 ```
@@ -537,7 +567,7 @@ Which environments do you require for this project, and what is their current st
    - Platform: [e.g., AWS, GCP, Azure, Vercel, Railway]
 ```
 
-### Q9: Configuration & Secrets Management
+### Q9: Configuration & Secrets Management (MANDATORY)
 
 **Ask:**
 ```
@@ -549,7 +579,7 @@ How will you manage environment-specific configurations and secrets?
 4. **Platform-native env variables** (Vercel/Heroku dashboard)
 ```
 
-### Q10: Infrastructure as Code (IaC)
+### Q10: Infrastructure as Code (IaC) (MANDATORY)
 
 **Ask:**
 ```
@@ -568,9 +598,11 @@ Do you plan to use Infrastructure as Code to manage these environments?
 
 ---
 
-## Observability & Log Access (ALWAYS ASK)
+## Observability & Log Access (MANDATORY - CANNOT BE SKIPPED)
 
-### Q11: AI Assistant Log Access
+### Q11: AI Assistant Log Access (MANDATORY)
+
+**CRITICAL:** Even if user seems busy or wants to skip, you MUST present this option. The user can choose "Later" or "No", but they must make an explicit choice.
 
 **Ask:**
 ```
@@ -1082,6 +1114,21 @@ Your choice?
 | API contracts | If has backend | If not in rules | If has backend |
 | Docs location | Always (offer default) | Keep existing | Ask preference |
 | Verification env | Always | If not in rules | Always |
+| **Q8 Environment Map** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
+| **Q9 Config/Secrets** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
+| **Q10 IaC** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
+| **Q11 Log Access** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
 | Rule differences | N/A | For each diff | N/A |
 | Import preferences | N/A | N/A | For each category |
 | Keep/replace rules | N/A | For each diff | If minimal rules |
+
+### MANDATORY Questions Enforcement
+
+**Q8-Q11 are non-negotiable.** These questions MUST be asked in every bootstrap, regardless of scenario or what was detected. The AI assistant cannot skip these questions for any reason, including:
+- "I detected the infrastructure already"
+- "This seems like a simple project"
+- "The user seems busy"
+- "I can infer this from the codebase"
+
+**If detection provides information:** Present it as a confirmation question, not a skip.
+**If user tries to skip:** Explain importance and re-ask. User can choose "Later" for Q11 but must make an explicit choice.

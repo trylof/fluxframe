@@ -72,6 +72,55 @@ Before starting this workflow:
 
 ---
 
+## CRITICAL: Never Make Assumptions
+
+**This section overrides all other guidance. Follow these rules absolutely.**
+
+### Required Questions CANNOT Be Skipped
+
+The following questions are **MANDATORY** regardless of what you detect or infer:
+
+- **Q8 (Environment Map)** - Even if you detect Docker, CI configs, or deployment files, you MUST ask the user to confirm their environment setup
+- **Q9 (Config/Secrets Management)** - Even if you detect .env files, you MUST ask about their secrets strategy
+- **Q10 (Infrastructure as Code)** - Even if you detect Terraform files, you MUST confirm IaC approach
+- **Q11 (Observability/Log Access)** - You MUST present this option and let user decide
+
+### Never Assume User Preferences
+
+- **NEVER** decide on behalf of the user what to include or exclude
+- **NEVER** skip a question because you think you know the answer
+- **NEVER** log a decision that the user didn't explicitly make
+- **ALWAYS** present all available options before proceeding
+- **ALWAYS** explain what each option includes
+
+### When Presenting Options
+
+For every configuration choice:
+1. **Explain what it does** - What will this option add to their project?
+2. **Show alternatives** - What are the other options?
+3. **Wait for explicit choice** - Do not proceed until user responds
+4. **Confirm understanding** - Repeat back what they chose
+
+### If User Gives Vague Answer
+
+If user says "whatever works", "you decide", or similar:
+```
+I need your explicit decision on this. Here's why [question] matters:
+[Explain impact]
+
+Please choose one of the options above.
+```
+
+### Decision Logging Rules
+
+- **ONLY** log decisions the user explicitly made
+- The `reasoning` field must contain the USER's stated reasoning, not your inference
+- If user didn't provide reasoning, ASK for it before logging
+- **NEVER** log "assumed because user didn't answer" or "skipped for efficiency"
+- Unconfirmed items must remain pending, not logged as decisions
+
+---
+
 ## File Generation Order
 
 **CRITICAL:** Files must be created in this order due to dependencies.

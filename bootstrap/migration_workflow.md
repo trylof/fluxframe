@@ -18,6 +18,66 @@ Before starting this workflow:
 
 ---
 
+## CRITICAL: Never Make Assumptions
+
+**This section overrides all other guidance. Follow these rules absolutely.**
+
+### Required Questions CANNOT Be Skipped
+
+The following questions are **MANDATORY** regardless of what you detect or infer:
+
+- **Q8 (Environment Map)** - Even if you detect Docker, CI configs, or deployment files, you MUST ask the user to confirm their environment setup
+- **Q9 (Config/Secrets Management)** - Even if you detect .env files, you MUST ask about their secrets strategy
+- **Q10 (Infrastructure as Code)** - Even if you detect Terraform files, you MUST confirm IaC approach
+- **Q11 (Observability/Log Access)** - You MUST present this option and let user decide
+
+### Never Assume User Preferences
+
+- **NEVER** decide on behalf of the user what to include or exclude
+- **NEVER** skip a question because you think you know the answer
+- **NEVER** log a decision that the user didn't explicitly make
+- **NEVER** assume the user wants "light migration" or "reference only"
+- **ALWAYS** present the FULL FluxFrame option first, then alternatives
+- **ALWAYS** explain what each option includes vs excludes
+
+### Full vs Partial Migration Requirement
+
+Before suggesting any migration approach, you MUST:
+1. Show what a **FULL** FluxFrame bootstrap includes
+2. Show what the user's **existing** setup already has
+3. Show the **GAP** between the two
+4. For **EACH** gap item, ask: "Would you like to add this?"
+
+Do NOT assume the user wants the "minimal change" approach. Always present full migration as the first option.
+
+### When Presenting Options
+
+For every configuration choice:
+1. **Explain what it does** - What will this option add to their project?
+2. **Show alternatives** - What are the other options?
+3. **Wait for explicit choice** - Do not proceed until user responds
+4. **Confirm understanding** - Repeat back what they chose
+
+### If User Gives Vague Answer
+
+If user says "whatever works", "you decide", or similar:
+```
+I need your explicit decision on this. Here's why [question] matters:
+[Explain impact]
+
+Please choose one of the options above.
+```
+
+### Decision Logging Rules
+
+- **ONLY** log decisions the user explicitly made
+- The `reasoning` field must contain the USER's stated reasoning, not your inference
+- If user didn't provide reasoning, ASK for it before logging
+- **NEVER** log "assumed because user didn't answer" or "skipped for efficiency"
+- Unconfirmed items must remain pending, not logged as decisions
+
+---
+
 ## Decision Logging (IMPORTANT)
 
 **Throughout this bootstrap process, you MUST log decisions with their reasoning.**
@@ -388,6 +448,134 @@ Follow the same questionnaire format as similar_workflow Phase 2.5:
 - Environments marked "Needs Setup" will be added to implementation_plan.md
 - Infrastructure section will be populated in technical_status.md with Environment Matrix
 - infra_patterns.md will be created from template
+```
+
+---
+
+## Phase 2.6: Gap Analysis (REQUIRED)
+
+**Purpose:** Before proceeding to migration, show the user what a FULL FluxFrame setup includes versus what they already have.
+
+**CRITICAL:** This phase ensures the user understands what they might be missing and explicitly chooses what to include.
+
+### Step 2.6.1: Present Full FluxFrame Overview
+
+Show the user what a complete FluxFrame bootstrap includes:
+
+```markdown
+## What Full FluxFrame Bootstrap Includes
+
+Before we proceed with migration, here's what a complete FluxFrame setup provides. I'll then show what you already have and what's missing.
+
+### Core Documentation
+- [ ] `context_master_guide.md` - Single source of truth for project context
+- [ ] `technical_status.md` - Real-time project state tracking
+- [ ] `implementation_plan.md` - Development roadmap with cycles
+- [ ] `api_contract_standards.md` - API type safety enforcement (if applicable)
+- [ ] `bootstrap_decisions.md` - Record of all setup decisions with reasoning
+
+### Pattern Library
+- [ ] `patterns/README.md` - Pattern index and methodology
+- [ ] `patterns/ui_patterns.md` - UI component patterns (if frontend)
+- [ ] `patterns/api_patterns.md` - API endpoint patterns (if backend)
+- [ ] `patterns/data_patterns.md` - Database patterns (if database)
+- [ ] `patterns/infra_patterns.md` - Infrastructure patterns
+
+### Workflows
+- [ ] `workflows/cycle_workflow.md` - Development cycle methodology
+- [ ] `workflows/change_request_protocol.md` - Bug fix and change tracking
+
+### AI Configuration
+- [ ] `AGENTS.md` - Universal AI baseline rules
+- [ ] Tool-specific rules (CLAUDE.md, .clinerules/, .roomodes, etc.)
+- [ ] MCP server configuration
+
+### Infrastructure Documentation
+- [ ] Environment matrix (dev/test/staging/prod)
+- [ ] Secrets management documentation
+- [ ] IaC configuration (if applicable)
+
+### Optional Features
+- [ ] Browser automation setup (Claude Chrome, Puppeteer)
+- [ ] Log access configuration (observability)
+```
+
+### Step 2.6.2: Show What User Already Has
+
+```markdown
+## What Your Current Setup Has
+
+Based on my analysis of your existing documentation:
+
+### Existing Components
+[For each item above, mark as:]
+- ✅ **Has:** [component] - [brief description of what exists]
+- ⚠️ **Partial:** [component] - [what's there, what's missing]
+- ❌ **Missing:** [component]
+
+### Summary
+- **Complete:** [N] components (can be migrated/referenced)
+- **Partial:** [N] components (can be enhanced)
+- **Missing:** [N] components (will be created)
+```
+
+### Step 2.6.3: Present Gap Analysis
+
+```markdown
+## Gap Analysis: What You're Missing
+
+Based on comparing your setup to full FluxFrame, here are the gaps:
+
+### Missing Components
+
+| # | Component | What It Provides | Your Choice |
+|---|-----------|------------------|-------------|
+| 1 | [Component] | [Brief description of value] | Add / Skip |
+| 2 | [Component] | [Brief description of value] | Add / Skip |
+| ... | ... | ... | ... |
+
+### Components That Can Be Enhanced
+
+| # | Component | Your Current Version | FluxFrame Enhancement | Your Choice |
+|---|-----------|---------------------|----------------------|-------------|
+| 1 | [Component] | [What you have] | [What FluxFrame adds] | Migrate / Reference Only |
+| ... | ... | ... | ... | ... |
+
+---
+
+**Important:** For each item above, I need your explicit decision:
+
+1. **Missing components:** Should I add this? (Yes/No)
+2. **Existing components:** Should I migrate (copy/adapt content) or just reference your existing docs?
+
+Please respond with your choices for each numbered item, or say "Add all missing" / "Migrate all" if you want the full migration.
+```
+
+### Step 2.6.4: Record Gap Decisions
+
+**Wait for user response.** Do not proceed until user has made explicit choices.
+
+For each decision, log it:
+```
+log_decision({
+  category: "gap_analysis",
+  decision: "[Add/Skip/Migrate/Reference] [Component]",
+  reasoning: "[User's stated reason]",
+  alternatives: ["Add", "Skip", "Migrate", "Reference only"],
+  implications: "[What this means for their setup]"
+})
+```
+
+**If user says "you decide" or gives vague answer:**
+```
+I need your explicit decision for each component. This ensures your FluxFrame setup matches your actual needs.
+
+Let me explain why each matters:
+- [Component 1]: [Detailed explanation of value]
+- [Component 2]: [Detailed explanation of value]
+...
+
+Please choose for each: Add/Skip (missing) or Migrate/Reference (existing)?
 ```
 
 ---

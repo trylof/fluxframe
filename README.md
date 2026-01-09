@@ -43,49 +43,52 @@ This framework provides:
 
 ---
 
-## 🌟 NEW: MCP-Powered Bootstrap
+## Getting Started: MCP-Powered Bootstrap
 
-**FluxFrame now includes an MCP (Model Context Protocol) server that ensures reliable, step-by-step bootstrap with automatic progress tracking.**
+**FluxFrame uses an MCP (Model Context Protocol) server that ensures reliable, step-by-step bootstrap with automatic progress tracking.**
 
-### Why Use MCP Bootstrap?
+### Why MCP Is Required
 
-**Traditional markdown instructions risk:**
-- ❌ Skipping steps accidentally
-- ❌ Losing context mid-process  
-- ❌ No progress tracking across sessions
-
-**MCP Bootstrap guarantees:**
+MCP ensures the bootstrap process is followed correctly:
 - ✅ Every step tracked and validated
 - ✅ Progress persists across sessions
 - ✅ Resume anytime from where you left off
 - ✅ AI knows exactly what to do next
+- ✅ Required questions cannot be skipped
 
-### Quick Start with MCP (5 minutes)
+### Quick Start
 
+**Step 1:** Clone FluxFrame:
 ```bash
-# 1. Clone and install
 git clone https://github.com/trylof/fluxframe.git
-cd fluxframe
-npm install
-
-# 2. Configure MCP server (see bootstrap/MCP_SETUP_GUIDE.md)
-# 3. Tell your AI: "Bootstrap FluxFrame using the MCP server"
-# 4. Done! ✅
 ```
 
-**See:** [`QUICKSTART.md`](QUICKSTART.md) for complete beginner-friendly guide  
-**See:** [`bootstrap/MCP_SETUP_GUIDE.md`](bootstrap/MCP_SETUP_GUIDE.md) for MCP configuration
+**Step 2:** Tell your AI assistant:
+```
+Read fluxframe/BOOTSTRAP_INSTRUCTIONS.md and bootstrap FluxFrame for this project.
+```
 
----
+**That's it.** The AI handles everything else:
+1. Run `npm install` if dependencies are missing
+2. Check if MCP is configured
+3. If not, **guide you through MCP setup step-by-step** (no prior knowledge needed)
+4. After you restart with MCP configured, detect your project
+5. Ask required questions (cannot skip)
+6. Generate configuration
+7. Present everything for your approval
 
-## Alternative: Manual Bootstrap
+### What If MCP Isn't Set Up Yet?
 
-**If MCP is not available**, you can use the traditional approach:
+**You don't need to know how to configure MCP.** When you ask the AI to bootstrap:
 
-### Prerequisites
+- If MCP is already configured → bootstrap proceeds automatically
+- If MCP is not configured → **the AI guides you through setup interactively**
+  - Asks which AI tool you're using
+  - Shows you exactly where to add configuration
+  - Helps you figure out the right paths
+  - Walks you through restart and verification
 
-- AI coding assistant: [Cline](https://github.com/cline/cline), [Roo Code](https://github.com/RooVetGit/Roo-Cline), [Claude Code](https://www.anthropic.com/claude-code), or similar
-- A project (new or existing)
+**See:** [`bootstrap/MCP_SETUP_GUIDE.md`](bootstrap/MCP_SETUP_GUIDE.md) for reference (the AI will guide you through this).
 
 ### Works for ANY Project State
 
@@ -93,43 +96,6 @@ FluxFrame's **detection-first** bootstrap works whether you have:
 - 🆕 **New project** - No existing workflow or docs
 - 🔄 **Existing AI workflow** - Already using Cline, Claude Code, etc.
 - 📚 **Existing documentation** - ADRs, wikis, bug fix history, etc.
-
-### 3-Step Setup
-
-**Step 1: Add FluxFrame to Your Project**
-
-Clone or copy FluxFrame into your project (or a sibling directory):
-```bash
-# Option A: Clone as sibling directory
-git clone https://github.com/trylof/fluxframe.git
-
-# Option B: Clone into project
-cd your-project
-git clone https://github.com/trylof/fluxframe.git
-```
-
-**Step 2: Point AI at Bootstrap Instructions**
-
-In your AI assistant chat:
-```
-Read fluxframe/BOOTSTRAP_INSTRUCTIONS.md and set up FluxFrame for this project.
-```
-
-**Step 3: Answer Questions & Review**
-
-The AI will:
-1. **Detect** what exists in your project (AI rules, docs, patterns)
-2. **Classify** your project (greenfield, similar workflow, or migration)
-3. **Ask** only the questions needed for your situation
-4. **Generate** appropriate configuration
-5. **Present** everything for your approval
-
-**That's it!** Start your first cycle:
-```
-@Cline Let's start Cycle 1.1: [your first feature]
-```
-
-### Bootstrap Scenarios
 
 | Your Project Has | Bootstrap Does |
 |------------------|---------------|
@@ -518,8 +484,8 @@ Created patterns for your domain? Help others!
 **Q: Do I need to use ALL the framework features?**  
 A: No. Take what's useful. Minimum viable: context guide + patterns + .clinerules
 
-**Q: Can I use this without MCP?**  
-A: Yes, but you lose persistent context. Still valuable for documentation and patterns.
+**Q: Is MCP setup required?**
+A: Yes, for bootstrap. The MCP server ensures reliable step-by-step setup. After bootstrap completes, you'll use your project's own MCP server for ongoing development.
 
 **Q: How much overhead is this?**  
 A: Bootstrap: 10 minutes. Ongoing: 5-10 minutes per iteration to update docs. Net time savings: massive.
