@@ -18,6 +18,61 @@ Before starting this workflow:
 
 ---
 
+## Decision Logging (IMPORTANT)
+
+**Throughout this bootstrap process, you MUST log decisions with their reasoning.**
+
+Migration involves many decisions about how to handle existing documentation (Copy, Migrate, or Reference). To ensure these decisions persist beyond the conversation context and can be referenced later, use the `log_decision` MCP tool.
+
+### When to Log Decisions
+
+Log a decision whenever:
+- User chooses Copy/Migrate/Reference for a documentation category
+- Documentation location decisions are made
+- Infrastructure or environment choices are made (Q8-Q10)
+- Browser automation configuration choices are made
+- Log access integration decisions are made
+- AI tools and integration level are selected
+- Any special handling for existing content is decided
+
+### How to Log Decisions
+
+```
+log_decision({
+  category: "migration",  // See categories below
+  decision: "Reference ADRs from context_master_guide instead of migrating",
+  reasoning: "ADRs serve a different purpose (recording WHY decisions were made) than FluxFrame docs (WHAT to do). Team actively uses ADR process and wants to continue.",
+  alternatives: ["Copy ADR content into patterns/", "Migrate ADRs to FluxFrame structure"],
+  implications: "context_master_guide will link to ADRs directory. Team continues existing ADR workflow for architectural decisions."
+})
+```
+
+### Decision Categories for Migration
+
+- `scenario` - Why classified as MIGRATION
+- `migration` - Copy/Migrate/Reference decisions per doc category
+- `docs_location` - Where FluxFrame docs will live
+- `infrastructure` - Environment setup, platforms
+- `config_management` - Secrets, configuration approach
+- `iac` - Infrastructure as Code tooling
+- `verification` - Where to verify changes
+- `browser_automation` - Browser testing configuration
+- `log_access` - Observability configuration
+- `ai_tools` - AI assistant selection
+- `existing_rules` - How to handle existing AI rules (if any)
+- `custom` - Any other decisions
+
+### Syncing Decisions to File
+
+After completing Phase 2 (User Preferences) and at the end of bootstrap, call:
+```
+sync_decisions_to_file({ docsDir: "project_docs" })
+```
+
+This writes all logged decisions to `{{DOCS_DIR}}/bootstrap_decisions.md`.
+
+---
+
 ## Workflow Overview
 
 ```
@@ -1268,6 +1323,8 @@ Before marking migration complete:
 - [ ] FluxFrame core documents created
 - [ ] AI rules generated with correct paths
 - [ ] MCP server configured and tested
+- [ ] **All decisions logged via `log_decision` tool**
+- [ ] **`sync_decisions_to_file` called to generate `bootstrap_decisions.md`**
 - [ ] Backup created and verified
 - [ ] Rollback instructions provided
 - [ ] User has reviewed and approved result
@@ -1411,6 +1468,7 @@ ls [original_docs_location]/  # if kept
 
 FluxFrame template files have been removed. Your project now contains only:
 - Your migrated documentation in `{{DOCS_DIR}}/`
+- Your bootstrap decisions log (`{{DOCS_DIR}}/bootstrap_decisions.md`) - **reference this for why choices were made**
 - Your original documentation in `[location]/` (if kept)
 - Your AI rules (`AGENTS.md` + tool-specific files)
 - Your MCP server (`mcp-server.js`)
@@ -1419,6 +1477,8 @@ FluxFrame template files have been removed. Your project now contains only:
 **Backup available at:** `.fluxframe-backup/[timestamp]/`
 
 **Your project is ready for development!**
+
+**Important:** The `bootstrap_decisions.md` file contains the reasoning behind all migration choices made during setup. Reference this when questions arise about why things are configured a certain way.
 
 Next: Define Cycle 1.1 in `{{DOCS_DIR}}/implementation_plan.md`
 ```
@@ -1434,8 +1494,9 @@ Migration is fully complete when:
 3. ✅ FluxFrame core documents created
 4. ✅ AI rules generated with correct paths
 5. ✅ MCP server configured and tested
-6. ✅ Template files cleaned up
-7. ✅ README.md updated for project
-8. ✅ Backup preserved for rollback
-9. ✅ User has reviewed and approved result
-10. ✅ Ready to define Cycle 1.1
+6. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md in docs directory)
+7. ✅ Template files cleaned up
+8. ✅ README.md updated for project
+9. ✅ Backup preserved for rollback
+10. ✅ User has reviewed and approved result
+11. ✅ Ready to define Cycle 1.1

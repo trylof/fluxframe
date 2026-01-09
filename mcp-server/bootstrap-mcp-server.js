@@ -26,6 +26,9 @@ const __dirname = path.dirname(__filename);
 // Bootstrap state file location
 const STATE_FILE = path.join(process.cwd(), '.fluxframe-bootstrap-state.json');
 
+// Decisions log file location (written during bootstrap, persists after)
+const DECISIONS_FILE_NAME = 'bootstrap_decisions.md';
+
 // Bootstrap workflow definition
 const BOOTSTRAP_WORKFLOW = {
   phases: [
@@ -260,7 +263,8 @@ const DEFAULT_STATE = {
   completedSteps: [],
   collectedInfo: {},
   validationResults: {},
-  notes: []
+  notes: [],
+  decisions: []  // Structured decisions with reasoning
 };
 
 class BootstrapServer {
@@ -371,6 +375,67 @@ class BootstrapServer {
             required: ["confirm"],
           },
         },
+        {
+          name: "log_decision",
+          description: "Log a decision with its reasoning. Use this to capture WHY a choice was made, not just WHAT was chosen. Decisions are persisted to bootstrap_decisions.md in the docs directory.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              category: {
+                type: "string",
+                description: "Decision category (e.g., 'infrastructure', 'ai_tools', 'architecture', 'config_management', 'verification', 'browser_automation', 'log_access', 'api_contract', 'custom')",
+              },
+              decision: {
+                type: "string",
+                description: "What was decided/chosen",
+              },
+              reasoning: {
+                type: "string",
+                description: "WHY this choice was made - context, tradeoffs considered, constraints, user preferences",
+              },
+              alternatives: {
+                type: "array",
+                items: { type: "string" },
+                description: "Other options that were considered (optional)",
+              },
+              implications: {
+                type: "string",
+                description: "What this decision means for the project going forward (optional)",
+              },
+              stepId: {
+                type: "string",
+                description: "The bootstrap step this decision was made in (optional, auto-detected if not provided)",
+              },
+            },
+            required: ["category", "decision", "reasoning"],
+          },
+        },
+        {
+          name: "get_decisions",
+          description: "Get all logged decisions, optionally filtered by category. Use this to review decisions made earlier in the bootstrap process.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              category: {
+                type: "string",
+                description: "Filter by category (optional, returns all if not specified)",
+              },
+            },
+          },
+        },
+        {
+          name: "sync_decisions_to_file",
+          description: "Write all logged decisions to the bootstrap_decisions.md file in the docs directory. Call this after major decision points or before ending a session.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              docsDir: {
+                type: "string",
+                description: "Documentation directory path (e.g., 'project_docs'). If not provided, uses collectedInfo.docs_location or defaults to 'project_docs'.",
+              },
+            },
+          },
+        },
       ],
     }));
 
@@ -391,6 +456,12 @@ class BootstrapServer {
             return await this.getWorkflowOverview();
           case "reset_bootstrap":
             return await this.resetBootstrap(request.params.arguments);
+          case "log_decision":
+            return await this.logDecision(request.params.arguments);
+          case "get_decisions":
+            return await this.getDecisions(request.params.arguments);
+          case "sync_decisions_to_file":
+            return await this.syncDecisionsToFile(request.params.arguments);
           default:
             throw new Error(`Unknown tool: ${request.params.name}`);
         }
@@ -548,30 +619,30 @@ class BootstrapServer {
   getStepInstructions(stepId, state) {
     // Provide detailed instructions for each step
     const instructions = {
-      "0.1": "Call get_workflow_overview to understand the full process, then confirm you can see the bootstrap tools.",
-      "0.2": "Explain to the user: Bootstrap will detect existing setup, ask questions, generate files, and clean up templates. Confirm they want to proceed.",
+      "0.1": "Call get_workflow_overview to understand the full process, then confirm you can see the bootstrap tools including log_decision, get_decisions, and sync_decisions_to_file.",
+      "0.2": "Explain to the user: Bootstrap will detect existing setup, ask questions, generate files, and clean up templates. Mention that decisions will be logged with reasoning for future reference. Confirm they want to proceed.",
       "1.1": "Scan the project root for: AI rules (.clinerules, AGENTS.md, etc.), documentation (docs/, project_docs/), patterns, and configuration files. Create an inventory.",
-      "1.2": "Based on scan: GREENFIELD (no AI rules/docs), SIMILAR_WORKFLOW (has AI rules similar to FluxFrame), or MIGRATION (has documentation to adapt). Store scenario.",
+      "1.2": "Based on scan: GREENFIELD (no AI rules/docs), SIMILAR_WORKFLOW (has AI rules similar to FluxFrame), or MIGRATION (has documentation to adapt). Store scenario. LOG DECISION: Use log_decision with category='scenario' to record why this classification was chosen.",
       "1.3": "Present findings to user with classification reasoning. Get confirmation to proceed with detected scenario.",
-      "2.1": "Ask user for: project name, one-line purpose, and technology stack. If package.json exists, extract what you can.",
-      "2.2": "Ask which AI tools they'll use: Claude Code, Roo Code, Cline, Antigravity, multiple, or other. Offer basic or full integration for each.",
-      "2.3": "Ask where documentation should live: project_docs/ (standard), existing location, or custom path.",
-      "2.4": "Ask about environments (Dev/Test/Staging/Prod status), config management, and IaC tooling. Use infrastructure questions from project_questionnaire.md.",
-      "2.5": "Ask about optional features: browser automation, log access. Offer to skip or configure later.",
+      "2.1": "Ask user for: project name, one-line purpose, and technology stack. If package.json exists, extract what you can. LOG DECISION: Use log_decision with category='project_basics' to record the project identity and any context about why these choices were made.",
+      "2.2": "Ask which AI tools they'll use: Claude Code, Roo Code, Cline, Antigravity, multiple, or other. Offer basic or full integration for each. LOG DECISION: Use log_decision with category='ai_tools' to record tool choices and reasoning (e.g., 'Team already uses VS Code so Cline is natural fit').",
+      "2.3": "Ask where documentation should live: project_docs/ (standard), existing location, or custom path. LOG DECISION: Use log_decision with category='docs_location' if user chooses non-standard location with a reason.",
+      "2.4": "Ask about environments (Dev/Test/Staging/Prod status), config management, and IaC tooling. Use infrastructure questions from project_questionnaire.md. LOG DECISIONS: Use log_decision with categories 'infrastructure', 'config_management', 'iac', and 'verification' to capture each major decision with reasoning and tradeoffs discussed.",
+      "2.5": "Ask about optional features: browser automation, log access. Offer to skip or configure later. LOG DECISIONS: Use log_decision with categories 'browser_automation' and 'log_access' to record choices. After this step, call sync_decisions_to_file to persist all Phase 2 decisions.",
       "3.1": "Create directory structure: {docs_location}/{patterns,workflows,implementation_plans,bug_fixes}",
-      "3.2": "Generate context_master_guide.md, technical_status.md, implementation_plan.md, and workflow docs using templates. Replace all placeholders.",
+      "3.2": "Generate context_master_guide.md, technical_status.md, implementation_plan.md, bootstrap_decisions.md (from sync), and workflow docs using templates. Replace all placeholders.",
       "3.3": "Generate AGENTS.md and tool-specific rules based on selected AI tools. Use templates from ai-rules/.",
       "3.4": "Create mcp-server.js in project root from template. Configure paths to match docs_location.",
       "3.5": "Update or create package.json with MCP dependency and 'mcp' script. Run npm install.",
-      "4.1": "Check all expected files exist, no placeholders remain, paths are consistent, markdown is valid.",
+      "4.1": "Check all expected files exist, no placeholders remain, paths are consistent, markdown is valid. Verify bootstrap_decisions.md exists and has content.",
       "4.2": "Test: node mcp-server.js starts without errors. Show output to user.",
-      "4.3": "Show user summary of generated files. Ask them to review key files. Confirm they approve before cleanup.",
+      "4.3": "Show user summary of generated files. Ask them to review key files including bootstrap_decisions.md. Confirm they approve before cleanup.",
       "5.1": "Present list of template files to remove (ai-rules/, bootstrap/, doc-templates/, etc.) and files to keep (project files). Get approval.",
       "5.2": "Execute cleanup: rm -rf ai-rules/ bootstrap/ doc-templates/ mcp-server/ pattern-library-system/ development-cycles/ testing-framework/ examples/ BOOTSTRAP_INSTRUCTIONS.md RESTRUCTURE_PLAN.md. The user's project now has its own mcp-server.js (created in step 3.4). Optionally keep .fluxframe-bootstrap-state.json as a record, or delete it too.",
       "5.3": "Replace README.md with project-specific content. Include FluxFrame methodology mention and links to docs.",
-      "6.1": "Show complete summary: what was created, what was preserved, backup location, configuration details.",
+      "6.1": "Show complete summary: what was created, what was preserved, backup location, configuration details. Mention that bootstrap_decisions.md contains the reasoning behind all configuration choices.",
       "6.2": "CRITICAL: Guide user to add their project's mcp-server.js to their AI assistant's MCP settings. Provide tool-specific instructions.",
-      "6.3": "Congratulate user! Bootstrap complete. Guide them to define Cycle 1.1 in implementation_plan.md as next step."
+      "6.3": "Congratulate user! Bootstrap complete. Call sync_decisions_to_file one final time to ensure all decisions are persisted. Guide them to define Cycle 1.1 in implementation_plan.md as next step."
     };
 
     return instructions[stepId] || "Follow the step description and validation criteria.";
@@ -769,6 +840,253 @@ class BootstrapServer {
         },
       ],
     };
+  }
+
+  async logDecision(args) {
+    const state = await this.loadState();
+    const { category, decision, reasoning, alternatives, implications, stepId } = args;
+
+    const decisionEntry = {
+      id: `decision_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      stepId: stepId || state.currentStep,
+      category,
+      decision,
+      reasoning,
+      alternatives: alternatives || [],
+      implications: implications || null
+    };
+
+    // Initialize decisions array if it doesn't exist (for backwards compatibility)
+    if (!state.decisions) {
+      state.decisions = [];
+    }
+
+    state.decisions.push(decisionEntry);
+    await this.saveState(state);
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            success: true,
+            message: "Decision logged successfully",
+            decision: decisionEntry,
+            totalDecisions: state.decisions.length,
+            hint: "Call sync_decisions_to_file to persist decisions to markdown"
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  async getDecisions(args) {
+    const state = await this.loadState();
+    const { category } = args || {};
+
+    // Initialize decisions array if it doesn't exist
+    const decisions = state.decisions || [];
+
+    let filteredDecisions = decisions;
+    if (category) {
+      filteredDecisions = decisions.filter(d => d.category === category);
+    }
+
+    // Group by category for easier reading
+    const byCategory = {};
+    for (const d of filteredDecisions) {
+      if (!byCategory[d.category]) {
+        byCategory[d.category] = [];
+      }
+      byCategory[d.category].push(d);
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            totalDecisions: filteredDecisions.length,
+            filter: category || "none",
+            byCategory,
+            decisions: filteredDecisions
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  async syncDecisionsToFile(args) {
+    const state = await this.loadState();
+    const { docsDir } = args || {};
+
+    // Determine docs directory
+    const targetDocsDir = docsDir || state.collectedInfo?.docs_location || 'project_docs';
+    const decisionsFilePath = path.join(process.cwd(), targetDocsDir, DECISIONS_FILE_NAME);
+
+    // Initialize decisions array if needed
+    const decisions = state.decisions || [];
+
+    if (decisions.length === 0) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              message: "No decisions to sync",
+              hint: "Use log_decision to record decisions first"
+            }, null, 2),
+          },
+        ],
+      };
+    }
+
+    // Generate markdown content
+    const markdown = this.generateDecisionsMarkdown(state, decisions);
+
+    // Ensure directory exists
+    try {
+      await fs.mkdir(path.dirname(decisionsFilePath), { recursive: true });
+    } catch (err) {
+      // Directory might already exist, that's fine
+    }
+
+    // Write file
+    await fs.writeFile(decisionsFilePath, markdown, 'utf-8');
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            success: true,
+            message: "Decisions synced to file",
+            filePath: decisionsFilePath,
+            decisionsCount: decisions.length,
+            categories: [...new Set(decisions.map(d => d.category))]
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  generateDecisionsMarkdown(state, decisions) {
+    const projectName = state.collectedInfo?.project_name || 'Project';
+    const now = new Date().toISOString().split('T')[0];
+    const startDate = state.startedAt ? state.startedAt.split('T')[0] : now;
+
+    // Group decisions by category
+    const byCategory = {};
+    for (const d of decisions) {
+      if (!byCategory[d.category]) {
+        byCategory[d.category] = [];
+      }
+      byCategory[d.category].push(d);
+    }
+
+    let md = `# ${projectName} - Bootstrap Decisions Log
+
+**Bootstrap Started:** ${startDate}
+**Last Updated:** ${now}
+**Scenario:** ${state.scenario || 'Not yet determined'}
+
+---
+
+## Purpose
+
+This document captures the reasoning behind key decisions made during the FluxFrame bootstrap process. It serves as a permanent record that persists beyond the bootstrap conversation, ensuring the AI assistant and user can reference *why* specific choices were made, not just *what* was chosen.
+
+---
+
+`;
+
+    // Category display order and titles
+    const categoryOrder = [
+      { key: 'project_basics', title: 'Project Basics' },
+      { key: 'ai_tools', title: 'AI Tools Selection' },
+      { key: 'docs_location', title: 'Documentation Location' },
+      { key: 'infrastructure', title: 'Infrastructure & Environments' },
+      { key: 'config_management', title: 'Configuration Management' },
+      { key: 'iac', title: 'Infrastructure as Code' },
+      { key: 'verification', title: 'Verification Environment' },
+      { key: 'browser_automation', title: 'Browser Automation' },
+      { key: 'log_access', title: 'Log Access' },
+      { key: 'api_contract', title: 'API Contract Approach' },
+      { key: 'architecture', title: 'Architecture' },
+      { key: 'scenario', title: 'Bootstrap Scenario' },
+      { key: 'merge', title: 'Merge Decisions (Similar Workflow)' },
+      { key: 'migration', title: 'Migration Decisions' },
+      { key: 'custom', title: 'Custom Decisions' }
+    ];
+
+    for (const { key, title } of categoryOrder) {
+      const categoryDecisions = byCategory[key];
+      if (!categoryDecisions || categoryDecisions.length === 0) continue;
+
+      md += `## ${title}\n\n`;
+
+      for (const d of categoryDecisions) {
+        md += `### ${d.decision}\n\n`;
+        md += `**Step:** ${d.stepId} | **Logged:** ${d.timestamp.split('T')[0]}\n\n`;
+        md += `**Reasoning:**\n${d.reasoning}\n\n`;
+
+        if (d.alternatives && d.alternatives.length > 0) {
+          md += `**Alternatives Considered:**\n`;
+          for (const alt of d.alternatives) {
+            md += `- ${alt}\n`;
+          }
+          md += '\n';
+        }
+
+        if (d.implications) {
+          md += `**Implications:**\n${d.implications}\n\n`;
+        }
+
+        md += `---\n\n`;
+      }
+    }
+
+    // Add any categories not in the predefined order
+    const handledCategories = new Set(categoryOrder.map(c => c.key));
+    for (const [category, categoryDecisions] of Object.entries(byCategory)) {
+      if (handledCategories.has(category)) continue;
+
+      md += `## ${category.charAt(0).toUpperCase() + category.slice(1).replace(/_/g, ' ')}\n\n`;
+
+      for (const d of categoryDecisions) {
+        md += `### ${d.decision}\n\n`;
+        md += `**Step:** ${d.stepId} | **Logged:** ${d.timestamp.split('T')[0]}\n\n`;
+        md += `**Reasoning:**\n${d.reasoning}\n\n`;
+
+        if (d.alternatives && d.alternatives.length > 0) {
+          md += `**Alternatives Considered:**\n`;
+          for (const alt of d.alternatives) {
+            md += `- ${alt}\n`;
+          }
+          md += '\n';
+        }
+
+        if (d.implications) {
+          md += `**Implications:**\n${d.implications}\n\n`;
+        }
+
+        md += `---\n\n`;
+      }
+    }
+
+    md += `## Summary
+
+**Total Decisions Logged:** ${decisions.length}
+**Categories:** ${[...new Set(decisions.map(d => d.category))].join(', ')}
+
+---
+
+*This document was generated during FluxFrame bootstrap and should be kept as a permanent project record.*
+`;
+
+    return md;
   }
 
   async run() {

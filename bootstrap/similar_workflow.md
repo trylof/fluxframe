@@ -18,6 +18,57 @@ Before starting this workflow:
 
 ---
 
+## Decision Logging (IMPORTANT)
+
+**Throughout this bootstrap process, you MUST log decisions with their reasoning.**
+
+The similar workflow upgrade involves many decisions about merging, keeping, or replacing existing configurations. To ensure these decisions persist beyond the conversation context and can be referenced later, use the `log_decision` MCP tool.
+
+### When to Log Decisions
+
+Log a decision whenever:
+- User chooses to Keep/FluxFrame/Merge for a rule category
+- Infrastructure or environment choices are made (Q8-Q10)
+- Browser automation upgrade decisions are made
+- Log access configuration choices are made
+- Any customization or special handling is decided
+
+### How to Log Decisions
+
+```
+log_decision({
+  category: "merge",  // See categories below
+  decision: "Keep existing testing rules, add FluxFrame workflow",
+  reasoning: "User has comprehensive pytest configuration with custom fixtures. FluxFrame workflow enhances without replacing.",
+  alternatives: ["Replace with FluxFrame testing rules", "Merge both approaches"],
+  implications: "Need to ensure FluxFrame workflow references existing test patterns"
+})
+```
+
+### Decision Categories for Similar Workflow
+
+- `scenario` - Why classified as SIMILAR_WORKFLOW
+- `merge` - Rule merge decisions (Keep/FluxFrame/Merge per category)
+- `infrastructure` - Environment setup, platforms
+- `config_management` - Secrets, configuration approach
+- `iac` - Infrastructure as Code tooling
+- `verification` - Where to verify changes
+- `browser_automation` - Browser testing upgrade decisions
+- `log_access` - Observability configuration
+- `mcp` - MCP server merge/replace decisions
+- `custom` - Any other decisions
+
+### Syncing Decisions to File
+
+After completing Phase 3 (User Decisions) and at the end of bootstrap, call:
+```
+sync_decisions_to_file({ docsDir: "project_docs" })
+```
+
+This writes all logged decisions to `{{DOCS_DIR}}/bootstrap_decisions.md`.
+
+---
+
 ## Workflow Overview
 
 ```
@@ -1145,6 +1196,7 @@ ls {{DOCS_DIR}}/
 
 FluxFrame template files have been removed. Your project now contains only:
 - Your generated documentation in `{{DOCS_DIR}}/`
+- Your bootstrap decisions log (`{{DOCS_DIR}}/bootstrap_decisions.md`) - **reference this for why choices were made**
 - Your AI rules (`AGENTS.md` + tool-specific files)
 - Your MCP server (`mcp-server.js`)
 - Your preserved customizations
@@ -1153,6 +1205,8 @@ FluxFrame template files have been removed. Your project now contains only:
 **Backup available at:** `.fluxframe-backup/[timestamp]/`
 
 **Your project is ready for development!**
+
+**Important:** The `bootstrap_decisions.md` file contains the reasoning behind all merge and configuration choices made during the upgrade. Reference this when questions arise about why things are configured a certain way.
 
 Next: Start a development cycle to experience the upgraded workflow.
 ```
@@ -1169,7 +1223,8 @@ Bootstrap upgrade is fully complete when:
 4. ✅ Dependencies installed
 5. ✅ No errors in any file
 6. ✅ User can read generated docs
-7. ✅ Template files cleaned up
-8. ✅ README.md updated for project
-9. ✅ Backup preserved for rollback
-10. ✅ Ready to start development cycle
+7. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md in docs directory)
+8. ✅ Template files cleaned up
+9. ✅ README.md updated for project
+10. ✅ Backup preserved for rollback
+11. ✅ Ready to start development cycle

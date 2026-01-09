@@ -8,6 +8,59 @@
 
 ---
 
+## Decision Logging (IMPORTANT)
+
+**Throughout this bootstrap process, you MUST log decisions with their reasoning.**
+
+The bootstrap process involves many architectural and configuration decisions. To ensure these decisions persist beyond the conversation context and can be referenced later, use the `log_decision` MCP tool.
+
+### When to Log Decisions
+
+Log a decision whenever:
+- The user makes a choice between multiple options (infrastructure, tools, approaches)
+- You detect something about the project that influences setup
+- A tradeoff is discussed and resolved
+- The user expresses a preference with a reason
+
+### How to Log Decisions
+
+```
+log_decision({
+  category: "infrastructure",  // See categories below
+  decision: "Use SOPS with age encryption for secrets",
+  reasoning: "Team uses GitOps workflow and needs secrets in version control. Age was chosen over GPG for simpler key management.",
+  alternatives: ["HashiCorp Vault", "AWS Secrets Manager", "Plain .env files"],
+  implications: "Will need to set up SOPS in CI pipeline and distribute age keys to team"
+})
+```
+
+### Decision Categories
+
+- `project_basics` - Project name, purpose, tech stack
+- `ai_tools` - AI assistant selection and integration level
+- `docs_location` - Where documentation lives
+- `infrastructure` - Environment setup, platforms
+- `config_management` - Secrets, configuration approach
+- `iac` - Infrastructure as Code tooling
+- `verification` - Where to verify changes
+- `browser_automation` - Browser testing setup
+- `log_access` - Observability configuration
+- `api_contract` - API approach (OpenAPI, GraphQL, etc.)
+- `architecture` - Monolith, microservices, etc.
+- `scenario` - Bootstrap scenario classification
+- `custom` - Any other decisions
+
+### Syncing Decisions to File
+
+After completing Phase 2 (Information Gathering) and at the end of bootstrap, call:
+```
+sync_decisions_to_file({ docsDir: "project_docs" })
+```
+
+This writes all logged decisions to `{{DOCS_DIR}}/bootstrap_decisions.md`.
+
+---
+
 ## Prerequisites
 
 Before starting this workflow:
@@ -1043,6 +1096,7 @@ Before presenting to user, verify:
 - [ ] `{{DOCS_DIR}}/context_master_guide.md`
 - [ ] `{{DOCS_DIR}}/technical_status.md`
 - [ ] `{{DOCS_DIR}}/implementation_plan.md`
+- [ ] `{{DOCS_DIR}}/bootstrap_decisions.md` **(NEW - decision log with reasoning)**
 - [ ] `{{DOCS_DIR}}/patterns/README.md`
 - [ ] `{{DOCS_DIR}}/patterns/*_patterns.md` (as applicable)
 - [ ] `{{DOCS_DIR}}/workflows/cycle_workflow.md`
@@ -1054,11 +1108,18 @@ Before presenting to user, verify:
 
 ### Content Quality
 - [ ] No `{{PLACEHOLDER}}` syntax remaining
-- [ ] No `[PLACEHOLDER]` brackets remaining  
+- [ ] No `[PLACEHOLDER]` brackets remaining
 - [ ] No template comments (`<!-- TEMPLATE:`)
 - [ ] All paths use actual directories
 - [ ] All dates are current
 - [ ] Project name is consistent everywhere
+
+### Decision Documentation
+- [ ] All major decisions logged via `log_decision` tool
+- [ ] `sync_decisions_to_file` called to generate `bootstrap_decisions.md`
+- [ ] Decisions include reasoning, not just values
+- [ ] Infrastructure decisions have alternatives considered
+- [ ] API/architecture decisions have implications documented
 
 ### Technical Validation
 - [ ] MCP server tested and working
@@ -1128,7 +1189,8 @@ Bootstrap is successful when:
 4. ✅ Dependencies installed
 5. ✅ No errors in any file
 6. ✅ User can read generated docs
-7. ✅ Ready to define Cycle 1.1
+7. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md generated)
+8. ✅ Ready to define Cycle 1.1
 
 **Next:** Present summary to user and guide them to next steps.
 
@@ -1263,11 +1325,14 @@ ls {{DOCS_DIR}}/
 
 FluxFrame template files have been removed. Your project now contains only:
 - Your generated documentation in `{{DOCS_DIR}}/`
+- Your bootstrap decisions log (`{{DOCS_DIR}}/bootstrap_decisions.md`) - **reference this for why choices were made**
 - Your AI rules (`AGENTS.md` + tool-specific files)
 - Your MCP server (`mcp-server.js`)
 - Your project configuration
 
 **Your project is ready for development!**
+
+**Important:** The `bootstrap_decisions.md` file contains the reasoning behind all configuration choices made during setup. Reference this when questions arise about why things are configured a certain way.
 
 Next: Define Cycle 1.1 in `{{DOCS_DIR}}/implementation_plan.md`
 ```
@@ -1284,6 +1349,7 @@ Bootstrap is fully complete when:
 4. ✅ Dependencies installed
 5. ✅ No errors in any file
 6. ✅ User can read generated docs
-7. ✅ Template files cleaned up
-8. ✅ README.md updated for project
-9. ✅ Ready to define Cycle 1.1
+7. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md in docs directory)
+8. ✅ Template files cleaned up
+9. ✅ README.md updated for project
+10. ✅ Ready to define Cycle 1.1
