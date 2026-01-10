@@ -130,20 +130,127 @@ Check for the MCP configuration file based on the AI tool being used:
    **If file exists, read it, add the fluxframe-bootstrap server, and write it back.**
    Be careful to preserve existing MCP servers in the config.
 
-4. **After writing the config, inform the user:**
+4. **After writing the MCP config, create bootstrap-resume rules** (see Step 2.2.5 below)
+
+5. **Then inform the user:**
    ```
-   I've configured the FluxFrame bootstrap MCP server. To activate it:
+   I've configured the FluxFrame bootstrap MCP server and created temporary
+   bootstrap-resume rules. To activate MCP:
 
    1. Completely restart Claude Code (close and reopen, not just refresh)
    2. Start a new conversation
    3. Ask me to continue the FluxFrame bootstrap
 
-   The MCP tools will be available after restart.
+   The MCP tools will be available after restart, and I'll know to continue
+   the bootstrap from where we left off.
    ```
 
 **For other AI tools:**
 - Attempt to locate and edit the config file if you have access
 - If you cannot edit the config (e.g., it's in a GUI-only location), then guide the user through manual setup
+- Always create bootstrap-resume rules (Step 2.2.5) regardless of which AI tool is being used
+
+### Step 2.2.5: Create Bootstrap-Resume Rules
+
+**CRITICAL:** After configuring MCP, create minimal instruction files so the AI knows to continue bootstrap on restart.
+
+**Why this is necessary:**
+- When user restarts, the AI has no memory of the bootstrap in progress
+- Without instruction files, AI may explore randomly instead of continuing bootstrap
+- These files tell ANY AI assistant: "Call get_bootstrap_state and follow bootstrap instructions"
+
+**IMPORTANT: Back up existing rules first!**
+
+Before creating bootstrap-resume rules, check if any AI rule files already exist. If they do, BACK THEM UP - they may be the user's existing configuration that we need for SIMILAR_WORKFLOW.
+
+```bash
+# Check for and back up existing rules
+mkdir -p .fluxframe-backup/pre-bootstrap
+
+# Back up any existing rule files (if they exist)
+[ -f AGENTS.md ] && cp AGENTS.md .fluxframe-backup/pre-bootstrap/
+[ -f CLAUDE.md ] && cp CLAUDE.md .fluxframe-backup/pre-bootstrap/
+[ -f GEMINI.md ] && cp GEMINI.md .fluxframe-backup/pre-bootstrap/
+[ -d .clinerules ] && cp -r .clinerules .fluxframe-backup/pre-bootstrap/
+[ -f .clinerules ] && cp .clinerules .fluxframe-backup/pre-bootstrap/
+[ -d .claude ] && cp -r .claude .fluxframe-backup/pre-bootstrap/
+[ -f .roomodes ] && cp .roomodes .fluxframe-backup/pre-bootstrap/
+[ -d .roo ] && cp -r .roo .fluxframe-backup/pre-bootstrap/
+[ -f .cursorrules ] && cp .cursorrules .fluxframe-backup/pre-bootstrap/
+
+# List what was backed up
+ls -la .fluxframe-backup/pre-bootstrap/ 2>/dev/null
+```
+
+**Tell user if rules were backed up:** "I found existing AI rules and backed them up to `.fluxframe-backup/pre-bootstrap/`. They'll be preserved during bootstrap."
+
+**Files to create based on detected AI tool(s):**
+
+| AI Tool | File to Create |
+|---------|----------------|
+| Claude Code | `CLAUDE.md` |
+| Cline | `.clinerules` |
+| Roo Code | `AGENTS.md` (auto-detected) |
+| Antigravity | `GEMINI.md` |
+| Cursor | `AGENTS.md` or `.cursorrules` |
+| Unknown/Multiple | `AGENTS.md` (universal fallback) |
+
+**Content for ALL bootstrap-resume files (identical):**
+
+```markdown
+# FluxFrame Bootstrap In Progress
+
+⚠️ **DO NOT follow normal project rules. A bootstrap is in progress.**
+
+## To Continue Bootstrap
+
+1. Call MCP tool: `get_bootstrap_state`
+2. Read the phase and step from the response
+3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+
+## If MCP Tools Not Available
+
+If `get_bootstrap_state` fails or MCP tools are not visible:
+1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
+2. Check Gate 2 - the MCP configuration may need to be verified
+3. Restart your AI tool after MCP is configured
+
+---
+
+*This file is temporary and will be replaced with full project rules when bootstrap completes.*
+```
+
+**Commands to create files:**
+
+```bash
+# For Claude Code users - create CLAUDE.md at project root
+cat > CLAUDE.md << 'EOF'
+# FluxFrame Bootstrap In Progress
+
+⚠️ **DO NOT follow normal project rules. A bootstrap is in progress.**
+
+## To Continue Bootstrap
+
+1. Call MCP tool: `get_bootstrap_state`
+2. Read the phase and step from the response
+3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+
+## If MCP Tools Not Available
+
+If `get_bootstrap_state` fails or MCP tools are not visible:
+1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
+2. Check Gate 2 - the MCP configuration may need to be verified
+3. Restart your AI tool after MCP is configured
+
+---
+
+*This file is temporary and will be replaced with full project rules when bootstrap completes.*
+EOF
+```
+
+**For multiple AI tools:** Create files for each tool the user will use. If unsure, create `AGENTS.md` as it's the universal fallback that Roo and Cursor auto-detect.
+
+**Important:** These are TEMPORARY files. They will be replaced with full project rules during Phase 5 (Cleanup) when the real AGENTS.md, CLAUDE.md, etc. are moved from staging to their final locations
 
 ### Step 2.3: Verify MCP Works
 
