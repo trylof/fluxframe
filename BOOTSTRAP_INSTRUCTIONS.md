@@ -31,43 +31,121 @@ Look for `node_modules/` directory in the FluxFrame folder, or check if `node_mo
 
 ---
 
-## Gate 2: MCP Verification Required
+## Gate 2: MCP Configuration
 
-**After dependencies are installed, verify MCP is configured.**
+**After dependencies are installed, set up MCP if needed.**
 
-### Verification Step
+### Step 2.1: Check if MCP is Already Configured
 
-Attempt to call `get_bootstrap_state`.
+**DO NOT immediately try to call `get_bootstrap_state`.** First, check if MCP configuration exists.
 
-**If the call succeeds:** MCP is configured. Proceed to Phase 0.
+Check for the MCP configuration file based on the AI tool being used:
 
-**If the call fails or the tool is not available:**
+| AI Tool | Config File Location |
+|---------|---------------------|
+| Claude Code | `~/.claude/claude_desktop_config.json` |
+| Cline | VS Code settings or `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json` |
+| Roo Code | VS Code Roo MCP settings |
+| Cursor | Cursor MCP settings |
 
-Do NOT just point user at documentation. Guide them interactively:
+**If config file exists and contains "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
 
-1. **Explain what's needed:** "To bootstrap FluxFrame, I need access to the MCP tools. Let me guide you through setting this up - it takes about 2 minutes."
+**If config file doesn't exist or doesn't have FluxFrame:** Proceed to Step 2.2 (configure it).
 
-2. **Check prerequisites with user:**
-   - "Do you have Node.js installed? Run `node --version` to check."
-   - "Have you run `npm install` in the FluxFrame directory?"
+### Step 2.2: Configure MCP Automatically
 
-3. **Guide MCP configuration step-by-step:**
-   - Ask which AI tool they're using (Claude Code, Cline, Roo Code, Cursor, etc.)
-   - Provide the exact config file location for their tool
-   - Show them the exact JSON to add (with paths they need to fill in)
-   - Explain each path they need to customize
-   - If they're unsure about paths, help them figure it out
+**IMPORTANT: Try to configure MCP yourself first.** You have terminal access and can edit files. Only ask the user to do it manually if you cannot.
+
+**For Claude Code:**
+
+1. **Check if config file exists:**
+   ```bash
+   cat ~/.claude/claude_desktop_config.json 2>/dev/null || echo "File does not exist"
+   ```
+
+2. **Determine the correct configuration:**
+   - FluxFrame directory: The directory containing this BOOTSTRAP_INSTRUCTIONS.md file
+   - Project directory (cwd): The user's project directory that will be bootstrapped
+
+3. **Create or update the config file:**
+
+   **If file doesn't exist, create it:**
+   ```bash
+   mkdir -p ~/.claude
+   cat > ~/.claude/claude_desktop_config.json << 'EOF'
+   {
+     "mcpServers": {
+       "fluxframe-bootstrap": {
+         "command": "node",
+         "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+         "cwd": "[PROJECT_PATH]"
+       }
+     }
+   }
+   EOF
+   ```
+
+   **If file exists, read it, add the fluxframe-bootstrap server, and write it back.**
+   Be careful to preserve existing MCP servers in the config.
+
+4. **After writing the config, inform the user:**
+   ```
+   I've configured the FluxFrame bootstrap MCP server. To activate it:
+
+   1. Completely restart Claude Code (close and reopen, not just refresh)
+   2. Start a new conversation
+   3. Ask me to continue the FluxFrame bootstrap
+
+   The MCP tools will be available after restart.
+   ```
+
+**For other AI tools:**
+- Attempt to locate and edit the config file if you have access
+- If you cannot edit the config (e.g., it's in a GUI-only location), then guide the user through manual setup
+
+### Step 2.3: Verify MCP Works
+
+After configuration (automatic or manual) and restart:
+
+Call `get_bootstrap_state`.
+
+**If successful:** MCP is working. Proceed to Phase 0.
+
+**If failed:** Troubleshoot:
+- Was the config file written correctly? Read it back and check.
+- Are the paths correct? Verify the fluxframe and project directories exist.
+- Did the user restart? MCP changes require a full restart.
+
+### Fallback: Manual Configuration
+
+**Only use this if automatic configuration fails.** Guide the user step-by-step:
+
+1. **Explain what's needed:** "I wasn't able to configure MCP automatically. Let me guide you through setting this up manually - it takes about 2 minutes."
+
+2. **Provide the exact config to add:**
+   ```json
+   {
+     "mcpServers": {
+       "fluxframe-bootstrap": {
+         "command": "node",
+         "args": ["[EXACT_FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+         "cwd": "[EXACT_PROJECT_PATH]"
+       }
+     }
+   }
+   ```
+
+   Fill in the actual paths - don't make the user figure them out.
+
+3. **Tell them exactly where to put it:**
+   - For Claude Code: `~/.claude/claude_desktop_config.json`
+   - Explain how to merge if they have existing MCP servers
 
 4. **Walk through the restart:**
-   - "Now save the config file and completely restart [their AI tool]"
+   - "Save the config file and completely restart [their AI tool]"
    - "Start a new conversation and ask me to verify MCP is working"
 
-5. **After restart, verify together:**
-   - Try `get_bootstrap_state` again
-   - If it works: "MCP is configured. Let's proceed with bootstrap."
-   - If still fails: Troubleshoot with user (wrong paths? restart needed? permissions?)
-
-**Key principle:** The user should not need to read documentation. You guide them through every step, waiting for confirmation before proceeding. If something requires manual action (clicking in UI, editing config files outside the project), explain exactly what to do and wait for them to confirm completion.
+**Key principle:** Always try to do it yourself first. The user should not need to manually edit config files if you can do it for them.
 
 **Why MCP is required:**
 - ✅ Tracks progress automatically - no steps skipped
