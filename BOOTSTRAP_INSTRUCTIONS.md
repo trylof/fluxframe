@@ -9,6 +9,30 @@
 
 ---
 
+## ⚠️ CRITICAL: Read This First
+
+**Follow these gates STRICTLY IN ORDER. Do NOT skip ahead or parallelize.**
+
+```
+Gate 1: npm install     →  MUST complete before Gate 2
+Gate 2: MCP config      →  MUST complete before Phase 0
+Phase 0+: Bootstrap     →  Only after Gates 1 and 2 are done
+```
+
+**DO NOT:**
+- ❌ Use Explore agents or delegate bootstrap to sub-agents
+- ❌ Check MCP config before npm install is done
+- ❌ Skip Gate 1 because you want to check config first
+- ❌ Parallelize the gates - they are sequential
+
+**DO:**
+- ✅ Follow this file step by step, in order
+- ✅ Complete Gate 1 fully before starting Gate 2
+- ✅ Complete Gate 2 fully before starting Phase 0
+- ✅ Execute commands yourself, don't delegate
+
+---
+
 ## Gate 1: Dependencies Installed
 
 **Before anything else, verify FluxFrame dependencies are installed.**
@@ -28,6 +52,14 @@ Look for `node_modules/` directory in the FluxFrame folder, or check if `node_mo
 - Check if Node.js is installed (`node --version`)
 - If Node.js is missing, guide user to install it from nodejs.org
 - After Node.js is installed, retry `npm install`
+
+### ✅ Gate 1 Checkpoint
+
+Before proceeding to Gate 2, confirm:
+- [ ] `node_modules/` exists in the FluxFrame directory
+- [ ] `node_modules/@modelcontextprotocol` exists
+
+**DO NOT proceed to Gate 2 until Gate 1 is complete.**
 
 ---
 
