@@ -443,8 +443,12 @@ Before we proceed, here's what a complete FluxFrame setup provides. I'll then sh
 - [ ] `patterns/infra_patterns.md` - Infrastructure & deployment patterns **(REQUIRED)**
 
 ### Workflows
-- [ ] `workflows/cycle_workflow.md` - Development cycle methodology
-- [ ] `workflows/change_request_protocol.md` - Bug fix and change tracking
+
+> [!NOTE]
+> Workflow files define the FluxFrame methodology and are required for consistent development practices.
+
+- [ ] `workflows/cycle_workflow.md` - Development cycle methodology **(REQUIRED)**
+- [ ] `workflows/change_request_protocol.md` - Bug fix and change tracking **(REQUIRED)**
 
 ### AI Configuration
 - [ ] `AGENTS.md` - Universal AI baseline rules

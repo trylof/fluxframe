@@ -538,7 +538,7 @@ Explain why it matters and ask again:
 ```
 This question affects [specific impact]. Without this information, I'll need to:
 - Leave the infrastructure section incomplete
-- Skip generating infra_patterns.md
+- Create infra_patterns.md as an empty placeholder
 - Not include environment details in your docs
 
 Would you prefer to answer now, or should I leave these sections for you to fill in later?
