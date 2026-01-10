@@ -59,7 +59,17 @@ Before proceeding to Gate 2, confirm:
 - [ ] `node_modules/` exists in the FluxFrame directory
 - [ ] `node_modules/@modelcontextprotocol` exists
 
-**DO NOT proceed to Gate 2 until Gate 1 is complete.**
+**If dependencies are missing:** Run `npm install` NOW. Do not continue reading this file until npm install completes successfully.
+
+**If you are in plan mode or cannot run commands:** STOP. Tell the user: "I need to run npm install but I'm in read-only/plan mode. Please exit plan mode so I can proceed with the bootstrap." Do NOT continue checking other things.
+
+---
+
+## ⛔ STOP - Gate 1 Must Be Complete Before Reading Further
+
+If you have not confirmed both checkboxes above, GO BACK and complete Gate 1.
+
+Do NOT read Gate 2 until Gate 1 is done. Seriously.
 
 ---
 
