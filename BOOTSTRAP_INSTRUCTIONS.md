@@ -85,14 +85,13 @@ Check for the MCP configuration file based on the AI tool being used:
 
 | AI Tool | Config File Location |
 |---------|---------------------|
-| Claude Code (CLI) | `~/.claude.json` (Global) or `.mcp.json` (Project) |
-| Cline | VS Code settings or `cline_mcp_settings.json` |
-| Roo Code | `.roo/mcp.json` (Project) or Global settings |
-| Cursor | `.cursor/mcp.json` (Project) or Global settings |
-| Codex | `~/.codex/config.toml` or `AGENTS.md` (for rules) |
-| Kilo Code | `.kilocode/mcp.json` (Project) or Global settings |
-| Antigravity | `mcp.json` or manage via IDE Store (uses GEMINI.md) |
-| Gemini CLI | `AGENTS.md` or `.gemini/` |
+| Claude Code (CLI) | `.mcp.json` in project root |
+| Cline | `.vscode/cline_mcp_settings.json` |
+| Roo Code | `.roo/mcp.json` |
+| Cursor | `.cursor/mcp.json` |
+| Kilo Code | `.kilocode/mcp.json` |
+| Antigravity | `mcp.json` in project root |
+| Codex / Gemini CLI | Limited MCP support - use `AGENTS.md` |
 
 **If config file exists and contains "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
 
@@ -120,55 +119,149 @@ Check for the MCP configuration file based on the AI tool being used:
 
 #### TASK 1 of 2: Configure MCP
 
-**IMPORTANT: Try to configure MCP yourself first.** You have terminal access and can edit files.
+**IMPORTANT: Configure MCP automatically.** You have terminal access and can edit files. Do not ask the user to configure manually unless automation fails.
 
-**For Claude Code (CLI):**
+**Required values:**
+- `[FLUXFRAME_PATH]`: The directory containing this BOOTSTRAP_INSTRUCTIONS.md file
+- `[PROJECT_PATH]`: The user's project directory that will be bootstrapped
 
-1. **Check if global config file exists:**
-   ```bash
-   cat ~/.claude.json 2>/dev/null || echo "File does not exist"
-   ```
+**Find your AI tool below and follow the instructions:**
 
-2. **Determine the correct configuration:**
-   - FluxFrame directory: The directory containing this BOOTSTRAP_INSTRUCTIONS.md file
-   - Project directory (cwd): The user's project directory that will be bootstrapped
+---
 
-3. **Create or update the config file:**
-   
-   **Option A: Project-local config (Recommended for portability)**
-   Create `.mcp.json` in your project root:
-   ```bash
-   cat > .mcp.json << 'EOF'
-   {
-     "mcpServers": {
-       "fluxframe-bootstrap": {
-         "command": "node",
-         "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
-         "cwd": "[PROJECT_PATH]"
-       }
-     }
-   }
-   EOF
-   ```
+##### Claude Code (CLI)
 
-   **Option B: Global config (~/.claude.json)**
-   If you prefer global availability, edit `~/.claude.json`. Note that this file contains other settings, so **DO NOT overwrite it with `cat >`**. You must read it, insert the `mcpServers` key if missing, or add to it.
+**Config:** `.mcp.json` in project root
 
-   ```json
-   {
-     "mcpServers": {
-       "fluxframe-bootstrap": {
-         "command": "node",
-         "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
-         "cwd": "[PROJECT_PATH]"
-       }
-     }
-   }
-   ```
+```bash
+cat > .mcp.json << 'EOF'
+{
+  "mcpServers": {
+    "fluxframe-bootstrap": {
+      "command": "node",
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "cwd": "[PROJECT_PATH]"
+    }
+  }
+}
+EOF
+```
 
-**Step 1e: Verify configuration was applied**
+---
 
-Check that the configuration file/setting now contains "fluxframe-bootstrap".
+##### Cline (VS Code Extension)
+
+**Config:** `.vscode/cline_mcp_settings.json`
+
+```bash
+mkdir -p .vscode
+cat > .vscode/cline_mcp_settings.json << 'EOF'
+{
+  "mcpServers": {
+    "fluxframe-bootstrap": {
+      "command": "node",
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "cwd": "[PROJECT_PATH]"
+    }
+  }
+}
+EOF
+```
+
+---
+
+##### Roo Code (VS Code Extension)
+
+**Config:** `.roo/mcp.json`
+
+```bash
+mkdir -p .roo
+cat > .roo/mcp.json << 'EOF'
+{
+  "mcpServers": {
+    "fluxframe-bootstrap": {
+      "command": "node",
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "cwd": "[PROJECT_PATH]"
+    }
+  }
+}
+EOF
+```
+
+---
+
+##### Cursor
+
+**Config:** `.cursor/mcp.json`
+
+```bash
+mkdir -p .cursor
+cat > .cursor/mcp.json << 'EOF'
+{
+  "mcpServers": {
+    "fluxframe-bootstrap": {
+      "command": "node",
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "cwd": "[PROJECT_PATH]"
+    }
+  }
+}
+EOF
+```
+
+---
+
+##### Kilo Code (VS Code Extension)
+
+**Config:** `.kilocode/mcp.json`
+
+```bash
+mkdir -p .kilocode
+cat > .kilocode/mcp.json << 'EOF'
+{
+  "mcpServers": {
+    "fluxframe-bootstrap": {
+      "command": "node",
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "cwd": "[PROJECT_PATH]"
+    }
+  }
+}
+EOF
+```
+
+---
+
+##### Antigravity (Gemini)
+
+**Config:** `mcp.json` in project root
+
+```bash
+cat > mcp.json << 'EOF'
+{
+  "mcpServers": {
+    "fluxframe-bootstrap": {
+      "command": "node",
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "cwd": "[PROJECT_PATH]"
+    }
+  }
+}
+EOF
+```
+
+---
+
+##### Codex / Gemini CLI
+
+**Note:** Codex and Gemini CLI have limited MCP support. Use `AGENTS.md` for rules instead.
+
+---
+
+**Verify configuration was applied:**
+
+Check that the configuration file now contains "fluxframe-bootstrap" with correct paths.
 
 **✓ Task 1 complete when:** MCP configuration contains "fluxframe-bootstrap" with correct paths
 
@@ -198,6 +291,7 @@ mkdir -p .fluxframe-backup/pre-bootstrap
 [ -f .roomodes ] && cp .roomodes .fluxframe-backup/pre-bootstrap/
 [ -d .roo ] && cp -r .roo .fluxframe-backup/pre-bootstrap/
 [ -f .cursorrules ] && cp .cursorrules .fluxframe-backup/pre-bootstrap/
+[ -d .agent ] && cp -r .agent .fluxframe-backup/pre-bootstrap/
 
 # List what was backed up
 ls -la .fluxframe-backup/pre-bootstrap/ 2>/dev/null
@@ -205,18 +299,11 @@ ls -la .fluxframe-backup/pre-bootstrap/ 2>/dev/null
 
 **Step 2b: Create the bootstrap-resume file**
 
-| AI Tool | File to Create |
-|---------|----------------|
-| Claude Code | `CLAUDE.md` |
-| Cline | `.clinerules` |
-| Roo Code | `AGENTS.md` (auto-detected) |
-| Antigravity | `GEMINI.md` (easiest for temp rules) or `.agent/rules/bootstrap.md` |
-| Cursor | `AGENTS.md` or `.cursorrules` |
-| Codex | `AGENTS.md` |
-| Gemini CLI | `AGENTS.md` |
-| Unknown/Multiple | `AGENTS.md` (universal fallback) |
+**Find your AI tool and execute the corresponding command:**
 
-**Execute this command (for Claude Code - adapt filename for other tools):**
+---
+
+##### Claude Code (CLI)
 
 ```bash
 cat > CLAUDE.md << 'EOF'
@@ -243,11 +330,159 @@ If `get_bootstrap_state` fails or MCP tools are not visible:
 EOF
 ```
 
-**Step 2c: Verify the file was created**
+---
+
+##### Cline (VS Code Extension)
 
 ```bash
-# MUST verify the file exists before proceeding
-cat CLAUDE.md | head -3
+cat > .clinerules << 'EOF'
+# FluxFrame Bootstrap In Progress
+
+⚠️ **DO NOT follow normal project rules. A bootstrap is in progress.**
+
+## To Continue Bootstrap
+
+1. Call MCP tool: `get_bootstrap_state`
+2. Read the phase and step from the response
+3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+
+## If MCP Tools Not Available
+
+If `get_bootstrap_state` fails or MCP tools are not visible:
+1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
+2. Check Gate 2 - the MCP configuration may need to be verified
+3. Restart your AI tool after MCP is configured
+
+---
+
+*This file is temporary and will be replaced with full project rules when bootstrap completes.*
+EOF
+```
+
+---
+
+##### Roo Code (VS Code Extension)
+
+```bash
+cat > AGENTS.md << 'EOF'
+# FluxFrame Bootstrap In Progress
+
+⚠️ **DO NOT follow normal project rules. A bootstrap is in progress.**
+
+## To Continue Bootstrap
+
+1. Call MCP tool: `get_bootstrap_state`
+2. Read the phase and step from the response
+3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+
+## If MCP Tools Not Available
+
+If `get_bootstrap_state` fails or MCP tools are not visible:
+1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
+2. Check Gate 2 - the MCP configuration may need to be verified
+3. Restart your AI tool after MCP is configured
+
+---
+
+*This file is temporary and will be replaced with full project rules when bootstrap completes.*
+EOF
+```
+
+---
+
+##### Antigravity (Gemini)
+
+```bash
+cat > GEMINI.md << 'EOF'
+# FluxFrame Bootstrap In Progress
+
+⚠️ **DO NOT follow normal project rules. A bootstrap is in progress.**
+
+## To Continue Bootstrap
+
+1. Call MCP tool: `get_bootstrap_state`
+2. Read the phase and step from the response
+3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+
+## If MCP Tools Not Available
+
+If `get_bootstrap_state` fails or MCP tools are not visible:
+1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
+2. Check Gate 2 - the MCP configuration may need to be verified
+3. Restart your AI tool after MCP is configured
+
+---
+
+*This file is temporary and will be replaced with full project rules when bootstrap completes.*
+EOF
+```
+
+---
+
+##### Cursor
+
+```bash
+cat > .cursorrules << 'EOF'
+# FluxFrame Bootstrap In Progress
+
+⚠️ **DO NOT follow normal project rules. A bootstrap is in progress.**
+
+## To Continue Bootstrap
+
+1. Call MCP tool: `get_bootstrap_state`
+2. Read the phase and step from the response
+3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+
+## If MCP Tools Not Available
+
+If `get_bootstrap_state` fails or MCP tools are not visible:
+1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
+2. Check Gate 2 - the MCP configuration may need to be verified
+3. Restart your AI tool after MCP is configured
+
+---
+
+*This file is temporary and will be replaced with full project rules when bootstrap completes.*
+EOF
+```
+
+---
+
+##### Codex / Gemini CLI / Universal Fallback
+
+```bash
+cat > AGENTS.md << 'EOF'
+# FluxFrame Bootstrap In Progress
+
+⚠️ **DO NOT follow normal project rules. A bootstrap is in progress.**
+
+## To Continue Bootstrap
+
+1. Call MCP tool: `get_bootstrap_state`
+2. Read the phase and step from the response
+3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+
+## If MCP Tools Not Available
+
+If `get_bootstrap_state` fails or MCP tools are not visible:
+1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
+2. Check Gate 2 - the MCP configuration may need to be verified
+3. Restart your AI tool after MCP is configured
+
+---
+
+*This file is temporary and will be replaced with full project rules when bootstrap completes.*
+EOF
+```
+
+---
+
+**Step 2c: Verify the file was created**
+
+Check that your rules file exists and contains the bootstrap marker:
+```bash
+# Check for any of the bootstrap-resume files
+head -1 CLAUDE.md 2>/dev/null || head -1 GEMINI.md 2>/dev/null || head -1 AGENTS.md 2>/dev/null || head -1 .clinerules 2>/dev/null || head -1 .cursorrules 2>/dev/null
 # Should show: "# FluxFrame Bootstrap In Progress"
 ```
 
@@ -262,7 +497,7 @@ cat CLAUDE.md | head -3
 │  BEFORE telling user to restart, verify BOTH:                      │
 │                                                                     │
 │  [ ] Task 1 DONE: MCP config exists with "fluxframe-bootstrap"     │
-│  [ ] Task 2 DONE: CLAUDE.md exists with "Bootstrap In Progress"    │
+│  [ ] Task 2 DONE: Rules file exists with "Bootstrap In Progress"   │
 │                                                                     │
 │  ⛔ IF EITHER IS INCOMPLETE → GO BACK AND COMPLETE IT              │
 │  ⛔ DO NOT PROCEED TO RESTART UNTIL BOTH BOXES ARE CHECKED         │
@@ -278,10 +513,10 @@ cat CLAUDE.md | head -3
 ```
 I've completed both pre-restart tasks:
 1. ✓ Configured the FluxFrame bootstrap MCP server
-2. ✓ Created a temporary bootstrap-resume file (CLAUDE.md)
+2. ✓ Created a temporary bootstrap-resume rules file
 
 To activate MCP:
-1. Completely restart Claude Code (close and reopen, not just refresh)
+1. Completely restart your AI tool (close and reopen, not just refresh)
 2. Start a new conversation
 3. Ask me to continue the FluxFrame bootstrap
 
