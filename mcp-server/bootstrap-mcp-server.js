@@ -539,7 +539,7 @@ class BootstrapServer {
   async getBootstrapState() {
     const state = await this.loadState();
     const currentStepInfo = this.findStep(state.currentStep);
-    
+
     const progress = {
       totalSteps: BOOTSTRAP_WORKFLOW.phases.reduce((sum, p) => sum + p.steps.length, 0),
       completedSteps: state.completedSteps.length,
@@ -686,7 +686,7 @@ class BootstrapServer {
 
     // Mark step complete
     state.completedSteps.push(stepId);
-    
+
     // Merge collected info
     if (collectedInfo) {
       state.collectedInfo = { ...state.collectedInfo, ...collectedInfo };
@@ -761,10 +761,10 @@ class BootstrapServer {
 
     const { step } = stepInfo;
     const allInfo = { ...state.collectedInfo, ...additionalInfo };
-    
+
     // Check required info is present
     const missingInfo = step.requiredInfo.filter(key => !allInfo[key]);
-    
+
     return {
       canComplete: missingInfo.length === 0,
       stepId: step.id,

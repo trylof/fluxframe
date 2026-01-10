@@ -6,9 +6,9 @@ Google Antigravity (formerly known as Google's AI coding assistant) uses GEMINI.
 
 | Feature | FluxFrame Usage | Benefit |
 |---------|-----------------|---------|
-| GEMINI.md | Project configuration | FluxFrame methodology |
-| Workflows | Automated tasks | Development automation |
-| Global Config | User preferences | Cross-project settings |
+| `.agent/rules/` | Project configuration | FluxFrame methodology |
+| `.agent/workflows/` | Automated tasks | Development automation |
+| `~/.gemini/GEMINI.md` | Global Config | User preferences |
 
 ## GEMINI.md Configuration
 
@@ -27,7 +27,7 @@ FluxFrame generates `GEMINI.md` with:
 
 | Location | Scope | Use Case |
 |----------|-------|----------|
-| `./GEMINI.md` | Project | Project-specific rules |
+| `.agent/rules/fluxframe.md` | Project | Project-specific rules |
 | `~/.gemini/GEMINI.md` | Global | User preferences |
 
 FluxFrame targets the project-level `GEMINI.md`.
@@ -56,7 +56,7 @@ If you want to add workflows, create a `.antigravity/workflows/` directory.
 ### Example Workflow
 
 ```yaml
-# .antigravity/workflows/test-and-lint.yaml
+# .agent/workflows/test-and-lint.yaml
 name: Test and Lint
 steps:
   - run: {{TEST_COMMAND}}

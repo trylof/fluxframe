@@ -210,7 +210,7 @@ ls -la .fluxframe-backup/pre-bootstrap/ 2>/dev/null
 | Claude Code | `CLAUDE.md` |
 | Cline | `.clinerules` |
 | Roo Code | `AGENTS.md` (auto-detected) |
-| Antigravity | `GEMINI.md` |
+| Antigravity | `GEMINI.md` (easiest for temp rules) or `.agent/rules/bootstrap.md` |
 | Cursor | `AGENTS.md` or `.cursorrules` |
 | Codex | `AGENTS.md` |
 | Gemini CLI | `AGENTS.md` |
