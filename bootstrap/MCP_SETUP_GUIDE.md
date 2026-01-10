@@ -26,9 +26,12 @@ Think of it as a "GPS for bootstrap" - it knows where you are and guides you to 
 Before starting, you need:
 
 1. **An AI Coding Assistant** - One of:
-   - Claude Code (Anthropic's CLI tool)
+   - Claude Code (CLI)
    - Cline (VS Code extension)
    - Roo Code (VS Code extension)
+   - Cursor (AI Editor)
+   - Codex (OpenAI)
+   - Kilo Code
    - Google Antigravity
 
 2. **Node.js installed** (v18 or later)
@@ -58,18 +61,15 @@ This installs the `@modelcontextprotocol/sdk` needed for the bootstrap MCP serve
 
 Choose your AI assistant below:
 
-### Option A: Claude Code (Desktop App)
+### Option A: Claude Code (CLI)
 
-1. **Open Claude Code Settings**
-   ```bash
-   # On macOS/Linux
-   ~/.config/claude/claude_desktop_config.json
-   
-   # On Windows
-   %APPDATA%\Claude\claude_desktop_config.json
-   ```
+1. **Locate Configuration**
+   - **Project-local (Recommended):** `.mcp.json` in your project root.
+   - **Global:** `~/.claude.json` in your home directory.
 
 2. **Add the bootstrap MCP server:**
+   
+   **For `.mcp.json` (Create if doesn't exist):**
    ```json
    {
      "mcpServers": {
@@ -81,12 +81,16 @@ Choose your AI assistant below:
      }
    }
    ```
+   
+   **For `~/.claude.json`:**
+   Add the specific server to the `mcpServers` object in your existing config. Do not overwrite other settings.
 
    **CRITICAL:** Replace:
    - `/ABSOLUTE/PATH/TO/fluxframe` → Your FluxFrame directory
    - `/ABSOLUTE/PATH/TO/YOUR/PROJECT` → The project you want to bootstrap
 
 3. **Restart Claude Code**
+   Run `/exit` and start `claude` again.
 
 4. **Verify Setup:**
    In a new conversation, ask: "Do you have access to fluxframe-bootstrap MCP tools?"
@@ -151,9 +155,31 @@ Choose your AI assistant below:
 
 5. **Reload window** (Cmd+Shift+P → "Developer: Reload Window")
 
-6. **Verify:** Ask Roo: "Show me your MCP capabilities"
+### Option D: Codex (OpenAI)
+
+1. **Edit Config File:** `~/.codex/config.toml`
+
+2. **Add Server (TOML format):**
+   ```toml
+   [mcp_servers.fluxframe-bootstrap]
+   command = "node"
+   args = ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"]
+   cwd = "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
+   ```
+
+3. **Restart Codex**
 
 ---
+
+### Option E: Kilo Code / Antigravity
+
+**For Kilo Code:**
+- Use project config: `.kilocode/mcp.json`
+- Follow JSON format similar to Option A.
+
+**For Antigravity:**
+- Use IDE Store to manage MCP servers OR
+- Edit `mcp.json` in your workspace.
 
 ### Option D: Other AI Assistants
 

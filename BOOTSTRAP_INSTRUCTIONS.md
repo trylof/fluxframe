@@ -77,48 +77,25 @@ Do NOT read Gate 2 until Gate 1 is done. Seriously.
 
 **After dependencies are installed, set up MCP if needed.**
 
-### Step 2.1: Identify Your AI Tool and Look Up MCP Configuration
+### Step 2.1: Check if MCP is Already Configured
 
-**DO NOT immediately try to call `get_bootstrap_state`.** First, configure MCP properly.
+**DO NOT immediately try to call `get_bootstrap_state`.** First, check if MCP configuration exists.
 
-**Step 2.1a: Identify which AI tool you are**
+Check for the MCP configuration file based on the AI tool being used:
 
-Determine which AI coding tool is running this bootstrap:
-- **Claude Code** (Anthropic's CLI tool - runs in terminal)
-- **Claude Desktop** (Anthropic's desktop app)
-- **Cline** (VS Code extension)
-- **Roo Code** (VS Code extension)
-- **Kilo Code** (VS Code extension)
-- **Cursor** (AI-native IDE)
-- **Windsurf** (AI-native IDE)
-- **Other** (specify)
+| AI Tool | Config File Location |
+|---------|---------------------|
+| Claude Code (CLI) | `~/.claude.json` (Global) or `.mcp.json` (Project) |
+| Cline | VS Code settings or `cline_mcp_settings.json` |
+| Roo Code | `.roo/mcp.json` (Project) or Global settings |
+| Cursor | `.cursor/mcp.json` (Project) or Global settings |
+| Codex | `~/.codex/config.toml` |
+| Kilo Code | `.kilocode/mcp.json` (Project) or Global settings |
+| Antigravity | `mcp.json` or manage via IDE Store |
 
-**Step 2.1b: Search for current MCP configuration method**
+**If config file exists and contains "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
 
-⚠️ **IMPORTANT:** MCP configuration varies by tool AND changes between versions. Do NOT rely on hardcoded paths.
-
-**Perform a web search** to find the current, correct MCP configuration method:
-
-```
-Search: "[YOUR_TOOL_NAME] MCP server configuration [CURRENT_YEAR]"
-Example: "Claude Code CLI MCP server configuration 2025"
-Example: "Cline VS Code MCP server setup 2025"
-```
-
-**What to look for in search results:**
-1. Official documentation from the tool vendor
-2. Configuration file location (path may vary by OS)
-3. Configuration file format (JSON structure)
-4. Whether configuration is done via CLI command, config file, or GUI
-5. Whether a restart is required after configuration
-
-**Step 2.1c: Check if MCP is already configured**
-
-Based on your search results, check if the FluxFrame bootstrap MCP server is already configured.
-
-**If already configured with "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
-
-**If not configured:** Proceed to Step 2.2 (configure it).
+**If config file doesn't exist or doesn't have FluxFrame:** Proceed to Step 2.2 (configure it).
 
 ### Step 2.2: Pre-Restart Setup (TWO REQUIRED TASKS)
 
@@ -144,42 +121,49 @@ Based on your search results, check if the FluxFrame bootstrap MCP server is alr
 
 **IMPORTANT: Try to configure MCP yourself first.** You have terminal access and can edit files.
 
-**Step 1a: Gather the required paths**
+**For Claude Code (CLI):**
 
-You need two paths for the MCP configuration:
-- **FLUXFRAME_PATH**: The directory containing this BOOTSTRAP_INSTRUCTIONS.md file
-- **PROJECT_PATH**: The user's project directory that will be bootstrapped (the cwd)
+1. **Check if global config file exists:**
+   ```bash
+   cat ~/.claude.json 2>/dev/null || echo "File does not exist"
+   ```
 
-**Step 1b: Determine configuration method from your Step 2.1b search**
+2. **Determine the correct configuration:**
+   - FluxFrame directory: The directory containing this BOOTSTRAP_INSTRUCTIONS.md file
+   - Project directory (cwd): The user's project directory that will be bootstrapped
 
-Based on your earlier web search, you should know:
-- The config file location OR CLI command for your AI tool
-- The JSON format required
-- Whether you can edit it programmatically or need GUI access
+3. **Create or update the config file:**
+   
+   **Option A: Project-local config (Recommended for portability)**
+   Create `.mcp.json` in your project root:
+   ```bash
+   cat > .mcp.json << 'EOF'
+   {
+     "mcpServers": {
+       "fluxframe-bootstrap": {
+         "command": "node",
+         "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+         "cwd": "[PROJECT_PATH]"
+       }
+     }
+   }
+   EOF
+   ```
 
-**Step 1c: Create the MCP server configuration**
+   **Option B: Global config (~/.claude.json)**
+   If you prefer global availability, edit `~/.claude.json`. Note that this file contains other settings, so **DO NOT overwrite it with `cat >`**. You must read it, insert the `mcpServers` key if missing, or add to it.
 
-The FluxFrame bootstrap MCP server configuration should include:
-
-```json
-{
-  "fluxframe-bootstrap": {
-    "command": "node",
-    "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
-    "cwd": "[PROJECT_PATH]"
-  }
-}
-```
-
-Replace `[FLUXFRAME_PATH]` and `[PROJECT_PATH]` with actual absolute paths.
-
-**Note:** The exact JSON structure may vary by tool. Some use `"type": "stdio"`, some nest under `"mcpServers"`, etc. Follow your tool's documented format.
-
-**Step 1d: Apply the configuration**
-
-- **If config file editable:** Read existing config, merge in fluxframe-bootstrap, write back
-- **If CLI command available:** Use the tool's MCP add command (e.g., `claude mcp add`)
-- **If GUI-only:** Guide user through the settings UI with exact values to enter
+   ```json
+   {
+     "mcpServers": {
+       "fluxframe-bootstrap": {
+         "command": "node",
+         "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+         "cwd": "[PROJECT_PATH]"
+       }
+     }
+   }
+   ```
 
 **Step 1e: Verify configuration was applied**
 
@@ -339,7 +323,8 @@ Call `get_bootstrap_state`.
    **Note:** Adjust the JSON structure based on your tool's requirements (some wrap in `"mcpServers"`, some require `"type": "stdio"`, etc.)
 
 3. **Tell them exactly where to put it:**
-   - Reference your Step 2.1b search results for the correct config file location
+   - For Claude Code: `~/.claude.json` or `.mcp.json`
+   - For Codex: `~/.codex/config.toml`
    - Explain how to merge if they have existing MCP servers
    - If GUI-only, walk them through the settings UI
 
