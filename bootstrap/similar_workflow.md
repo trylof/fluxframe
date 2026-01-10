@@ -800,6 +800,30 @@ If MCP server exists but is different:
 2. Ask user: merge features or replace?
 3. Implement decision
 
+### Step 5.4: Generate FluxFrame Guide (REQUIRED)
+
+**Purpose:** Create a persistent guide that remains after bootstrap, explaining how to work with FluxFrame and keep rules updated.
+
+**Source:** `doc-templates/fluxframe_guide.template.md`
+
+**Output:** `{{DOCS_DIR}}/fluxframe_guide.md`
+
+**Process:**
+1. Read template file
+2. Replace all placeholders (see greenfield Step 7.5 for full placeholder details):
+   - `{{DOCS_DIR}}` → Documentation directory path
+   - `{{AI_TOOLS_SECTION}}` → List of configured AI tools with integration levels
+   - `{{TOOL_SPECIFIC_FILES}}` → Tool-specific file references
+   - `{{API_APPROACH_SECTION}}` → Chosen API contract approach
+3. Customize based on user's upgraded configuration
+4. Reference existing patterns and documentation
+
+**Validation:**
+- [ ] File created at `{{DOCS_DIR}}/fluxframe_guide.md`
+- [ ] All placeholders replaced
+- [ ] Tool sections match configured tools
+- [ ] References existing user documentation correctly
+
 ---
 
 ## Phase 5.5: Browser Automation Upgrade (RECOMMENDED for Web Projects)

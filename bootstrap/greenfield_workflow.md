@@ -133,6 +133,7 @@ Please choose one of the options above.
 5. Pattern library structure
 6. API contract standards (if applicable)
 7. Workflow docs (if requested)
+7.5. FluxFrame guide (persistent post-bootstrap instructions)
 8. MCP server configuration
 9. package.json
 10. .clinerules (references all above)
@@ -792,6 +793,70 @@ If project is local-only, create from template as-is. The template is designed t
 - [ ] Protocol files created
 - [ ] Verification steps customized to environment
 - [ ] Files valid markdown
+
+---
+
+### Step 7.5: Generate FluxFrame Guide (REQUIRED)
+
+**Purpose:** Create a persistent guide that remains after bootstrap, explaining how to work with FluxFrame and keep rules updated.
+
+**Source:** `doc-templates/fluxframe_guide.template.md`
+
+**Output:** `{{DOCS_DIR}}/fluxframe_guide.md`
+
+**Placeholder Replacements:**
+
+| Placeholder | Replacement |
+|-------------|-------------|
+| `{{DOCS_DIR}}` | Documentation directory path |
+| `{{AI_TOOLS_SECTION}}` | List of configured AI tools (see below) |
+| `{{TOOL_SPECIFIC_FILES}}` | Tool-specific file list |
+| `{{API_APPROACH_SECTION}}` | Chosen API contract approach |
+
+**AI_TOOLS_SECTION Content:**
+
+Based on user's tool selection (Q2), generate:
+
+```markdown
+**Primary Tools:**
+- [TOOL_NAME]: [INTEGRATION_LEVEL]
+  - Rules: [RULES_FILE]
+  - Config: [CONFIG_LOCATION]
+```
+
+Example:
+```markdown
+**Primary Tools:**
+- Claude Code: Full Integration
+  - Rules: `CLAUDE.md` + `.claude/rules/`
+  - Config: `~/.config/claude/config.json`
+- Cline: Full Integration  
+  - Rules: `.clinerules/`
+  - Config: VS Code settings
+```
+
+**TOOL_SPECIFIC_FILES Content:**
+
+Based on configured tools, list additional rule files:
+- Claude Code: ", `CLAUDE.md`, `.claude/rules/`"
+- Cline: ", `.clinerules/`"
+- Roo Code: ", `.roomodes`, `.roo/rules/`"
+- Antigravity: ", `GEMINI.md`"
+- Cursor: ", `.cursorrules`"
+
+**API_APPROACH_SECTION Content:**
+
+Based on user's API choice:
+- OpenAPI: "OpenAPI + Pydantic with contract-first development. See `api_contract_standards.md`."
+- GraphQL: "GraphQL with typed schema. See `api_contract_standards.md`."
+- JSON Schema: "JSON Schema for contract validation. See `api_contract_standards.md`."
+- None: "No API contract approach configured. Add one when APIs are introduced."
+
+**Validation:**
+- [ ] File created at `{{DOCS_DIR}}/fluxframe_guide.md`
+- [ ] All placeholders replaced
+- [ ] Tool-specific sections match configured tools
+- [ ] API approach section accurate
 
 ---
 
