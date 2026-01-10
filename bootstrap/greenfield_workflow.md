@@ -544,21 +544,25 @@ See `context_master_guide.md` for complete development cycle methodology.
 
 ### Step 5: Create Pattern Library Structure
 
+> [!IMPORTANT]
+> **ALL pattern files below are REQUIRED.** Create them regardless of current project state.
+> Projects evolve—local-only today may need infrastructure tomorrow.
+> Since bootstrap instructions are removed after completion, all pattern files must exist.
+> Use "Status: Placeholder" content when a category is not currently applicable.
+
 **Files to Create:**
 
-**5.1: `{{DOCS_DIR}}/patterns/README.md`**
+**5.1: `{{DOCS_DIR}}/patterns/README.md`** (REQUIRED)
 
 Source: `pattern-library-system/meta-patterns/pattern_template.md`
 
 Content: Index file listing pattern categories
 
-**5.2: Domain-Specific Pattern Files**
+**5.2: `{{DOCS_DIR}}/patterns/ui_patterns.md`** (REQUIRED)
 
-Create based on stack:
-
-**If has frontend:**
+If project has frontend, use this content:
 ```markdown
-# [PROJECT_NAME] - UI Patterns
+# {{PROJECT_NAME}} - UI Patterns
 
 **Purpose:** Reusable UI component patterns and conventions.
 
@@ -589,9 +593,26 @@ When you establish a new UI pattern:
 See `context_master_guide.md` Section 4 for pattern documentation guidelines.
 ```
 
-**If has backend:**
+If project has NO frontend, create as placeholder:
 ```markdown
-# [PROJECT_NAME] - API Patterns
+# {{PROJECT_NAME}} - UI Patterns
+
+**Purpose:** UI component patterns and conventions.
+
+**Status:** ⏹️ Placeholder - no frontend in current stack
+
+---
+
+> **Note:** This file exists as a placeholder. If UI components are added later, document patterns here. Projects evolve—this ensures the pattern file exists when needed.
+
+See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+```
+
+**5.3: `{{DOCS_DIR}}/patterns/api_patterns.md`** (REQUIRED)
+
+If project has backend/API, use this content:
+```markdown
+# {{PROJECT_NAME}} - API Patterns
 
 **Purpose:** API endpoint patterns, authentication, data handling.
 
@@ -622,9 +643,26 @@ When you establish a new API pattern:
 See `context_master_guide.md` Section 4 for pattern documentation guidelines.
 ```
 
-**If has database:**
+If project has NO backend/API, create as placeholder:
 ```markdown
-# [PROJECT_NAME] - Data Patterns
+# {{PROJECT_NAME}} - API Patterns
+
+**Purpose:** API endpoint patterns, authentication, data handling.
+
+**Status:** ⏹️ Placeholder - no API/backend in current stack
+
+---
+
+> **Note:** This file exists as a placeholder. If API endpoints are added later, document patterns here. Projects evolve—this ensures the pattern file exists when needed.
+
+See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+```
+
+**5.4: `{{DOCS_DIR}}/patterns/data_patterns.md`** (REQUIRED)
+
+If project has database, use this content:
+```markdown
+# {{PROJECT_NAME}} - Data Patterns
 
 **Purpose:** Database queries, data models, persistence patterns.
 
@@ -643,10 +681,35 @@ When you establish a new data pattern:
 See `context_master_guide.md` Section 4 for pattern documentation guidelines.
 ```
 
+If project has NO database, create as placeholder:
+```markdown
+# {{PROJECT_NAME}} - Data Patterns
+
+**Purpose:** Database queries, data models, persistence patterns.
+
+**Status:** ⏹️ Placeholder - no database in current stack
+
+---
+
+> **Note:** This file exists as a placeholder. If a database is added later, document patterns here. Projects evolve—this ensures the pattern file exists when needed.
+
+See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+```
+
+**5.5: `{{DOCS_DIR}}/patterns/infra_patterns.md`** (REQUIRED)
+
+**Source:** `doc-templates/infra_patterns.template.md`
+
+This file is ALWAYS created from template—even for local-only projects. The template has "Status: Template - patterns will be added as infrastructure is established" which works as a placeholder.
+
+If project has infrastructure (CI/CD, cloud, IaC), customize with detected/chosen infrastructure.
+
+If project is local-only, create from template as-is. The template is designed to work as a placeholder.
+
 **Validation:**
-- [ ] Pattern files match project's stack
-- [ ] Don't create frontend patterns for CLI tools
-- [ ] Don't create API patterns for static sites
+- [ ] ALL 5 pattern files created (README + 4 domain files)
+- [ ] Files use placeholder content when domain not applicable
+- [ ] No pattern files skipped based on current stack
 
 ---
 

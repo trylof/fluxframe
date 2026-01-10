@@ -432,11 +432,15 @@ Before we proceed, here's what a complete FluxFrame setup provides. I'll then sh
 - [ ] `bootstrap_decisions.md` - Record of all setup decisions with reasoning
 
 ### Pattern Library
-- [ ] `patterns/README.md` - Pattern index and methodology
-- [ ] `patterns/ui_patterns.md` - UI component patterns (if frontend)
-- [ ] `patterns/api_patterns.md` - API endpoint patterns (if backend)
-- [ ] `patterns/data_patterns.md` - Database patterns (if database)
-- [ ] `patterns/infra_patterns.md` - Infrastructure patterns
+
+> [!IMPORTANT]
+> **All pattern files are REQUIRED placeholders.** Projects evolve—a local-only project today may need infrastructure tomorrow. Since bootstrap instructions are removed after completion, all pattern files must exist from the start. Create each with "Status: Placeholder" content when not currently applicable.
+
+- [ ] `patterns/README.md` - Pattern index and methodology **(REQUIRED)**
+- [ ] `patterns/ui_patterns.md` - UI component patterns **(REQUIRED - placeholder if no frontend)**
+- [ ] `patterns/api_patterns.md` - API endpoint patterns **(REQUIRED - placeholder if no backend)**
+- [ ] `patterns/data_patterns.md` - Database patterns **(REQUIRED - placeholder if no database)**
+- [ ] `patterns/infra_patterns.md` - Infrastructure & deployment patterns **(REQUIRED)**
 
 ### Workflows
 - [ ] `workflows/cycle_workflow.md` - Development cycle methodology
