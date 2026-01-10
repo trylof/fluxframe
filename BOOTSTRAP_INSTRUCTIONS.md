@@ -77,22 +77,48 @@ Do NOT read Gate 2 until Gate 1 is done. Seriously.
 
 **After dependencies are installed, set up MCP if needed.**
 
-### Step 2.1: Check if MCP is Already Configured
+### Step 2.1: Identify Your AI Tool and Look Up MCP Configuration
 
-**DO NOT immediately try to call `get_bootstrap_state`.** First, check if MCP configuration exists.
+**DO NOT immediately try to call `get_bootstrap_state`.** First, configure MCP properly.
 
-Check for the MCP configuration file based on the AI tool being used:
+**Step 2.1a: Identify which AI tool you are**
 
-| AI Tool | Config File Location |
-|---------|---------------------|
-| Claude Code | `~/.claude/claude_desktop_config.json` |
-| Cline | VS Code settings or `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json` |
-| Roo Code | VS Code Roo MCP settings |
-| Cursor | Cursor MCP settings |
+Determine which AI coding tool is running this bootstrap:
+- **Claude Code** (Anthropic's CLI tool - runs in terminal)
+- **Claude Desktop** (Anthropic's desktop app)
+- **Cline** (VS Code extension)
+- **Roo Code** (VS Code extension)
+- **Kilo Code** (VS Code extension)
+- **Cursor** (AI-native IDE)
+- **Windsurf** (AI-native IDE)
+- **Other** (specify)
 
-**If config file exists and contains "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
+**Step 2.1b: Search for current MCP configuration method**
 
-**If config file doesn't exist or doesn't have FluxFrame:** Proceed to Step 2.2 (configure it).
+⚠️ **IMPORTANT:** MCP configuration varies by tool AND changes between versions. Do NOT rely on hardcoded paths.
+
+**Perform a web search** to find the current, correct MCP configuration method:
+
+```
+Search: "[YOUR_TOOL_NAME] MCP server configuration [CURRENT_YEAR]"
+Example: "Claude Code CLI MCP server configuration 2025"
+Example: "Cline VS Code MCP server setup 2025"
+```
+
+**What to look for in search results:**
+1. Official documentation from the tool vendor
+2. Configuration file location (path may vary by OS)
+3. Configuration file format (JSON structure)
+4. Whether configuration is done via CLI command, config file, or GUI
+5. Whether a restart is required after configuration
+
+**Step 2.1c: Check if MCP is already configured**
+
+Based on your search results, check if the FluxFrame bootstrap MCP server is already configured.
+
+**If already configured with "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
+
+**If not configured:** Proceed to Step 2.2 (configure it).
 
 ### Step 2.2: Pre-Restart Setup (TWO REQUIRED TASKS)
 
@@ -118,43 +144,48 @@ Check for the MCP configuration file based on the AI tool being used:
 
 **IMPORTANT: Try to configure MCP yourself first.** You have terminal access and can edit files.
 
-**For Claude Code:**
+**Step 1a: Gather the required paths**
 
-1. **Check if config file exists:**
-   ```bash
-   cat ~/.claude/claude_desktop_config.json 2>/dev/null || echo "File does not exist"
-   ```
+You need two paths for the MCP configuration:
+- **FLUXFRAME_PATH**: The directory containing this BOOTSTRAP_INSTRUCTIONS.md file
+- **PROJECT_PATH**: The user's project directory that will be bootstrapped (the cwd)
 
-2. **Determine the correct configuration:**
-   - FluxFrame directory: The directory containing this BOOTSTRAP_INSTRUCTIONS.md file
-   - Project directory (cwd): The user's project directory that will be bootstrapped
+**Step 1b: Determine configuration method from your Step 2.1b search**
 
-3. **Create or update the config file:**
+Based on your earlier web search, you should know:
+- The config file location OR CLI command for your AI tool
+- The JSON format required
+- Whether you can edit it programmatically or need GUI access
 
-   **If file doesn't exist, create it:**
-   ```bash
-   mkdir -p ~/.claude
-   cat > ~/.claude/claude_desktop_config.json << 'EOF'
-   {
-     "mcpServers": {
-       "fluxframe-bootstrap": {
-         "command": "node",
-         "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
-         "cwd": "[PROJECT_PATH]"
-       }
-     }
-   }
-   EOF
-   ```
+**Step 1c: Create the MCP server configuration**
 
-   **If file exists, read it, add the fluxframe-bootstrap server, and write it back.**
-   Be careful to preserve existing MCP servers in the config.
+The FluxFrame bootstrap MCP server configuration should include:
 
-**For other AI tools:**
-- Attempt to locate and edit the config file if you have access
-- If you cannot edit the config (e.g., it's in a GUI-only location), then guide the user through manual setup
+```json
+{
+  "fluxframe-bootstrap": {
+    "command": "node",
+    "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+    "cwd": "[PROJECT_PATH]"
+  }
+}
+```
 
-**✓ Task 1 complete when:** MCP config file exists and contains "fluxframe-bootstrap"
+Replace `[FLUXFRAME_PATH]` and `[PROJECT_PATH]` with actual absolute paths.
+
+**Note:** The exact JSON structure may vary by tool. Some use `"type": "stdio"`, some nest under `"mcpServers"`, etc. Follow your tool's documented format.
+
+**Step 1d: Apply the configuration**
+
+- **If config file editable:** Read existing config, merge in fluxframe-bootstrap, write back
+- **If CLI command available:** Use the tool's MCP add command (e.g., `claude mcp add`)
+- **If GUI-only:** Guide user through the settings UI with exact values to enter
+
+**Step 1e: Verify configuration was applied**
+
+Check that the configuration file/setting now contains "fluxframe-bootstrap".
+
+**✓ Task 1 complete when:** MCP configuration contains "fluxframe-bootstrap" with correct paths
 
 ---
 
@@ -295,21 +326,22 @@ Call `get_bootstrap_state`.
 2. **Provide the exact config to add:**
    ```json
    {
-     "mcpServers": {
-       "fluxframe-bootstrap": {
-         "command": "node",
-         "args": ["[EXACT_FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
-         "cwd": "[EXACT_PROJECT_PATH]"
-       }
+     "fluxframe-bootstrap": {
+       "command": "node",
+       "args": ["[EXACT_FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+       "cwd": "[EXACT_PROJECT_PATH]"
      }
    }
    ```
 
    Fill in the actual paths - don't make the user figure them out.
 
+   **Note:** Adjust the JSON structure based on your tool's requirements (some wrap in `"mcpServers"`, some require `"type": "stdio"`, etc.)
+
 3. **Tell them exactly where to put it:**
-   - For Claude Code: `~/.claude/claude_desktop_config.json`
+   - Reference your Step 2.1b search results for the correct config file location
    - Explain how to merge if they have existing MCP servers
+   - If GUI-only, walk them through the settings UI
 
 4. **Walk through the restart:**
    - "Save the config file and completely restart [their AI tool]"
