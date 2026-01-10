@@ -54,6 +54,9 @@ Check for these files/directories in project root:
 | `.roomodes` or `.roo/` | Roo Code configuration |
 | `GEMINI.md` | Antigravity configuration |
 | `.cursorrules` | Cursor configuration |
+| `.codex/` or `CODEX.md` | Codex configuration |
+| `.gemini/` | Gemini CLI configuration |
+| `AGENTS.md` | Universal AI baseline (also used by Codex, Gemini CLI, Cursor) |
 | `.github/copilot-instructions.md` | GitHub Copilot |
 
 **If ANY of these exist → project has existing AI workflow**
@@ -239,6 +242,10 @@ Present findings to user in this format:
 - **Cline:** [Found/Not found] [details if found]
 - **Claude Code:** [Found/Not found]
 - **Roo Code:** [Found/Not found]
+- **Antigravity:** [Found/Not found] (GEMINI.md)
+- **Cursor:** [Found/Not found] (.cursorrules or AGENTS.md)
+- **Codex:** [Found/Not found] (AGENTS.md or .codex)
+- **Gemini CLI:** [Found/Not found] (AGENTS.md or .gemini)
 - **Other:** [List any other AI configs found]
 
 ### Detected Documentation

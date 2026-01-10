@@ -89,9 +89,10 @@ Check for the MCP configuration file based on the AI tool being used:
 | Cline | VS Code settings or `cline_mcp_settings.json` |
 | Roo Code | `.roo/mcp.json` (Project) or Global settings |
 | Cursor | `.cursor/mcp.json` (Project) or Global settings |
-| Codex | `~/.codex/config.toml` |
+| Codex | `~/.codex/config.toml` or `AGENTS.md` (for rules) |
 | Kilo Code | `.kilocode/mcp.json` (Project) or Global settings |
-| Antigravity | `mcp.json` or manage via IDE Store |
+| Antigravity | `mcp.json` or manage via IDE Store (uses GEMINI.md) |
+| Gemini CLI | `AGENTS.md` or `.gemini/` |
 
 **If config file exists and contains "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
 
@@ -211,6 +212,8 @@ ls -la .fluxframe-backup/pre-bootstrap/ 2>/dev/null
 | Roo Code | `AGENTS.md` (auto-detected) |
 | Antigravity | `GEMINI.md` |
 | Cursor | `AGENTS.md` or `.cursorrules` |
+| Codex | `AGENTS.md` |
+| Gemini CLI | `AGENTS.md` |
 | Unknown/Multiple | `AGENTS.md` (universal fallback) |
 
 **Execute this command (for Claude Code - adapt filename for other tools):**
@@ -428,6 +431,8 @@ Check for these items in the project:
 - `.roomodes` or `.roo/` (Roo Code)
 - `GEMINI.md` (Antigravity)
 - `.cursorrules` (Cursor)
+- `.codex/` or `CODEX.md` (Codex)
+- `.gemini/` (Gemini CLI)
 - `.github/copilot-instructions.md` (Copilot)
 
 **Documentation (indicates existing structure):**
@@ -576,8 +581,11 @@ Which AI coding tools will you use with this project?
 2. Roo Code (VS Code extension with modes)
 3. Cline (VS Code extension)
 4. Google Antigravity
-5. Multiple (specify which)
-6. Other / Universal AGENTS.md only
+5. Cursor
+6. Codex
+7. Gemini CLI
+8. Multiple (specify which)
+9. Other / Universal AGENTS.md only
 ```
 
 For each selected tool, determine integration level:
