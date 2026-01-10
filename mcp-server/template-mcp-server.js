@@ -70,7 +70,7 @@ class ProjectDocsMCPServer {
     for (const line of lines) {
       // Check if this is a heading
       const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
-      
+
       if (headingMatch) {
         // Save previous section if we were collecting one
         if (currentSection && currentContent.length > 0) {
@@ -154,7 +154,7 @@ class ProjectDocsMCPServer {
               properties: {
                 task_type: {
                   type: 'string',
-                  enum: ['session_start', 'cycle_start', 'cycle_complete', 'pattern_check', 'full_guide'],
+                  enum: ['session_start', 'cycle_start', 'cycle_planning', 'cycle_complete', 'pattern_check', 'full_guide'],
                   description: 'Type of task to get context for',
                 },
               },
@@ -353,6 +353,125 @@ class ProjectDocsMCPServer {
               properties: {},
             },
           },
+          // ============================================================
+          // IMPLEMENTATION PLANNING TOOLS (Two-Tier Planning System)
+          // ============================================================
+          {
+            name: 'start_cycle_planning',
+            description: 'Initiate the planning phase for a development cycle. CALL THIS BEFORE implementing any cycle. Returns research guidance, checks for existing plan, and enforces the planning-first workflow.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                cycle_id: {
+                  type: 'string',
+                  description: 'Cycle identifier (e.g., "1.1", "2.3", "1.2a")',
+                },
+              },
+              required: ['cycle_id'],
+            },
+          },
+          {
+            name: 'analyze_cycle_scope',
+            description: 'Scope Analysis Engine. Evaluates feature complexity, estimates effort, and recommends decomposition if the feature is too large for a single cycle. CRITICAL: Be honest about complexity - a senior engineer knows to ship small, test, iterate.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                cycle_id: {
+                  type: 'string',
+                  description: 'Cycle identifier',
+                },
+                feature_description: {
+                  type: 'string',
+                  description: 'Description of what the feature/cycle will accomplish',
+                },
+                estimated_loc: {
+                  type: 'number',
+                  description: 'Estimated lines of code to add/modify',
+                },
+                components_affected: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'List of components/files that will be affected',
+                },
+                has_external_deps: {
+                  type: 'boolean',
+                  description: 'Whether external APIs or dependencies are involved',
+                },
+                has_db_changes: {
+                  type: 'boolean',
+                  description: 'Whether database/schema changes are needed',
+                },
+                breaking_risk: {
+                  type: 'string',
+                  enum: ['low', 'medium', 'high'],
+                  description: 'Risk of breaking existing functionality',
+                },
+              },
+              required: ['cycle_id', 'feature_description', 'estimated_loc', 'components_affected'],
+            },
+          },
+          {
+            name: 'create_cycle_plan',
+            description: 'Create a new detailed implementation plan from the template. Use after research and scope analysis are complete.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                cycle_id: {
+                  type: 'string',
+                  description: 'Cycle identifier',
+                },
+                cycle_name: {
+                  type: 'string',
+                  description: 'Human-readable name for the cycle',
+                },
+                scope_analysis_result: {
+                  type: 'object',
+                  description: 'Result from analyze_cycle_scope (pass the full object)',
+                },
+              },
+              required: ['cycle_id', 'cycle_name'],
+            },
+          },
+          {
+            name: 'get_cycle_plan',
+            description: 'Read an existing detailed implementation plan for a cycle. Returns the plan content if it exists, or guidance to create one if not.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                cycle_id: {
+                  type: 'string',
+                  description: 'Cycle identifier (e.g., "1.1", "2.3")',
+                },
+              },
+              required: ['cycle_id'],
+            },
+          },
+          {
+            name: 'approve_cycle_plan',
+            description: 'Validate plan structure, verify scope assessment was performed, and mark the cycle as ready for implementation. Updates implementation_plan.md status. ONLY call after user has reviewed and approved the detailed plan.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                cycle_id: {
+                  type: 'string',
+                  description: 'Cycle identifier',
+                },
+                user_confirmed: {
+                  type: 'boolean',
+                  description: 'User has explicitly approved the plan (must be true)',
+                },
+              },
+              required: ['cycle_id', 'user_confirmed'],
+            },
+          },
+          {
+            name: 'get_implementation_roadmap',
+            description: 'Get overview of all cycles with their planning status, decomposition relationships, and which cycles have detailed plans. Use at session start to understand project state.',
+            inputSchema: {
+              type: 'object',
+              properties: {},
+            },
+          },
         ],
       };
     });
@@ -364,40 +483,59 @@ class ProjectDocsMCPServer {
       switch (name) {
         case 'get_context_for_task':
           return await this.getContextForTask(args.task_type);
-        
+
         case 'validate_cycle_completion':
           return await this.validateCycleCompletion(args.cycle_id, args.completed_items);
-        
+
         case 'check_pattern_exists':
           return await this.checkPatternExists(args.feature_description);
-        
+
         case 'get_current_implementation_status':
           return await this.getCurrentImplementationStatus();
-        
+
         case 'validate_workflow_documentation':
           return await this.validateWorkflowDocumentation(args.changes_made, args.description);
-        
+
         case 'start_change_request':
           return await this.startChangeRequest(args.description, args.change_type, args.affected_feature, args.severity);
-        
+
         case 'validate_change_resolution':
           return await this.validateChangeResolution(args.change_id);
-        
+
         case 'close_change_request':
           return await this.closeChangeRequest(args.change_id, args.documentation_file);
-        
+
         case 'get_completion_checklist':
           return await this.getCompletionChecklist();
-        
+
         case 'validate_api_contracts':
           return await this.validateAPIContracts(args.endpoints_modified);
-        
+
         case 'get_logs':
           return await this.getLogs(args);
-        
+
         case 'get_log_access_status':
           return await this.getLogAccessStatus();
-        
+
+        // Implementation Planning Tools
+        case 'start_cycle_planning':
+          return await this.startCyclePlanning(args.cycle_id);
+
+        case 'analyze_cycle_scope':
+          return await this.analyzeCycleScope(args);
+
+        case 'create_cycle_plan':
+          return await this.createCyclePlan(args.cycle_id, args.cycle_name, args.scope_analysis_result);
+
+        case 'get_cycle_plan':
+          return await this.getCyclePlan(args.cycle_id);
+
+        case 'approve_cycle_plan':
+          return await this.approveCyclePlan(args.cycle_id, args.user_confirmed);
+
+        case 'get_implementation_roadmap':
+          return await this.getImplementationRoadmap();
+
         default:
           throw new Error(`Unknown tool: ${name}`);
       }
@@ -446,6 +584,15 @@ class ProjectDocsMCPServer {
         message = 'Context for checking patterns before implementation:';
         break;
 
+      case 'cycle_planning':
+        sectionsToExtract = [
+          'Two-Tier Planning System',
+          'Planning Workflow',
+          'Pattern-Driven Development',
+        ];
+        message = 'Context for planning a development cycle - research, scope analysis, and plan creation:';
+        break;
+
       case 'full_guide':
         return {
           content: [
@@ -473,6 +620,21 @@ class ProjectDocsMCPServer {
   }
 
   async validateCycleCompletion(cycleId, completedItems) {
+    // Check if detailed plan exists
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
+    const planPath = path.join(implementationPlansDir, planFileName);
+
+    let hasPlan = false;
+    let planApproved = false;
+    try {
+      const planContent = await fs.readFile(planPath, 'utf-8');
+      hasPlan = true;
+      planApproved = planContent.includes('- [x] **User approved this plan**');
+    } catch (err) {
+      // Plan doesn't exist
+    }
+
     const requiredItems = [
       'Real implementation (no stubs)',
       'Results visible to users',
@@ -484,14 +646,25 @@ class ProjectDocsMCPServer {
       'technical_status.md updated',
       'Test documentation updated',
       'Patterns documented (if new patterns established)',
+      'Implementation plan followed (or deviations documented)',
     ];
 
     const checklist = requiredItems.map(item => {
-      const completed = completedItems.some(ci => 
+      const completed = completedItems.some(ci =>
         ci.toLowerCase().includes(item.toLowerCase().split('(')[0].trim())
       );
       return `${completed ? '✅' : '❌'} ${item}`;
     });
+
+    // Add plan-specific checks
+    const planChecks = [];
+    if (hasPlan) {
+      planChecks.push(`${planApproved ? '✅' : '❌'} Detailed implementation plan was approved`);
+      planChecks.push(`${completedItems.some(ci => ci.toLowerCase().includes('deviation') || ci.toLowerCase().includes('plan followed')) ? '✅' : '⚠️'} Plan alignment verified (check deviations documented)`);
+    } else {
+      planChecks.push(`⚠️ No detailed implementation plan found for Cycle ${cycleId}`);
+      planChecks.push(`   Consider creating plans for future cycles using start_cycle_planning()`);
+    }
 
     const allComplete = requiredItems.every((item, i) => checklist[i].startsWith('✅'));
 
@@ -499,11 +672,14 @@ class ProjectDocsMCPServer {
       content: [
         {
           type: 'text',
-          text: `Cycle/Iteration ${cycleId} Completion Validation:\n\n${checklist.join('\n')}\n\n${
-            allComplete
+          text: `Cycle/Iteration ${cycleId} Completion Validation:\n\n` +
+            `## Core Criteria\n${checklist.join('\n')}\n\n` +
+            `## Plan Alignment\n${planChecks.join('\n')}\n\n` +
+            `${allComplete
               ? '✅ ALL CRITERIA MET - Cycle can be marked complete'
               : '❌ INCOMPLETE - Do not mark this cycle as complete until all items are checked'
-          }\n\nReminder: Test data must match actual implementation (see Critical Alignment Rule in context_master_guide.md)`,
+            }\n\n` +
+            `Reminder: Test data must match actual implementation (see Critical Alignment Rule in context_master_guide.md)`,
         },
       ],
     };
@@ -514,7 +690,7 @@ class ProjectDocsMCPServer {
       // Read from patterns directory
       const patternsDir = path.join(PROJECT_DOCS_DIR, 'patterns');
       const readmePath = path.join(patternsDir, 'README.md');
-      
+
       let allContent = '';
       try {
         const readmeContent = await fs.readFile(readmePath, 'utf-8');
@@ -522,12 +698,12 @@ class ProjectDocsMCPServer {
       } catch (err) {
         // README might not exist yet
       }
-      
+
       // Search all pattern files
       try {
         const patternFiles = await fs.readdir(patternsDir);
         const mdFiles = patternFiles.filter(f => f.endsWith('.md') && f !== 'README.md');
-        
+
         for (const file of mdFiles) {
           const fileContent = await fs.readFile(path.join(patternsDir, file), 'utf-8');
           allContent += `\n\n--- ${file} ---\n\n${fileContent}`;
@@ -546,9 +722,9 @@ class ProjectDocsMCPServer {
           ],
         };
       }
-      
+
       const content = allContent;
-      
+
       // Search for relevant patterns
       const lines = content.split('\n');
       const keywords = featureDescription.toLowerCase().split(' ');
@@ -567,7 +743,7 @@ class ProjectDocsMCPServer {
             relevantLines.push(...sectionContent);
             relevantLines.push('---');
           }
-          
+
           // Check if new section is relevant
           inRelevantSection = keywords.some(kw => lowerLine.includes(kw));
           sectionContent = inRelevantSection ? [line] : [];
@@ -616,9 +792,9 @@ class ProjectDocsMCPServer {
       );
       return {
         content: [
-          { 
-            type: 'text', 
-            text: `Current Implementation Status:\n\n${content}` 
+          {
+            type: 'text',
+            text: `Current Implementation Status:\n\n${content}`
           }
         ],
       };
@@ -649,7 +825,7 @@ class ProjectDocsMCPServer {
       const docs = changeToDocMapping[change];
       if (docs) {
         docs.forEach(doc => documentsToUpdate.add(doc));
-        
+
         // Add specific reasons
         switch (change) {
           case 'new_component':
@@ -679,7 +855,7 @@ class ProjectDocsMCPServer {
       };
     }
 
-    const updateList = docsArray.map(doc => 
+    const updateList = docsArray.map(doc =>
       `• workflows/${doc}`
     ).join('\n');
 
@@ -690,15 +866,15 @@ class ProjectDocsMCPServer {
         {
           type: 'text',
           text: `⚠️ WORKFLOW DOCUMENTATION UPDATES MAY BE REQUIRED\n\n` +
-                `Changes Made: ${changesMade.join(', ')}\n` +
-                `Description: ${description}\n\n` +
-                `Documents to Review:\n${updateList}\n\n` +
-                `Reasons:\n${reasonsList}\n\n` +
-                `📋 Next Steps:\n` +
-                `1. Review if these workflow documents exist\n` +
-                `2. Update if conceptual logic changed\n` +
-                `3. Show diff to user for approval\n\n` +
-                `Reference: context_master_guide.md for workflow update guidelines`,
+            `Changes Made: ${changesMade.join(', ')}\n` +
+            `Description: ${description}\n\n` +
+            `Documents to Review:\n${updateList}\n\n` +
+            `Reasons:\n${reasonsList}\n\n` +
+            `📋 Next Steps:\n` +
+            `1. Review if these workflow documents exist\n` +
+            `2. Update if conceptual logic changed\n` +
+            `3. Show diff to user for approval\n\n` +
+            `Reference: context_master_guide.md for workflow update guidelines`,
         },
       ],
     };
@@ -708,7 +884,7 @@ class ProjectDocsMCPServer {
     // Generate change ID
     const changeId = `CHANGE_${Date.now()}`;
     const startDate = new Date().toISOString().split('T')[0];
-    
+
     // Store in memory
     this.currentChange = {
       id: changeId,
@@ -733,18 +909,18 @@ class ProjectDocsMCPServer {
         {
           type: 'text',
           text: `${typeEmoji[changeType]} CHANGE REQUEST INITIATED\n\n` +
-                `Change ID: ${changeId}\n` +
-                `Type: ${changeType.toUpperCase()}\n` +
-                `Severity: ${severity.toUpperCase()}\n` +
-                `Affected Feature: ${affectedFeature}\n` +
-                `Description: ${description}\n` +
-                `Started: ${startDate}\n\n` +
-                `📋 Next Steps (Phase 1: Analysis):\n` +
-                `1. Check patterns: use check_pattern_exists() - Could this be a pattern violation?\n` +
-                `2. Root cause analysis: Investigate WHY without making changes yet\n` +
-                `3. Document hypothesis in <thinking> tags\n\n` +
-                `⚠️ DO NOT make code changes yet - understand the problem first.\n` +
-                `⚠️ DO NOT document anything yet - that comes AFTER user confirms the fix works.`,
+            `Change ID: ${changeId}\n` +
+            `Type: ${changeType.toUpperCase()}\n` +
+            `Severity: ${severity.toUpperCase()}\n` +
+            `Affected Feature: ${affectedFeature}\n` +
+            `Description: ${description}\n` +
+            `Started: ${startDate}\n\n` +
+            `📋 Next Steps (Phase 1: Analysis):\n` +
+            `1. Check patterns: use check_pattern_exists() - Could this be a pattern violation?\n` +
+            `2. Root cause analysis: Investigate WHY without making changes yet\n` +
+            `3. Document hypothesis in <thinking> tags\n\n` +
+            `⚠️ DO NOT make code changes yet - understand the problem first.\n` +
+            `⚠️ DO NOT document anything yet - that comes AFTER user confirms the fix works.`,
         },
       ],
     };
@@ -857,29 +1033,29 @@ Test scenarios performed:
         {
           type: 'text',
           text: `✅ USER CONFIRMED CHANGE WORKS - Starting COMPLETE documentation\n\n` +
-                `Change ID: ${changeId}\n` +
-                `Resolved: ${this.currentChange.resolvedDate}\n` +
-                `Archive Date: ${archiveDateStr} (1 month from now)\n\n` +
-                `📋 COMPLETE DOCUMENTATION CHECKLIST:\n\n` +
-                `REQUIRED (ALWAYS):\n` +
-                `1. ✅ Create change documentation: ${suggestedFileName}\n` +
-                `2. ✅ Update technical_status.md - Add to "Recently Fixed/Changed" section\n\n` +
-                `CONDITIONAL (IF APPLICABLE):\n` +
-                `3. ⚠️ Update pattern library IF:\n` +
-                `   - Change revealed anti-pattern\n` +
-                `   - Change established new pattern\n` +
-                `   - Change fixed pattern violation\n\n` +
-                `4. ⚠️ Update workflow docs IF:\n` +
-                `   - Conceptual logic changed\n` +
-                `   - User-facing workflow changed\n` +
-                `   Use: validate_workflow_documentation() to check\n\n` +
-                `📄 CHANGE DOCUMENTATION TEMPLATE:\n\n` +
-                `Suggested file: ${suggestedFileName}\n\n` +
-                `${template}\n\n` +
-                `⚠️ IMPORTANT:\n` +
-                `- Fill in ALL sections with actual details\n` +
-                `- Check all applicable documentation boxes\n` +
-                `- After completing, call close_change_request() with the file path`,
+            `Change ID: ${changeId}\n` +
+            `Resolved: ${this.currentChange.resolvedDate}\n` +
+            `Archive Date: ${archiveDateStr} (1 month from now)\n\n` +
+            `📋 COMPLETE DOCUMENTATION CHECKLIST:\n\n` +
+            `REQUIRED (ALWAYS):\n` +
+            `1. ✅ Create change documentation: ${suggestedFileName}\n` +
+            `2. ✅ Update technical_status.md - Add to "Recently Fixed/Changed" section\n\n` +
+            `CONDITIONAL (IF APPLICABLE):\n` +
+            `3. ⚠️ Update pattern library IF:\n` +
+            `   - Change revealed anti-pattern\n` +
+            `   - Change established new pattern\n` +
+            `   - Change fixed pattern violation\n\n` +
+            `4. ⚠️ Update workflow docs IF:\n` +
+            `   - Conceptual logic changed\n` +
+            `   - User-facing workflow changed\n` +
+            `   Use: validate_workflow_documentation() to check\n\n` +
+            `📄 CHANGE DOCUMENTATION TEMPLATE:\n\n` +
+            `Suggested file: ${suggestedFileName}\n\n` +
+            `${template}\n\n` +
+            `⚠️ IMPORTANT:\n` +
+            `- Fill in ALL sections with actual details\n` +
+            `- Check all applicable documentation boxes\n` +
+            `- After completing, call close_change_request() with the file path`,
         },
       ],
     };
@@ -911,19 +1087,19 @@ Test scenarios performed:
         {
           type: 'text',
           text: `✅ CHANGE REQUEST CLOSED\n\n` +
-                `Change ID: ${changeId}\n` +
-                `Type: ${completedChange.changeType}\n` +
-                `Feature: ${completedChange.affectedFeature}\n` +
-                `Documentation: ${documentationFile}\n` +
-                `Archive Date: ${completedChange.archiveDate}\n\n` +
-                `📊 Summary:\n` +
-                `- Started: ${completedChange.startDate}\n` +
-                `- Resolved: ${completedChange.resolvedDate}\n` +
-                `- Duration: ${this.calculateDuration(completedChange.startDate, completedChange.resolvedDate)}\n\n` +
-                `✅ Change is fully documented and ready for production monitoring.\n` +
-                `✅ Knowledge preserved in technical_status.md\n` +
-                `✅ Specific details available in ${documentationFile}\n` +
-                `✅ Will auto-archive on ${completedChange.archiveDate}`,
+            `Change ID: ${changeId}\n` +
+            `Type: ${completedChange.changeType}\n` +
+            `Feature: ${completedChange.affectedFeature}\n` +
+            `Documentation: ${documentationFile}\n` +
+            `Archive Date: ${completedChange.archiveDate}\n\n` +
+            `📊 Summary:\n` +
+            `- Started: ${completedChange.startDate}\n` +
+            `- Resolved: ${completedChange.resolvedDate}\n` +
+            `- Duration: ${this.calculateDuration(completedChange.startDate, completedChange.resolvedDate)}\n\n` +
+            `✅ Change is fully documented and ready for production monitoring.\n` +
+            `✅ Knowledge preserved in technical_status.md\n` +
+            `✅ Specific details available in ${documentationFile}\n` +
+            `✅ Will auto-archive on ${completedChange.archiveDate}`,
         },
       ],
     };
@@ -933,7 +1109,7 @@ Test scenarios performed:
     const start = new Date(startDate);
     const end = new Date(endDate);
     const diffDays = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return 'same day';
     if (diffDays === 1) return '1 day';
     return `${diffDays} days`;
@@ -944,15 +1120,15 @@ Test scenarios performed:
       // Read API contract standards document
       const contractStandardsPath = path.join(PROJECT_DOCS_DIR, 'api_contract_standards.md');
       const contractStandards = await fs.readFile(contractStandardsPath, 'utf-8');
-      
+
       // Extract the chosen approach from the document
       const approachMatch = contractStandards.match(/\*\*Chosen Approach:\*\*\s+(.+)/);
       const chosenApproach = approachMatch ? approachMatch[1] : 'Not specified';
-      
+
       // Determine validation requirements based on approach
       const validationChecks = [];
       const criticalChecks = [];
-      
+
       if (chosenApproach.includes('OpenAPI') || chosenApproach.includes('Pydantic')) {
         criticalChecks.push('✅ Backend endpoints have `response_model` parameter');
         criticalChecks.push('✅ Pydantic models defined in models/api_responses.py');
@@ -978,27 +1154,27 @@ Test scenarios performed:
         criticalChecks.push('✅ Contract validation implemented');
         validationChecks.push('Verify: Custom contract requirements met');
       }
-      
+
       const endpointsList = endpointsModified.map(e => `  - ${e}`).join('\n');
-      
+
       return {
         content: [
           {
             type: 'text',
             text: `🔍 API CONTRACT VALIDATION\n\n` +
-                  `Chosen Approach: ${chosenApproach}\n` +
-                  `Endpoints Modified:\n${endpointsList}\n\n` +
-                  `📋 MANDATORY CHECKS FOR ${chosenApproach}:\n\n` +
-                  `${criticalChecks.join('\n')}\n\n` +
-                  `⚙️ VALIDATION STEPS:\n\n` +
-                  `${validationChecks.join('\n')}\n\n` +
-                  `❌ WORK IS NOT COMPLETE UNTIL:\n` +
-                  `1. ALL critical checks above are verified\n` +
-                  `2. Contract-first sequence followed (define contract → implement → validate)\n` +
-                  `3. No direct HTTP calls bypassing contract (e.g., raw fetch() calls)\n` +
-                  `4. Breaking changes caught at type-check time (compile errors if mismatch)\n\n` +
-                  `⚠️ If ANY check fails, fix before marking cycle complete.\n\n` +
-                  `Reference: api_contract_standards.md for complete requirements`,
+              `Chosen Approach: ${chosenApproach}\n` +
+              `Endpoints Modified:\n${endpointsList}\n\n` +
+              `📋 MANDATORY CHECKS FOR ${chosenApproach}:\n\n` +
+              `${criticalChecks.join('\n')}\n\n` +
+              `⚙️ VALIDATION STEPS:\n\n` +
+              `${validationChecks.join('\n')}\n\n` +
+              `❌ WORK IS NOT COMPLETE UNTIL:\n` +
+              `1. ALL critical checks above are verified\n` +
+              `2. Contract-first sequence followed (define contract → implement → validate)\n` +
+              `3. No direct HTTP calls bypassing contract (e.g., raw fetch() calls)\n` +
+              `4. Breaking changes caught at type-check time (compile errors if mismatch)\n\n` +
+              `⚠️ If ANY check fails, fix before marking cycle complete.\n\n` +
+              `Reference: api_contract_standards.md for complete requirements`,
           },
         ],
       };
@@ -1008,14 +1184,14 @@ Test scenarios performed:
           {
             type: 'text',
             text: `⚠️ WARNING: Could not validate API contracts\n\n` +
-                  `Error: ${error.message}\n\n` +
-                  `This might mean:\n` +
-                  `1. API contract standards not yet defined for this project\n` +
-                  `2. File api_contract_standards.md not found\n\n` +
-                  `Before marking work complete:\n` +
-                  `- Define API contract approach (via bootstrap questionnaire)\n` +
-                  `- Create api_contract_standards.md documenting chosen approach\n` +
-                  `- Ensure all endpoints follow the documented standard`,
+              `Error: ${error.message}\n\n` +
+              `This might mean:\n` +
+              `1. API contract standards not yet defined for this project\n` +
+              `2. File api_contract_standards.md not found\n\n` +
+              `Before marking work complete:\n` +
+              `- Define API contract approach (via bootstrap questionnaire)\n` +
+              `- Create api_contract_standards.md documenting chosen approach\n` +
+              `- Ensure all endpoints follow the documented standard`,
           },
         ],
         isError: false, // Warning, not error
@@ -1109,7 +1285,7 @@ This check applies to:
 
   async getLogs(args) {
     const { source, environment, query, lines, since, service, level } = args;
-    
+
     // Try to read log access configuration
     let logConfig = null;
     try {
@@ -1126,13 +1302,13 @@ This check applies to:
           {
             type: 'text',
             text: `⚠️ LOG ACCESS NOT CONFIGURED\n\n` +
-                  `Log access has not been set up for this project.\n\n` +
-                  `**To configure log access:**\n` +
-                  `1. During bootstrap: Answer Q11 (Observability & Log Access) with option 1 or 2\n` +
-                  `2. After bootstrap: Create \`${PROJECT_DOCS_DIR}/log_access_setup.md\` with your configuration\n\n` +
-                  `**Manual log checking guidance:**\n` +
-                  `For source "${source}" in "${environment || 'local'}" environment:\n\n` +
-                  this.getManualLogGuidance(source, environment || 'local'),
+              `Log access has not been set up for this project.\n\n` +
+              `**To configure log access:**\n` +
+              `1. During bootstrap: Answer Q11 (Observability & Log Access) with option 1 or 2\n` +
+              `2. After bootstrap: Create \`${PROJECT_DOCS_DIR}/log_access_setup.md\` with your configuration\n\n` +
+              `**Manual log checking guidance:**\n` +
+              `For source "${source}" in "${environment || 'local'}" environment:\n\n` +
+              this.getManualLogGuidance(source, environment || 'local'),
           },
         ],
       };
@@ -1140,20 +1316,20 @@ This check applies to:
 
     // Parse configuration to find the appropriate log access method
     const sourceConfig = this.parseLogSourceConfig(logConfig, source, environment || 'local');
-    
+
     if (!sourceConfig || sourceConfig.status !== 'configured') {
       return {
         content: [
           {
             type: 'text',
             text: `⚠️ LOG SOURCE NOT CONFIGURED\n\n` +
-                  `Source: ${source}\n` +
-                  `Environment: ${environment || 'local'}\n\n` +
-                  `This log source is not configured in log_access_setup.md.\n\n` +
-                  `**Manual log checking guidance:**\n` +
-                  this.getManualLogGuidance(source, environment || 'local') +
-                  `\n\n**To add this source:**\n` +
-                  `Update \`${PROJECT_DOCS_DIR}/log_access_setup.md\` with configuration for ${source} logs.`,
+              `Source: ${source}\n` +
+              `Environment: ${environment || 'local'}\n\n` +
+              `This log source is not configured in log_access_setup.md.\n\n` +
+              `**Manual log checking guidance:**\n` +
+              this.getManualLogGuidance(source, environment || 'local') +
+              `\n\n**To add this source:**\n` +
+              `Update \`${PROJECT_DOCS_DIR}/log_access_setup.md\` with configuration for ${source} logs.`,
           },
         ],
       };
@@ -1177,18 +1353,18 @@ This check applies to:
         {
           type: 'text',
           text: `📋 LOG QUERY READY\n\n` +
-                `**Source:** ${queryInfo.source}\n` +
-                `**Environment:** ${queryInfo.environment}\n` +
-                `**Method:** ${queryInfo.method}\n\n` +
-                `**Command to execute:**\n\`\`\`bash\n${this.buildLogCommand(queryInfo)}\n\`\`\`\n\n` +
-                `**Parameters:**\n` +
-                `- Lines: ${queryInfo.lines}\n` +
-                `- Since: ${queryInfo.since}\n` +
-                `- Filter: ${queryInfo.query || '(none)'}\n` +
-                `- Service: ${queryInfo.service || '(all)'}\n` +
-                `- Level: ${queryInfo.level}\n\n` +
-                `⚠️ **Note:** Execute this command in the terminal to retrieve logs.\n` +
-                `The AI assistant cannot execute shell commands directly for security reasons.`,
+            `**Source:** ${queryInfo.source}\n` +
+            `**Environment:** ${queryInfo.environment}\n` +
+            `**Method:** ${queryInfo.method}\n\n` +
+            `**Command to execute:**\n\`\`\`bash\n${this.buildLogCommand(queryInfo)}\n\`\`\`\n\n` +
+            `**Parameters:**\n` +
+            `- Lines: ${queryInfo.lines}\n` +
+            `- Since: ${queryInfo.since}\n` +
+            `- Filter: ${queryInfo.query || '(none)'}\n` +
+            `- Service: ${queryInfo.service || '(all)'}\n` +
+            `- Level: ${queryInfo.level}\n\n` +
+            `⚠️ **Note:** Execute this command in the terminal to retrieve logs.\n` +
+            `The AI assistant cannot execute shell commands directly for security reasons.`,
         },
       ],
     };
@@ -1197,7 +1373,7 @@ This check applies to:
   parseLogSourceConfig(configContent, source, environment) {
     // Simple parser - looks for source configuration in markdown tables
     const lines = configContent.split('\n');
-    
+
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       // Look for table rows that match source and environment
@@ -1206,11 +1382,11 @@ This check applies to:
         // Check if environment matches
         if (cells.some(c => c.toLowerCase().includes(environment.toLowerCase()))) {
           // Found a match - try to extract method
-          const methodCell = cells.find(c => 
-            c.includes('docker') || c.includes('aws') || c.includes('gcloud') || 
+          const methodCell = cells.find(c =>
+            c.includes('docker') || c.includes('aws') || c.includes('gcloud') ||
             c.includes('kubectl') || c.includes('gh ') || c.includes('tail')
           );
-          
+
           if (methodCell) {
             return {
               status: 'configured',
@@ -1221,13 +1397,13 @@ This check applies to:
         }
       }
     }
-    
+
     return null;
   }
 
   buildLogCommand(queryInfo) {
     const { source, environment, method, lines, since, query, service, level } = queryInfo;
-    
+
     // Build command based on source type
     switch (source) {
       case 'docker':
@@ -1238,34 +1414,34 @@ This check applies to:
         if (since) dockerCmd += ` --since ${since}`;
         if (query) dockerCmd += ` 2>&1 | grep "${query}"`;
         return dockerCmd;
-        
+
       case 'file':
         let tailCmd = `tail -n ${lines}`;
         if (query) tailCmd += ` <log_file> | grep "${query}"`;
         else tailCmd += ` <log_file>`;
         return tailCmd;
-        
+
       case 'cicd':
         if (method && method.includes('gh')) {
           return `gh run view --log`;
         }
         return `# Check your CI/CD platform for logs\n# ${method || 'Configure CI/CD log access'}`;
-        
+
       case 'app':
         if (environment === 'local') {
           return `# Check application output in terminal\n# Or: tail -f logs/app.log`;
         }
         return `# ${method || 'Configure app log access for ' + environment}`;
-        
+
       case 'database':
         return `# Database logs vary by type\n# PostgreSQL: tail -f /var/log/postgresql/\n# MySQL: tail -f /var/log/mysql/`;
-        
+
       case 'infra':
         if (method && method.includes('kubectl')) {
           return `kubectl logs ${service || '<pod_name>'} --tail=${lines}`;
         }
         return `# ${method || 'Configure infrastructure log access'}`;
-        
+
       default:
         return `# Configure log access for source: ${source}`;
     }
@@ -1274,20 +1450,20 @@ This check applies to:
   getManualLogGuidance(source, environment) {
     const guidance = {
       docker: `**Docker logs:**\n\`\`\`bash\ndocker logs <container_name> --tail 100\ndocker logs -f <container_name>  # follow mode\n\`\`\``,
-      
+
       file: `**File logs:**\n\`\`\`bash\ntail -n 100 <log_file>\ntail -f <log_file>  # follow mode\ngrep "ERROR" <log_file>  # filter errors\n\`\`\``,
-      
+
       cicd: `**CI/CD logs:**\n- GitHub Actions: \`gh run view --log\` or check Actions tab\n- GitLab CI: Check Pipelines in GitLab UI\n- CircleCI: \`circleci <command>\` or web UI`,
-      
-      app: environment === 'local' 
+
+      app: environment === 'local'
         ? `**Local app logs:**\n- Check terminal output where app is running\n- Look for log files in \`logs/\` directory\n- Use \`npm run dev 2>&1 | tee app.log\` to capture`
         : `**${environment} app logs:**\n- AWS: \`aws logs tail <log-group>\`\n- GCP: \`gcloud logging read\`\n- Azure: \`az monitor log-analytics\``,
-      
+
       database: `**Database logs:**\n- PostgreSQL: \`/var/log/postgresql/\` or \`pg_stat_statements\`\n- MySQL: \`/var/log/mysql/\` or slow query log\n- MongoDB: \`db.currentOp()\` or profiler`,
-      
+
       infra: `**Infrastructure logs:**\n- Kubernetes: \`kubectl logs <pod>\`\n- AWS: CloudWatch Logs\n- Docker: \`docker compose logs\``,
     };
-    
+
     return guidance[source] || `No specific guidance for "${source}" logs. Check your platform documentation.`;
   }
 
@@ -1307,22 +1483,22 @@ This check applies to:
           {
             type: 'text',
             text: `📋 LOG ACCESS STATUS: NOT CONFIGURED\n\n` +
-                  `Log access has not been set up for this project.\n\n` +
-                  `**Available options:**\n\n` +
-                  `1. **Configure during bootstrap:**\n` +
-                  `   - Answer Q11 (Observability & Log Access) with option 1 (full) or 2 (local)\n\n` +
-                  `2. **Configure manually:**\n` +
-                  `   - Create \`${PROJECT_DOCS_DIR}/log_access_setup.md\`\n` +
-                  `   - Document your log sources and access methods\n\n` +
-                  `3. **Use manual guidance:**\n` +
-                  `   - The \`get_logs\` tool will provide manual instructions\n` +
-                  `   - User can copy-paste commands to retrieve logs\n\n` +
-                  `**Potential log sources** (based on typical setups):\n` +
-                  `- Local: Docker logs, file logs, app console\n` +
-                  `- CI/CD: GitHub Actions, GitLab CI, etc.\n` +
-                  `- Cloud: CloudWatch, Cloud Logging, Azure Monitor\n` +
-                  `- Database: Query logs, slow query logs\n\n` +
-                  `See \`greenfield_workflow.md\` Step 9.6 for setup instructions.`,
+              `Log access has not been set up for this project.\n\n` +
+              `**Available options:**\n\n` +
+              `1. **Configure during bootstrap:**\n` +
+              `   - Answer Q11 (Observability & Log Access) with option 1 (full) or 2 (local)\n\n` +
+              `2. **Configure manually:**\n` +
+              `   - Create \`${PROJECT_DOCS_DIR}/log_access_setup.md\`\n` +
+              `   - Document your log sources and access methods\n\n` +
+              `3. **Use manual guidance:**\n` +
+              `   - The \`get_logs\` tool will provide manual instructions\n` +
+              `   - User can copy-paste commands to retrieve logs\n\n` +
+              `**Potential log sources** (based on typical setups):\n` +
+              `- Local: Docker logs, file logs, app console\n` +
+              `- CI/CD: GitHub Actions, GitLab CI, etc.\n` +
+              `- Cloud: CloudWatch, Cloud Logging, Azure Monitor\n` +
+              `- Database: Query logs, slow query logs\n\n` +
+              `See \`greenfield_workflow.md\` Step 9.6 for setup instructions.`,
           },
         ],
       };
@@ -1334,13 +1510,656 @@ This check applies to:
         {
           type: 'text',
           text: `📋 LOG ACCESS STATUS: CONFIGURED\n\n` +
-                `Configuration file: \`${PROJECT_DOCS_DIR}/log_access_setup.md\`\n\n` +
-                `**Current Configuration:**\n\n${logConfig}\n\n` +
-                `**Usage:**\n` +
-                `Use \`get_logs\` tool with appropriate source and environment parameters.\n\n` +
-                `Example: \`get_logs(source="docker", environment="local", lines=100)\``,
+            `Configuration file: \`${PROJECT_DOCS_DIR}/log_access_setup.md\`\n\n` +
+            `**Current Configuration:**\n\n${logConfig}\n\n` +
+            `**Usage:**\n` +
+            `Use \`get_logs\` tool with appropriate source and environment parameters.\n\n` +
+            `Example: \`get_logs(source="docker", environment="local", lines=100)\``,
         },
       ],
+    };
+  }
+
+  // ============================================================
+  // IMPLEMENTATION PLANNING TOOLS
+  // ============================================================
+
+  async startCyclePlanning(cycleId) {
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
+    const planPath = path.join(implementationPlansDir, planFileName);
+
+    // Check if implementation_plan.md exists
+    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'implementation_plan.md');
+    let roadmapContent = '';
+    try {
+      roadmapContent = await fs.readFile(roadmapPath, 'utf-8');
+    } catch (err) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ ERROR: No implementation_plan.md found\n\n` +
+            `Cannot find the high-level implementation plan at:\n${roadmapPath}\n\n` +
+            `This file should exist with cycle definitions. ` +
+            `Create it first or run the bootstrap process.`,
+        }],
+        isError: true,
+      };
+    }
+
+    // Check if detailed plan already exists
+    let existingPlan = null;
+    try {
+      existingPlan = await fs.readFile(planPath, 'utf-8');
+    } catch (err) {
+      // Plan doesn't exist yet - this is expected
+    }
+
+    // Extract cycle info from roadmap
+    const cyclePattern = new RegExp(`### .*Cycle ${cycleId}[^#]*`, 'i');
+    const cycleMatch = roadmapContent.match(cyclePattern);
+    const cycleInfo = cycleMatch ? cycleMatch[0] : 'Cycle not found in roadmap';
+
+    if (existingPlan) {
+      // Plan exists - check if it's approved
+      const isApproved = existingPlan.includes('- [x] **User approved this plan**');
+      const status = isApproved ? '✅ APPROVED - Ready for implementation' : '📋 DRAFT - Needs review';
+
+      return {
+        content: [{
+          type: 'text',
+          text: `📋 CYCLE ${cycleId} PLANNING STATUS\n\n` +
+            `**Detailed plan exists:** \`${planFileName}\`\n` +
+            `**Status:** ${status}\n\n` +
+            `---\n\n` +
+            `**From high-level roadmap:**\n${cycleInfo}\n\n` +
+            `---\n\n` +
+            `**Next Steps:**\n` +
+            (isApproved
+              ? `✅ Plan is approved. Proceed with implementation using the existing MCP tools.\n` +
+              `- Use \`check_pattern_exists()\` before implementing\n` +
+              `- Use \`validate_cycle_completion()\` when done`
+              : `1. Review the existing plan with the user\n` +
+              `2. If approved, call \`approve_cycle_plan("${cycleId}")\`\n` +
+              `3. If changes needed, update the plan file directly`),
+        }],
+      };
+    }
+
+    // Plan doesn't exist - provide research guidance
+    return {
+      content: [{
+        type: 'text',
+        text: `🔬 PLANNING REQUIRED FOR CYCLE ${cycleId}\n\n` +
+          `No detailed implementation plan exists yet.\n\n` +
+          `**From high-level roadmap:**\n${cycleInfo}\n\n` +
+          `---\n\n` +
+          `## Research Phase Checklist\n\n` +
+          `Before creating the detailed plan, complete this research:\n\n` +
+          `### 1. Understand the Feature\n` +
+          `- [ ] What problem does this solve?\n` +
+          `- [ ] What are the inputs and outputs?\n` +
+          `- [ ] What does "done" look like for the user?\n\n` +
+          `### 2. Check Existing Patterns\n` +
+          `- [ ] Call \`check_pattern_exists()\` for relevant patterns\n` +
+          `- [ ] Review existing codebase for reusable components\n\n` +
+          `### 3. Assess Scope (CRITICAL)\n` +
+          `- [ ] Call \`analyze_cycle_scope()\` with feature details\n` +
+          `- [ ] Be HONEST about complexity - don't underestimate\n` +
+          `- [ ] If scope is too large, DECOMPOSE into sub-cycles\n\n` +
+          `### 4. Create the Plan\n` +
+          `- [ ] Call \`create_cycle_plan()\` after research is complete\n` +
+          `- [ ] Fill in all required sections\n` +
+          `- [ ] Review with user\n\n` +
+          `---\n\n` +
+          `**⚠️ Senior Engineering Practice:**\n` +
+          `Humans tend to overestimate what can be done in one cycle.\n` +
+          `Ship small, test, iterate. If in doubt, make it smaller.\n\n` +
+          `**Plan location:** \`${implementationPlansDir}/${planFileName}\``,
+      }],
+    };
+  }
+
+  async analyzeCycleScope(args) {
+    const {
+      cycle_id,
+      feature_description,
+      estimated_loc,
+      components_affected,
+      has_external_deps = false,
+      has_db_changes = false,
+      breaking_risk = 'low',
+    } = args;
+
+    // Calculate complexity scores (1-5 scale)
+    const scores = {
+      loc: estimated_loc <= 100 ? 1 : estimated_loc <= 300 ? 2 : estimated_loc <= 500 ? 3 : estimated_loc <= 800 ? 4 : 5,
+      components: components_affected.length <= 2 ? 1 : components_affected.length <= 4 ? 2 : components_affected.length <= 6 ? 3 : components_affected.length <= 8 ? 4 : 5,
+      external_deps: has_external_deps ? 3 : 1,
+      db_changes: has_db_changes ? 3 : 1,
+      breaking_risk: breaking_risk === 'low' ? 1 : breaking_risk === 'medium' ? 3 : 5,
+    };
+
+    const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+    const maxScore = 25;
+
+    // Determine verdict
+    let verdict, verdictEmoji, recommendation;
+    if (totalScore <= 10) {
+      verdict = 'PROCEED';
+      verdictEmoji = '✅';
+      recommendation = 'Scope is appropriate for a single cycle. Proceed with planning.';
+    } else if (totalScore <= 15) {
+      verdict = 'CONSIDER_DECOMPOSITION';
+      verdictEmoji = '⚠️';
+      recommendation = 'Scope is borderline. Consider breaking into smaller cycles if any complexity dimension is high.';
+    } else {
+      verdict = 'MUST_DECOMPOSE';
+      verdictEmoji = '❌';
+      recommendation = 'Scope is too large for a single cycle. MUST decompose into smaller, testable increments.';
+    }
+
+    // Generate decomposition suggestions if needed
+    let decompositionSuggestions = '';
+    if (verdict !== 'PROCEED') {
+      decompositionSuggestions = `\n\n---\n\n## Decomposition Suggestions\n\n` +
+        `Based on the complexity analysis, consider splitting this cycle:\n\n` +
+        `**Suggested sub-cycles:**\n` +
+        `- ${cycle_id}a: [Core foundation - most basic version]\n` +
+        `- ${cycle_id}b: [Enhancement - adds complexity layer]\n` +
+        `- ${cycle_id}c: [Polish - edge cases and refinements]\n\n` +
+        `**Start with ${cycle_id}a because:**\n` +
+        `- It establishes the foundation\n` +
+        `- It's testable in isolation\n` +
+        `- It delivers visible value quickly\n\n` +
+        `**Update the high-level implementation_plan.md** to reflect these sub-cycles.`;
+    }
+
+    return {
+      content: [{
+        type: 'text',
+        text: `${verdictEmoji} SCOPE ANALYSIS: Cycle ${cycle_id}\n\n` +
+          `**Feature:** ${feature_description}\n\n` +
+          `---\n\n` +
+          `## Complexity Breakdown\n\n` +
+          `| Dimension | Score | Notes |\n` +
+          `|-----------|-------|-------|\n` +
+          `| Lines of Code | ${scores.loc}/5 | ~${estimated_loc} LOC |\n` +
+          `| Components Affected | ${scores.components}/5 | ${components_affected.length} components |\n` +
+          `| External Dependencies | ${scores.external_deps}/5 | ${has_external_deps ? 'Yes' : 'No'} |\n` +
+          `| Database Changes | ${scores.db_changes}/5 | ${has_db_changes ? 'Yes' : 'No'} |\n` +
+          `| Breaking Risk | ${scores.breaking_risk}/5 | ${breaking_risk} |\n` +
+          `| **TOTAL** | **${totalScore}/${maxScore}** | |\n\n` +
+          `---\n\n` +
+          `## Verdict: ${verdictEmoji} ${verdict}\n\n` +
+          `${recommendation}` +
+          decompositionSuggestions +
+          `\n\n---\n\n` +
+          `**Components to modify:**\n` +
+          components_affected.map(c => `- ${c}`).join('\n'),
+      }],
+    };
+  }
+
+  async createCyclePlan(cycleId, cycleName, scopeAnalysisResult) {
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
+    const planPath = path.join(implementationPlansDir, planFileName);
+
+    // Ensure directory exists
+    try {
+      await fs.mkdir(implementationPlansDir, { recursive: true });
+    } catch (err) {
+      // Directory may already exist
+    }
+
+    // Check if plan already exists
+    try {
+      await fs.access(planPath);
+      return {
+        content: [{
+          type: 'text',
+          text: `⚠️ Plan already exists: \`${planFileName}\`\n\n` +
+            `Use \`get_cycle_plan("${cycleId}")\` to read it, or delete it to create fresh.`,
+        }],
+      };
+    } catch (err) {
+      // File doesn't exist - good, we can create it
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+
+    // Create the plan from template structure
+    const planContent = `# Cycle ${cycleId}: ${cycleName} — Implementation Plan
+
+**Parent Cycle:** <!-- Fill if this is a sub-cycle -->
+**High-Level Reference:** [implementation_plan.md](../implementation_plan.md) → Cycle ${cycleId}
+**Status:** 📋 PLANNING
+**Created:** ${today}
+**Last Updated:** ${today}
+
+---
+
+## 1. Research Summary
+
+### Problem Statement
+
+**What we're building:**
+<!-- Describe the feature/capability -->
+
+**Why it matters:**
+<!-- Business value and user impact -->
+
+**User impact:**
+<!-- What users will see/experience -->
+
+### Existing Code & Patterns Analysis
+
+**Existing patterns that apply:**
+- <!-- Pattern name: How it applies -->
+
+**Existing code to reuse:**
+- <!-- File/component: What to reuse -->
+
+**Research findings:**
+<!-- Key insights from research phase -->
+
+---
+
+## 2. Scope Assessment (MANDATORY)
+
+### Complexity Score
+
+| Dimension | Score | Notes |
+|-----------|-------|-------|
+| Lines of code (estimated) | /5 | LOC |
+| Components affected | /5 | |
+| External dependencies/APIs | /5 | |
+| Database/schema changes | /5 | |
+| Risk to existing functionality | /5 | |
+| **TOTAL** | **/25** | |
+
+### Scope Verdict
+
+**Verdict:** <!-- ✅ PROCEED / ⚠️ CONSIDER DECOMPOSITION / ❌ MUST DECOMPOSE -->
+
+**Reasoning:**
+<!-- Why this scope is appropriate or needs to be reduced -->
+
+---
+
+## 3. Decomposition (If Required)
+
+<!-- Remove this section if verdict is ✅ PROCEED -->
+
+### Recommended Sub-Cycles
+
+| Sub-Cycle | Description | Visible Output | Builds On |
+|-----------|-------------|----------------|-----------|
+| ${cycleId}a | | | Foundation |
+| ${cycleId}b | | | ${cycleId}a |
+
+### Why This Decomposition
+
+**First increment chosen because:**
+<!-- Reasoning -->
+
+**THIS PLAN COVERS ONLY:** <!-- Specify which sub-cycle -->
+
+---
+
+## 4. Technical Design
+
+### Architecture Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| | | |
+
+### Code Structure
+
+**Files to create:**
+\`\`\`
+<!-- New files with purposes -->
+\`\`\`
+
+**Files to modify:**
+\`\`\`
+<!-- Existing files with changes -->
+\`\`\`
+
+---
+
+## 5. Implementation Checklist
+
+### Backend/Service Layer
+- [ ] <!-- Task -->
+
+### Frontend/UI Layer
+- [ ] <!-- Task -->
+
+### Integration
+- [ ] <!-- Task -->
+
+---
+
+## 6. Test Strategy
+
+### Unit Tests
+- [ ] <!-- Test -->
+
+### Integration Tests
+- [ ] <!-- Test -->
+
+### Manual Testing
+**Verification environment:** <!-- localhost/staging/etc -->
+**Test steps:**
+1. <!-- Step -->
+
+---
+
+## 7. Risk Assessment
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| | | | |
+
+---
+
+## 8. Alignment Verification
+
+- [ ] Purpose matches \`implementation_plan.md\` description
+- [ ] Inputs/outputs match high-level plan
+- [ ] Timeline is realistic
+- [ ] Dependencies are accurate
+
+### Success Criteria
+
+<!-- Copy from high-level implementation_plan.md -->
+
+---
+
+## 9. Approval
+
+- [ ] **User approved this plan**
+- [ ] **Scope assessment reviewed**
+- [ ] **Decomposition applied** (if required)
+- [ ] **Ready for implementation**
+
+**Approved by:** 
+**Approval date:** 
+
+---
+
+## 10. Implementation Notes
+
+<!-- Use during implementation -->
+
+### During Implementation
+
+### Deviations from Plan
+
+| What Changed | Why | Impact |
+|--------------|-----|--------|
+| | | |
+`;
+
+    await fs.writeFile(planPath, planContent, 'utf-8');
+
+    return {
+      content: [{
+        type: 'text',
+        text: `✅ Created implementation plan: \`${planFileName}\`\n\n` +
+          `**Location:** \`${planPath}\`\n\n` +
+          `---\n\n` +
+          `## Next Steps\n\n` +
+          `1. **Fill in the plan sections** - Replace all placeholders\n` +
+          `2. **Complete scope assessment** - Be honest about complexity\n` +
+          `3. **Add decomposition** if scope is too large\n` +
+          `4. **Review with user** - Walk through the plan together\n` +
+          `5. **Call \`approve_cycle_plan("${cycleId}")\`** after user approves\n\n` +
+          `⚠️ Do NOT start implementation until the plan is approved.`,
+      }],
+    };
+  }
+
+  async getCyclePlan(cycleId) {
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
+    const planPath = path.join(implementationPlansDir, planFileName);
+
+    try {
+      const content = await fs.readFile(planPath, 'utf-8');
+      return {
+        content: [{
+          type: 'text',
+          text: `📋 Cycle ${cycleId} Implementation Plan\n\n` +
+            `**File:** \`${planFileName}\`\n\n` +
+            `---\n\n${content}`,
+        }],
+      };
+    } catch (err) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ No detailed plan found for Cycle ${cycleId}\n\n` +
+            `Expected location: \`${planPath}\`\n\n` +
+            `**To create a plan:**\n` +
+            `1. Call \`start_cycle_planning("${cycleId}")\` for guidance\n` +
+            `2. Complete the research phase\n` +
+            `3. Call \`analyze_cycle_scope()\` to assess complexity\n` +
+            `4. Call \`create_cycle_plan("${cycleId}", "Cycle Name")\` to create the plan`,
+        }],
+      };
+    }
+  }
+
+  async approveCyclePlan(cycleId, userConfirmed) {
+    if (!userConfirmed) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ Cannot approve plan without user confirmation.\n\n` +
+            `The \`user_confirmed\` parameter must be \`true\`.\n\n` +
+            `Before calling this tool, ensure:\n` +
+            `1. User has reviewed the detailed plan\n` +
+            `2. User explicitly approves proceeding\n` +
+            `3. Scope assessment has been completed`,
+        }],
+        isError: true,
+      };
+    }
+
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
+    const planPath = path.join(implementationPlansDir, planFileName);
+
+    // Read the plan
+    let planContent;
+    try {
+      planContent = await fs.readFile(planPath, 'utf-8');
+    } catch (err) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ No plan found for Cycle ${cycleId}\n\n` +
+            `Cannot approve a plan that doesn't exist.\n` +
+            `Call \`start_cycle_planning("${cycleId}")\` first.`,
+        }],
+        isError: true,
+      };
+    }
+
+    // Validate plan has required sections
+    const requiredSections = [
+      'Problem Statement',
+      'Scope Assessment',
+      'Complexity Score',
+      'Technical Design',
+      'Implementation Checklist',
+    ];
+
+    const missingSections = requiredSections.filter(
+      section => !planContent.includes(section)
+    );
+
+    if (missingSections.length > 0) {
+      return {
+        content: [{
+          type: 'text',
+          text: `⚠️ Plan is incomplete\n\n` +
+            `Missing sections:\n${missingSections.map(s => `- ${s}`).join('\n')}\n\n` +
+            `Complete these sections before approval.`,
+        }],
+      };
+    }
+
+    // Check scope assessment was done (look for filled scores)
+    if (!planContent.match(/\*\*TOTAL\*\*.*\d+\/25/)) {
+      return {
+        content: [{
+          type: 'text',
+          text: `⚠️ Scope assessment incomplete\n\n` +
+            `The complexity score section appears unfilled.\n` +
+            `Complete the scope assessment before approval.`,
+        }],
+      };
+    }
+
+    // Update the plan to mark as approved
+    const today = new Date().toISOString().split('T')[0];
+    let updatedContent = planContent
+      .replace('**Status:** 📋 PLANNING', '**Status:** 🏗️ APPROVED')
+      .replace('- [ ] **User approved this plan**', '- [x] **User approved this plan**')
+      .replace('**Approved by:**', `**Approved by:** User`)
+      .replace('**Approval date:**', `**Approval date:** ${today}`);
+
+    await fs.writeFile(planPath, updatedContent, 'utf-8');
+
+    // Try to update the high-level implementation_plan.md status
+    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'implementation_plan.md');
+    try {
+      let roadmapContent = await fs.readFile(roadmapPath, 'utf-8');
+      // Update cycle status from PLANNING to IN PROGRESS
+      const cyclePattern = new RegExp(`(### .*Cycle ${cycleId}[^#]*?Status:\\**)\\s*📋\\s*PLANNING`, 'i');
+      if (cyclePattern.test(roadmapContent)) {
+        roadmapContent = roadmapContent.replace(cyclePattern, '$1 🏗️ IN PROGRESS');
+        await fs.writeFile(roadmapPath, roadmapContent, 'utf-8');
+      }
+    } catch (err) {
+      // Roadmap update is best-effort
+    }
+
+    return {
+      content: [{
+        type: 'text',
+        text: `✅ CYCLE ${cycleId} APPROVED - READY FOR IMPLEMENTATION\n\n` +
+          `**Plan:** \`${planFileName}\`\n` +
+          `**Approved:** ${today}\n\n` +
+          `---\n\n` +
+          `## Implementation Workflow\n\n` +
+          `Now you can proceed with implementation:\n\n` +
+          `1. **Follow the implementation checklist** in the plan\n` +
+          `2. **Check patterns** before coding: \`check_pattern_exists()\`\n` +
+          `3. **Update technical_status.md** as you progress\n` +
+          `4. **Document new patterns** as you establish them\n` +
+          `5. **Validate completion** when done: \`validate_cycle_completion("${cycleId}")\`\n\n` +
+          `⚠️ If scope changes significantly, update the plan and re-approve.`,
+      }],
+    };
+  }
+
+  async getImplementationRoadmap() {
+    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'implementation_plan.md');
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+
+    // Read the high-level roadmap
+    let roadmapContent;
+    try {
+      roadmapContent = await fs.readFile(roadmapPath, 'utf-8');
+    } catch (err) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ No implementation_plan.md found\n\n` +
+            `The high-level roadmap doesn't exist at:\n${roadmapPath}\n\n` +
+            `This file should be created during bootstrap.`,
+        }],
+        isError: true,
+      };
+    }
+
+    // Find all detailed plans
+    let detailedPlans = [];
+    try {
+      const files = await fs.readdir(implementationPlansDir);
+      detailedPlans = files.filter(f => f.endsWith('_IMPLEMENTATION_PLAN.md'));
+    } catch (err) {
+      // Directory may not exist yet
+    }
+
+    // Extract cycle information from roadmap
+    const cycleMatches = roadmapContent.matchAll(/### .*Cycle (\d+\.\d+[a-z]?):?\s*([^\n]*)\n[^#]*?\*Status:\*\*?\s*([📋🏗️✅⏸️❌][^\n]*)/gi);
+    const cycles = [];
+    for (const match of cycleMatches) {
+      const cycleId = match[1];
+      const cycleName = match[2].trim();
+      const status = match[3].trim();
+      const hasDetailedPlan = detailedPlans.some(p => p.includes(`CYCLE_${cycleId.replace(/\./g, '_')}`));
+      cycles.push({ id: cycleId, name: cycleName, status, hasDetailedPlan });
+    }
+
+    // Build summary
+    let summary = `# Implementation Roadmap Overview\n\n`;
+    summary += `**High-level plan:** \`implementation_plan.md\`\n`;
+    summary += `**Detailed plans:** \`implementation_plans/\`\n\n`;
+    summary += `---\n\n`;
+    summary += `## Cycles\n\n`;
+    summary += `| Cycle | Name | Status | Detailed Plan |\n`;
+    summary += `|-------|------|--------|---------------|\n`;
+
+    for (const cycle of cycles) {
+      summary += `| ${cycle.id} | ${cycle.name || 'Untitled'} | ${cycle.status} | ${cycle.hasDetailedPlan ? '✅ Yes' : '❌ No'} |\n`;
+    }
+
+    if (cycles.length === 0) {
+      summary += `| - | No cycles defined yet | - | - |\n`;
+    }
+
+    summary += `\n---\n\n`;
+    summary += `## Available Detailed Plans\n\n`;
+    if (detailedPlans.length > 0) {
+      for (const plan of detailedPlans) {
+        summary += `- \`${plan}\`\n`;
+      }
+    } else {
+      summary += `No detailed plans created yet.\n`;
+    }
+
+    summary += `\n---\n\n`;
+    summary += `## Next Actions\n\n`;
+
+    const planningCycles = cycles.filter(c => c.status.includes('PLANNING') && !c.hasDetailedPlan);
+    if (planningCycles.length > 0) {
+      summary += `**Cycles ready for planning:**\n`;
+      for (const cycle of planningCycles) {
+        summary += `- Call \`start_cycle_planning("${cycle.id}")\` to begin planning\n`;
+      }
+    }
+
+    const inProgressCycles = cycles.filter(c => c.status.includes('IN PROGRESS'));
+    if (inProgressCycles.length > 0) {
+      summary += `\n**Cycles in progress:**\n`;
+      for (const cycle of inProgressCycles) {
+        summary += `- Cycle ${cycle.id}: In progress\n`;
+      }
+    }
+
+    return {
+      content: [{
+        type: 'text',
+        text: summary,
+      }],
     };
   }
 

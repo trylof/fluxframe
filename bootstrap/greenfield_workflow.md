@@ -523,6 +523,36 @@ None yet - starting fresh!
 - User-visible results delivered
 
 See `context_master_guide.md` for complete development cycle methodology.
+
+---
+
+## Two-Tier Planning System
+
+This project uses a two-tier planning approach:
+
+### Tier 1: This Document (Strategic Roadmap)
+- Lists ALL planned cycles with brief descriptions
+- Tracks status: 📋 PLANNING → 🏗️ IN PROGRESS → ✅ COMPLETE
+- Provides timeline estimates and dependencies
+- Points to detailed plans when ready to implement
+
+### Tier 2: implementation_plans/ (Tactical Plans)
+- Created JUST-IN-TIME when ready to implement a cycle
+- Contains detailed research, scope analysis, technical design
+- Includes decomposition if feature is too large
+- Requires user approval before implementation begins
+
+### Planning Workflow (MCP Tools)
+
+**Before implementing any cycle, use these MCP tools:**
+
+1. `start_cycle_planning(cycle_id)` - Initiate planning, get research guidance
+2. `analyze_cycle_scope(...)` - Assess complexity, get decomposition recommendations  
+3. `create_cycle_plan(cycle_id, name)` - Create detailed plan from template
+4. `approve_cycle_plan(cycle_id)` - Validate and mark ready for implementation
+
+**Key Principle:** A senior engineer knows to ship small, test, iterate.
+If a cycle is too large (complexity score > 10), decompose into sub-cycles.
 ```
 
 **Placeholder Replacements:**
@@ -539,6 +569,7 @@ See `context_master_guide.md` for complete development cycle methodology.
 - [ ] Cycle 1.1 has placeholder for user to fill
 - [ ] No unfilled placeholders
 - [ ] References to detailed plans are correct
+- [ ] Two-tier planning system explanation included
 
 ---
 

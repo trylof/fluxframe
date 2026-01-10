@@ -1502,8 +1502,37 @@ Your project's merged AI rules are now active, and FluxFrame template files have
 
 **Next Steps:**
 1. Configure your project's MCP server in your AI tool (replace bootstrap MCP with project MCP)
-2. Start a development cycle to experience the upgraded workflow
+2. When starting your next development cycle:
+   - Call `start_cycle_planning("[cycle_id]")` to initiate planning
+   - Call `analyze_cycle_scope()` to assess complexity
+   - Call `create_cycle_plan("[cycle_id]", "Cycle Name")` to create detailed plan
+   - Get user approval, then call `approve_cycle_plan("[cycle_id]")`
+   - THEN start implementing
+3. Start developing! Use the two-tier planning system for all cycles.
 ```
+
+---
+
+## Two-Tier Planning System
+
+This project uses a two-tier implementation planning approach:
+
+### Tier 1: implementation_plan.md (Strategic Roadmap)
+- Lists ALL planned cycles with brief descriptions
+- Tracks status: 📋 PLANNING → 🏗️ IN PROGRESS → ✅ COMPLETE
+- Provides timeline estimates and dependencies
+
+### Tier 2: implementation_plans/ (Tactical Plans)
+- Created JUST-IN-TIME when ready to implement a cycle
+- Contains detailed research, scope analysis, technical design
+- Includes decomposition if feature is too large
+- Requires user approval before implementation begins
+
+### Planning MCP Tools
+- `start_cycle_planning(cycle_id)` - Initiate planning, get research guidance
+- `analyze_cycle_scope(...)` - Assess complexity, get decomposition recommendations
+- `create_cycle_plan(cycle_id, name)` - Create detailed plan from template
+- `approve_cycle_plan(cycle_id)` - Validate and mark ready for implementation
 
 ---
 
@@ -1521,4 +1550,5 @@ Bootstrap upgrade is fully complete when:
 8. ✅ Template files cleaned up
 9. ✅ README.md updated for project
 10. ✅ Backup preserved for rollback
-11. ✅ Ready to start development cycle
+11. ✅ Ready to define next cycle using two-tier planning system
+

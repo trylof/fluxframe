@@ -317,6 +317,12 @@ Required sections:
 **In implementation_plan.md:**
 - [ ] References context_master_guide.md methodology
 - [ ] Points to implementation_plans/ directory
+- [ ] Two-tier planning system explanation included
+- [ ] Planning workflow (MCP tools) documented
+
+**In implementation_plans/:**
+- [ ] Directory exists (may be empty initially)
+- [ ] Template is referenced in planning workflow
 
 ---
 
@@ -651,7 +657,13 @@ Your project's AI rules are now active, and FluxFrame template files have been r
 **Next Steps:**
 1. Configure your project's MCP server in your AI tool (replace bootstrap MCP with project MCP)
 2. Define Cycle 1.1 in `{{DOCS_DIR}}/implementation_plan.md`
-3. Start developing!
+3. When ready to implement Cycle 1.1:
+   - Call `start_cycle_planning("1.1")` to initiate planning
+   - Call `analyze_cycle_scope()` to assess complexity
+   - Call `create_cycle_plan("1.1", "Cycle Name")` to create detailed plan
+   - Get user approval, then call `approve_cycle_plan("1.1")`
+   - THEN start implementing
+4. Start developing! Use the two-tier planning system for all cycles.
 ```
 
 ---

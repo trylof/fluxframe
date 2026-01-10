@@ -288,7 +288,54 @@ From {{STARTING_CYCLE}} onward, **EVERY new feature must:**
 
 ---
 
-## 12) Alignment with Project Documents
+## 12) Two-Tier Planning System
+
+<!-- AI ASSISTANT: This is the HIGH-LEVEL strategic roadmap. Detailed tactical plans live in implementation_plans/ -->
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  THIS DOCUMENT (Strategic Roadmap)                                  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│  • Lists ALL planned cycles with brief descriptions                 │
+│  • Status tracking (📋 PLANNING → 🏗️ IN PROGRESS → ✅ COMPLETE)    │
+│  • Timeline estimates and dependencies                              │
+│  • Points to detailed plans when ready to implement                 │
+└─────────────────────────────────────────────────────────────────────┘
+                                    │
+                    When ready to implement a cycle:
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  implementation_plans/CYCLE_X_X_IMPLEMENTATION_PLAN.md (Tactical)   │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│  Created JUST-IN-TIME during research/planning phase:              │
+│  • Problem statement & research findings                            │
+│  • Scope analysis & complexity scoring                              │
+│  • Decomposition into sub-cycles (if too large)                     │
+│  • Technical design & architecture decisions                        │
+│  • Detailed implementation checklist                                │
+│  • Test strategy & risk assessment                                  │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Planning Workflow (Before Each Cycle)
+
+**BEFORE implementing any cycle:**
+
+1. **Call `start_cycle_planning(cycle_id)`** - Initiates planning, checks for existing plan
+2. **Research the feature** - Understand problem, check patterns, review codebase
+3. **Call `analyze_cycle_scope()`** - Get complexity score and decomposition recommendation
+4. **Create detailed plan** - Use template in `implementation_plans/`
+5. **Get user approval** - Review plan together
+6. **Call `approve_cycle_plan()`** - Validates plan and marks ready
+
+**ONLY THEN** proceed with implementation using existing development cycle tools.
+
+---
+
+## 13) Alignment with Project Documents
 
 <!-- AI ASSISTANT: Critical - ensure this plan stays in sync with other docs -->
 
@@ -296,13 +343,14 @@ This implementation plan MUST align with:
 - **`{{TECH_BLUEPRINT_FILE}}`** - Overall system architecture and vision
 - **`technical_status.md`** - Current implementation state
 - **`{{DOCS_DIR}}/patterns/`** - Established architectural patterns
-- **Detailed Plans** - `implementation_plans/` directory for cycle-specific details
+- **`implementation_plans/`** - Detailed cycle-specific plans (created just-in-time)
 
 **Alignment Rules:**
 1. Cycle statuses must match between this document and `technical_status.md`
 2. Detailed plans must reference this high-level roadmap
 3. Any scope changes require updating both high-level and detailed plans
-4. Pattern documentation must be updated when cycles establish new patterns
+4. If a cycle is decomposed, add sub-cycles (e.g., 1.2a, 1.2b) to this document
+5. Pattern documentation must be updated when cycles establish new patterns
 
 ---
 
@@ -317,6 +365,7 @@ AI ASSISTANT FINAL CHECKLIST:
 - [ ] Alignment with other project documents verified
 - [ ] Terminology consistent (Cycle/Iteration, NOT Sprint/Feature alone)
 - [ ] Optional sections removed if not applicable
+- [ ] Two-tier planning system explanation included
 -->
 
 ---

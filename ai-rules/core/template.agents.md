@@ -54,19 +54,36 @@ This project follows the FluxFrame development methodology - a documentation-fir
 |------|---------|
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth for all project context |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state and recent changes |
-| `{{DOCS_DIR}}/implementation_plan.md` | Roadmap and development cycles |
+| `{{DOCS_DIR}}/implementation_plan.md` | High-level roadmap (Tier 1 - strategic) |
+| `{{DOCS_DIR}}/implementation_plans/` | Detailed cycle plans (Tier 2 - tactical) |
 | `{{DOCS_DIR}}/patterns/` | Reusable solution patterns |
 
 ---
 
 ## Development Workflow
 
+### Before Starting Any Cycle
+
+**CRITICAL: Planning-First Approach**
+
+Before implementing ANY development cycle:
+
+1. **Call `start_cycle_planning(cycle_id)`** - Initiate planning for the cycle
+2. **Research the feature** - Understand problem, check patterns, review codebase
+3. **Call `analyze_cycle_scope()`** - Get complexity score and decomposition recommendation
+4. **If complexity > 10: MUST decompose** - Break into smaller sub-cycles
+5. **Call `create_cycle_plan()`** - Create detailed plan in `implementation_plans/`
+6. **Review with user** - Walk through the plan together
+7. **Call `approve_cycle_plan()`** - Validate and mark ready
+
+**Only THEN proceed with implementation.**
+
 ### Before Any Implementation
 
 1. **Read Context** - Review `{{DOCS_DIR}}/context_master_guide.md` for full project context
 2. **Check Patterns** - Search `{{DOCS_DIR}}/patterns/` for existing solutions
 3. **Read Status** - Check `{{DOCS_DIR}}/technical_status.md` for current state
-4. **Understand Scope** - Know what you're building and why
+4. **Review Cycle Plan** - Follow the approved plan in `{{DOCS_DIR}}/implementation_plans/`¬
 
 ### During Implementation
 
@@ -74,13 +91,15 @@ This project follows the FluxFrame development methodology - a documentation-fir
 - **Ensure Visible Results** - Every change should be demonstrable
 - **Follow Existing Patterns** - When patterns exist, follow them exactly
 - **Write Aligned Tests** - Tests should validate actual behavior
+- **Follow the Plan** - Stick to the approved implementation plan
 
 ### After Implementation
 
 1. **Get User Confirmation** - Never document until user confirms the change works
 2. **Update ALL Affected Documentation** - technical_status.md, patterns/, workflows/
 3. **Document New Patterns** - If solution is reusable, add to pattern library
-4. **Mark Complete** - Only after all documentation is updated
+4. **Update Implementation Plan** - Mark cycle as complete, document any deviations
+5. **Call `validate_cycle_completion()`** - Verify all completion criteria met
 
 ---
 
@@ -226,19 +245,31 @@ Always use the current date from environment details, not training data dates.
 ### Session Start Checklist
 - [ ] Read context_master_guide.md
 - [ ] Check technical_status.md
-- [ ] Identify task type (new feature, bug fix, etc.)
+- [ ] Call `get_implementation_roadmap()` to see cycle status
+- [ ] Identify task type (new cycle, continue cycle, bug fix)
 - [ ] Search patterns for existing solutions
 
+### Before Starting a New Cycle
+- [ ] Call `start_cycle_planning(cycle_id)` 
+- [ ] Research the feature
+- [ ] Call `analyze_cycle_scope()` - complexity must be ≤10 or decomposed
+- [ ] Call `create_cycle_plan()` if plan doesn't exist
+- [ ] Get user approval on the plan
+- [ ] Call `approve_cycle_plan()` to mark ready
+
 ### Before Code Changes
+- [ ] Cycle plan exists and is approved
 - [ ] Pattern search completed
 - [ ] Understand current implementation state
-- [ ] Have clear acceptance criteria
+- [ ] Have clear acceptance criteria from plan
 
 ### After Implementation
 - [ ] User confirmed change works
 - [ ] technical_status.md updated
+- [ ] Implementation plan marked complete
+- [ ] Any deviations from plan documented
 - [ ] New patterns documented (if applicable)
-- [ ] All affected docs updated
+- [ ] Call `validate_cycle_completion()`
 
 ---
 

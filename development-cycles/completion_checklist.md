@@ -193,15 +193,22 @@ API contracts prevent integration failures. They are enforced independently beca
   - Completion date added
   - Deliverables checked off
 
+- [ ] **Detailed plan exists and was followed**
+  - Plan created via `start_cycle_planning()` before implementation
+  - Scope assessment completed (complexity score < 10 or decomposed)
+  - Plan approved via `approve_cycle_plan()` before coding started
+
 - [ ] **Detailed plan updated** (if exists)
   - Matches high-level plan status
   - Technical details current
   - Timeline accurate
+  - Any deviations documented with reasoning
 
 - [ ] **Plan alignment verified**
   - High-level and detailed plans match
   - No contradictions
   - Dependencies properly reflected
+  - Sub-cycles added if original scope was decomposed
 
 ### ✅ Additional Documentation (Project-Specific)
 

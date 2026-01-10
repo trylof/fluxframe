@@ -1771,8 +1771,37 @@ Your project's AI rules are now active, and FluxFrame template files have been r
 **Next Steps:**
 1. Configure your project's MCP server in your AI tool (replace bootstrap MCP with project MCP)
 2. Define Cycle 1.1 in `{{DOCS_DIR}}/implementation_plan.md`
-3. Start developing!
+3. When ready to implement Cycle 1.1:
+   - Call `start_cycle_planning("1.1")` to initiate planning
+   - Call `analyze_cycle_scope()` to assess complexity
+   - Call `create_cycle_plan("1.1", "Cycle Name")` to create detailed plan
+   - Get user approval, then call `approve_cycle_plan("1.1")`
+   - THEN start implementing
+4. Start developing! Use the two-tier planning system for all cycles.
 ```
+
+---
+
+## Two-Tier Planning System
+
+This project uses a two-tier implementation planning approach:
+
+### Tier 1: implementation_plan.md (Strategic Roadmap)
+- Lists ALL planned cycles with brief descriptions
+- Tracks status: 📋 PLANNING → 🏗️ IN PROGRESS → ✅ COMPLETE
+- Provides timeline estimates and dependencies
+
+### Tier 2: implementation_plans/ (Tactical Plans)
+- Created JUST-IN-TIME when ready to implement a cycle
+- Contains detailed research, scope analysis, technical design
+- Includes decomposition if feature is too large
+- Requires user approval before implementation begins
+
+### Planning MCP Tools
+- `start_cycle_planning(cycle_id)` - Initiate planning, get research guidance
+- `analyze_cycle_scope(...)` - Assess complexity, get decomposition recommendations
+- `create_cycle_plan(cycle_id, name)` - Create detailed plan from template
+- `approve_cycle_plan(cycle_id)` - Validate and mark ready for implementation
 
 ---
 
@@ -1790,4 +1819,5 @@ Migration is fully complete when:
 8. ✅ README.md updated for project
 9. ✅ Backup preserved for rollback
 10. ✅ User has reviewed and approved result
-11. ✅ Ready to define Cycle 1.1
+11. ✅ Ready to define Cycle 1.1 using two-tier planning system
+
