@@ -1098,6 +1098,22 @@ A successfully bootstrapped project will have:
 | AI tools | Always |
 | Handle existing rules | If minimal rules exist |
 
+### Future State Questions (ALL SCENARIOS)
+
+**Step 2.6 - Optional but recommended:** After mandatory infrastructure questions, offer to capture future plans.
+
+| Question | Description | MCP Tool |
+|----------|-------------|----------|
+| Planned Infrastructure | Things user is actively planning to add soon | `log_future_item` with tier="planned" |
+| Planned Features | Features coming soon (browser automation, testing, etc.) | `log_future_item` with tier="planned" |
+| Aspirational Items | Nice-to-have items, no rush | `log_future_item` with tier="aspirational" |
+
+**Tier Distinction:**
+- **Planned (Tier 2):** FluxFrame creates placeholder patterns and cycle entries
+- **Aspirational (Tier 3):** Documentation in "Future Considerations" only, no active prep
+
+**If User Skips:** Log decision with category="future_state", proceed without future state capture.
+
 ---
 
 ## Troubleshooting

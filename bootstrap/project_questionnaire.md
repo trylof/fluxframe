@@ -716,9 +716,125 @@ Your choice (1-3):
 
 ---
 
+## Future State: Planned & Aspirational (OPTIONAL but recommended)
+
+**Purpose:** Capture what the user intends to build, even if not implementing now. This helps FluxFrame prepare appropriately.
+
+**When to ask:** After Q8-Q11 mandatory questions, before proceeding to file generation.
+
+**How to explain:**
+```
+Before we proceed, I'd like to understand what you're **planning** for the future.
+
+FluxFrame works best when it can prepare for your project's evolution. We'll capture 
+two types of future items:
+
+1. **PLANNED (Soon):** Things you're actively planning to add
+   → FluxFrame will create placeholder patterns and cycle entries
+   → Ready for you to implement when the time comes
+
+2. **ASPIRATIONAL (Someday):** Nice-to-have items, no rush
+   → Documented in "Future Considerations" section only
+   → No active preparation, just for future reference
+
+This is optional but recommended. Want to capture your future plans? (yes/skip)
+```
+
+### Q12: Planned Infrastructure (Tier 2 - Active Prep)
+
+**Ask if user says yes:**
+```
+Based on your current setup, what infrastructure are you **actively planning** to add soon?
+
+**Your current setup:**
+- Environments: [summarize Q8 answers]
+- Config management: [Q9]
+- IaC: [Q10]
+
+**What are you planning to add soon?** (Select all that apply)
+
+□ Additional environments (staging, production, preview, etc.)
+□ CI/CD pipeline
+□ Infrastructure as Code
+□ Containerization (Docker, Kubernetes)
+□ Cloud hosting (AWS, GCP, Azure, Vercel, etc.)
+□ Monitoring/observability
+□ Secrets management upgrade
+□ Other: _______________
+□ Nothing planned - skip to aspirational
+```
+
+**For each selected item, log it:**
+```
+log_future_item({
+  tier: "planned",
+  category: "[infrastructure/environment/feature]",
+  intention: "[what they selected]",
+  timeframe: "soon",
+  fluxframeImpact: "[how this affects patterns/workflows]",
+  placeholder: "[what to create now]"
+})
+```
+
+### Q13: Planned Features (Tier 2 - Active Prep)
+
+```
+Any additional features you're actively planning to implement soon?
+
+□ Browser automation for AI testing
+□ AI log access
+□ API documentation generation
+□ Automated testing framework
+□ Other: _______________
+□ Nothing additional planned
+```
+
+**Log each as tier: "planned"**
+
+### Q14: Aspirational Items (Tier 3 - Documentation Only)
+
+```
+Any **nice-to-have** items you'd like documented for the future?
+
+These won't get active preparation - just recorded in your implementation plan's
+"Future Considerations" section for when you're ready.
+
+□ Multi-region deployment
+□ Disaster recovery
+□ Advanced monitoring/alerting
+□ Performance optimization
+□ Feature flags system
+□ A/B testing infrastructure
+□ Other: _______________
+□ Nothing to document
+```
+
+**Log each as tier: "aspirational"**
+
+### Impact of Future State Questions
+
+| Tier | What FluxFrame Does |
+|------|---------------------|
+| **Planned (Soon)** | Creates cycle entries in implementation_plan.md, placeholder patterns, notes in rules |
+| **Aspirational (Someday)** | Documents in "Future Considerations" section only |
+| **Skipped** | No future state captured, configured for current state only |
+
+### If User Skips
+
+```
+log_decision({
+  category: "future_state",
+  decision: "User chose to skip future state capture",
+  reasoning: "User wants to focus on current implementation only",
+  implications: "FluxFrame configured for current state. User can add future items to implementation_plan.md later."
+})
+```
+
+---
+
 ## Optional Questions (Ask only if relevant)
 
-### Q12: Key Features (if not provided)
+### Q15: Key Features (if not provided)
 
 **Ask if:**
 - User gave minimal description
@@ -741,7 +857,7 @@ For example:
 
 ---
 
-### Q13: Team Size
+### Q16: Team Size
 
 **Usually DON'T ask** - Framework works for any size
 
@@ -1118,6 +1234,7 @@ Your choice?
 | **Q9 Config/Secrets** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
 | **Q10 IaC** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
 | **Q11 Log Access** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
+| **Q12-14 Future State** | **ALWAYS OFFER** | **ALWAYS OFFER** | **ALWAYS OFFER** |
 | Rule differences | N/A | For each diff | N/A |
 | Import preferences | N/A | N/A | For each category |
 | Keep/replace rules | N/A | For each diff | If minimal rules |
@@ -1132,3 +1249,11 @@ Your choice?
 
 **If detection provides information:** Present it as a confirmation question, not a skip.
 **If user tries to skip:** Explain importance and re-ask. User can choose "Later" for Q11 but must make an explicit choice.
+
+### Future State Questions (Q12-Q14)
+
+**Q12-Q14 are OPTIONAL but ALWAYS OFFERED.** The user can skip these entirely, but the AI must always present the option. Unlike mandatory questions:
+- User CAN skip the entire Future State section
+- If they engage, capture both Planned (Tier 2) and Aspirational (Tier 3) items
+- Log appropriately using `log_future_item` with correct tier
+

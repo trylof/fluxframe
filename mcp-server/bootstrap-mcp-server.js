@@ -120,6 +120,13 @@ const BOOTSTRAP_WORKFLOW = {
           description: "Browser automation, log access, etc.",
           validation: "Optional features decided",
           requiredInfo: ["optional_features"]
+        },
+        {
+          id: "2.6",
+          name: "Future State (Planned & Aspirational)",
+          description: "Capture intended future capabilities for planning",
+          validation: "Future state recorded or explicitly skipped",
+          requiredInfo: []  // Optional - user can skip
         }
       ]
     },
@@ -264,7 +271,11 @@ const DEFAULT_STATE = {
   collectedInfo: {},
   validationResults: {},
   notes: [],
-  decisions: []  // Structured decisions with reasoning
+  decisions: [],  // Structured decisions with reasoning
+  futureState: {   // Planned and aspirational items
+    planned: [],   // Tier 2: Items to actively prepare for (soon)
+    aspirational: [] // Tier 3: Documentation only (someday)
+  }
 };
 
 class BootstrapServer {
@@ -436,6 +447,55 @@ class BootstrapServer {
             },
           },
         },
+        {
+          name: "log_future_item",
+          description: "Log a planned or aspirational item for future implementation. Planned items (soon) get active FluxFrame preparation. Aspirational items (someday) are documentation only.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              tier: {
+                type: "string",
+                enum: ["planned", "aspirational"],
+                description: "'planned' = soon, active FluxFrame prep; 'aspirational' = someday, documentation only",
+              },
+              category: {
+                type: "string",
+                description: "Category (e.g., 'infrastructure', 'environment', 'feature', 'integration')",
+              },
+              intention: {
+                type: "string",
+                description: "What user intends to have",
+              },
+              timeframe: {
+                type: "string",
+                description: "When they plan to implement (e.g., 'soon', 'eventually', 'someday')",
+              },
+              fluxframeImpact: {
+                type: "string",
+                description: "How this will affect workflows/patterns/rules when implemented",
+              },
+              placeholder: {
+                type: "string",
+                description: "What placeholder should be created now (for planned items)",
+              },
+            },
+            required: ["tier", "category", "intention"],
+          },
+        },
+        {
+          name: "get_future_state",
+          description: "Get all logged planned and aspirational items. Use this to review future state captured during bootstrap.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              tier: {
+                type: "string",
+                enum: ["planned", "aspirational", "all"],
+                description: "Filter by tier (optional, defaults to 'all')",
+              },
+            },
+          },
+        },
       ],
     }));
 
@@ -462,6 +522,10 @@ class BootstrapServer {
             return await this.getDecisions(request.params.arguments);
           case "sync_decisions_to_file":
             return await this.syncDecisionsToFile(request.params.arguments);
+          case "log_future_item":
+            return await this.logFutureItem(request.params.arguments);
+          case "get_future_state":
+            return await this.getFutureState(request.params.arguments);
           default:
             throw new Error(`Unknown tool: ${request.params.name}`);
         }
@@ -629,6 +693,7 @@ class BootstrapServer {
       "2.3": "Ask where documentation should live: project_docs/ (standard), existing location, or custom path. LOG DECISION: Use log_decision with category='docs_location' if user chooses non-standard location with a reason.",
       "2.4": "Ask about environments (Dev/Test/Staging/Prod status), config management, and IaC tooling. Use infrastructure questions from project_questionnaire.md. LOG DECISIONS: Use log_decision with categories 'infrastructure', 'config_management', 'iac', and 'verification' to capture each major decision with reasoning and tradeoffs discussed.",
       "2.5": "Ask about optional features: browser automation, log access. Offer to skip or configure later. LOG DECISIONS: Use log_decision with categories 'browser_automation' and 'log_access' to record choices. After this step, call sync_decisions_to_file to persist all Phase 2 decisions.",
+      "2.6": "OPTIONAL but recommended: Ask about FUTURE STATE. Explain the two tiers: PLANNED (soon - FluxFrame actively prepares with placeholders) vs ASPIRATIONAL (someday - documentation only). For each item: call log_future_item with tier='planned' or tier='aspirational'. Planned items create cycle entries in implementation_plan.md and pattern placeholders. Aspirational items go to 'Future Considerations' section. User can skip entirely.",
       "3.1": "Create directory structure: {docs_location}/{patterns,workflows,implementation_plans,bug_fixes} and staging directory .fluxframe-pending/ for AI rules.",
       "3.2": "Generate context_master_guide.md, technical_status.md, implementation_plan.md, bootstrap_decisions.md (from sync), and workflow docs using templates. Replace all placeholders. Documentation goes to final location, NOT staging.",
       "3.3": "CRITICAL: Generate AI rules to STAGING directory (.fluxframe-pending/), NOT final locations. Create .fluxframe-pending/AGENTS.md and tool-specific rules. This prevents project rules from interfering with bootstrap. Bootstrap-resume rules remain at final locations until cleanup.",
@@ -1087,6 +1152,118 @@ This document captures the reasoning behind key decisions made during the FluxFr
 `;
 
     return md;
+  }
+
+  async logFutureItem(args) {
+    const state = await this.loadState();
+    const { tier, category, intention, timeframe, fluxframeImpact, placeholder } = args;
+
+    // Validate tier
+    if (!['planned', 'aspirational'].includes(tier)) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              error: "Invalid tier. Must be 'planned' or 'aspirational'",
+              hint: "planned = soon, active FluxFrame prep; aspirational = someday, documentation only"
+            }, null, 2),
+          },
+        ],
+      };
+    }
+
+    const futureItem = {
+      id: `future_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      stepId: state.currentStep,
+      tier,
+      category,
+      intention,
+      timeframe: timeframe || (tier === 'planned' ? 'soon' : 'someday'),
+      fluxframeImpact: fluxframeImpact || null,
+      placeholder: placeholder || null
+    };
+
+    // Initialize futureState if it doesn't exist (backwards compatibility)
+    if (!state.futureState) {
+      state.futureState = { planned: [], aspirational: [] };
+    }
+
+    // Add to appropriate tier
+    state.futureState[tier].push(futureItem);
+    await this.saveState(state);
+
+    const tierDescription = tier === 'planned'
+      ? 'FluxFrame will create placeholder patterns and cycle entries'
+      : 'Documented in Future Considerations only (no placeholders)';
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            success: true,
+            message: `Future ${tier} item logged`,
+            item: futureItem,
+            tierBehavior: tierDescription,
+            totals: {
+              planned: state.futureState.planned.length,
+              aspirational: state.futureState.aspirational.length
+            }
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  async getFutureState(args) {
+    const state = await this.loadState();
+    const { tier } = args || {};
+
+    // Initialize futureState if it doesn't exist
+    if (!state.futureState) {
+      state.futureState = { planned: [], aspirational: [] };
+    }
+
+    let result;
+    if (tier === 'planned') {
+      result = {
+        tier: 'planned',
+        description: 'Items marked for active FluxFrame preparation (placeholders, cycle entries)',
+        items: state.futureState.planned
+      };
+    } else if (tier === 'aspirational') {
+      result = {
+        tier: 'aspirational',
+        description: 'Items documented in Future Considerations only (no placeholders)',
+        items: state.futureState.aspirational
+      };
+    } else {
+      result = {
+        tier: 'all',
+        planned: {
+          description: 'Active FluxFrame preparation',
+          count: state.futureState.planned.length,
+          items: state.futureState.planned
+        },
+        aspirational: {
+          description: 'Documentation only',
+          count: state.futureState.aspirational.length,
+          items: state.futureState.aspirational
+        }
+      };
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
   }
 
   async run() {

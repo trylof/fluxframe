@@ -556,6 +556,59 @@ This project uses a two-tier planning approach:
 If a cycle is too large (complexity score > 10), decompose into sub-cycles.
 ```
 
+**Future State Content (if captured in Step 2.6):**
+
+If the user captured future state during bootstrap, add these sections:
+
+**For Tier 2 (Planned) items:** Add after "Planned Cycles" section:
+```markdown
+---
+
+## Planned Cycles (From Bootstrap)
+
+These cycles were identified during bootstrap for near-term implementation.
+FluxFrame has prepared placeholder patterns and documentation for these.
+
+### Cycle X.Y: [PLANNED_ITEM_INTENTION]
+
+*Status:* 📋 PLANNING  
+*Timeline:* Soon  
+*FluxFrame Prep:* [PLANNED_ITEM_PLACEHOLDER]
+
+**Purpose:** [PLANNED_ITEM_INTENTION]
+
+**Impact on FluxFrame:** [PLANNED_ITEM_FLUXFRAME_IMPACT]
+
+**Note:** This cycle was identified during bootstrap. Define detailed scope when ready to implement.
+
+---
+```
+
+**For Tier 3 (Aspirational) items:** Add after "Completed Cycles" section:
+```markdown
+---
+
+## Future Considerations (Aspirational)
+
+These items were identified during bootstrap as potential future capabilities.
+No FluxFrame preparation has been done - these are documentation only.
+When ready to implement, create a development cycle.
+
+| Item | Category | Notes |
+|------|----------|-------|
+| [ASPIRATIONAL_ITEM_INTENTION] | [CATEGORY] | [FLUXFRAME_IMPACT or "To be determined"] |
+
+---
+
+> **Note:** When implementing any of these, update:
+> - This implementation plan (create specific cycle)
+> - Relevant pattern files
+> - AI rules as needed
+> - technical_status.md
+```
+
+**If no Future State captured:** Do not include these sections.
+
 **Placeholder Replacements:**
 - `[PROJECT_NAME]` → User's project name
 - `[TODAY_DATE]` → Current date
@@ -563,6 +616,8 @@ If a cycle is too large (complexity score > 10), decompose into sub-cycles.
 - `[TECH_STACK]` → User's technology stack  
 - `[ARCHITECTURE_TYPE]` → Architecture type
 - `[IF_USER_PROVIDED_FEATURES]` → Conditional: include if user mentioned features
+- `[PLANNED_ITEM_*]` → From `get_future_state({ tier: "planned" })`
+- `[ASPIRATIONAL_ITEM_*]` → From `get_future_state({ tier: "aspirational" })`
 
 **Output Location:** `{{DOCS_DIR}}/implementation_plan.md`
 
@@ -571,6 +626,7 @@ If a cycle is too large (complexity score > 10), decompose into sub-cycles.
 - [ ] No unfilled placeholders
 - [ ] References to detailed plans are correct
 - [ ] Two-tier planning system explanation included
+- [ ] Future State sections included if items were captured
 
 ---
 
@@ -738,10 +794,39 @@ If project has infrastructure (CI/CD, cloud, IaC), customize with detected/chose
 
 If project is local-only, create from template as-is. The template is designed to work as a placeholder.
 
+**Include Planned Items (Tier 2):**
+
+If the user captured Tier 2 (Planned) items during Step 2.6 that relate to infrastructure, add a "Planned Patterns" section:
+
+```markdown
+---
+
+## Planned Patterns (Prepared for Implementation)
+
+*Note: These sections are placeholders for actively planned capabilities.*
+
+### [PLANNED_ITEM_INTENTION] Patterns (Planned - Soon)
+
+**Status:** Placeholder - actively preparing for this  
+**Bootstrap Decision:** User indicated this as a planned near-term goal
+
+When implemented, this section will contain:
+- [Relevant pattern types based on category]
+
+**To implement:** Create a development cycle, then update this section.
+
+---
+```
+
+Repeat for each Tier 2 item in the infrastructure/environment category.
+
+**Note:** Tier 3 (Aspirational) items do NOT get pattern placeholders - they're only documented in implementation_plan.md.
+
 **Validation:**
 - [ ] ALL 5 pattern files created (README + 4 domain files)
 - [ ] Files use placeholder content when domain not applicable
 - [ ] No pattern files skipped based on current stack
+- [ ] Planned items (Tier 2) have placeholder sections in relevant pattern files
 
 ---
 

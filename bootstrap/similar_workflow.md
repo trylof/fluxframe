@@ -545,6 +545,96 @@ Please choose for each: Add or Skip?
 
 ---
 
+## Phase 2.7: Future State (Planned & Aspirational) - OPTIONAL
+
+**Purpose:** After gap analysis, capture what the user intends to build beyond current setup.
+
+**When to ask:** Always offer this after Phase 2.6, but user can skip.
+
+### Step 2.7.1: Introduce Future State Capture
+
+```markdown
+## Looking Ahead
+
+Before we proceed, I'd like to understand what you're **planning** for the future.
+
+FluxFrame works best when it can prepare for your project's evolution. We'll capture two types of future items:
+
+1. **PLANNED (Soon):** Things you're actively planning to add
+   → FluxFrame will create placeholder patterns and cycle entries
+   → Ready for you to implement when the time comes
+
+2. **ASPIRATIONAL (Someday):** Nice-to-have items, no rush
+   → Documented in "Future Considerations" section only
+   → No active preparation, just for future reference
+
+Would you like to capture your future plans? (yes/skip)
+```
+
+### Step 2.7.2: Gather Planned Items (Tier 2)
+
+**If user says yes:**
+
+```markdown
+Based on your current setup and the gaps we identified, what are you **actively planning** to add soon?
+
+**Current state:**
+- Environments: [summarize from Phase 2.5]
+- Missing components from gap analysis: [list from Phase 2.6]
+
+**What are you planning to add soon?** (Select all that apply)
+
+□ Any of the "Skip" items from gap analysis you'll add later
+□ Additional environments (staging, production, etc.)
+□ CI/CD pipeline enhancements
+□ Infrastructure as Code
+□ Monitoring/observability
+□ Other: _______________
+□ Nothing planned right now
+```
+
+**For each selected item, log it:**
+```
+log_future_item({
+  tier: "planned",
+  category: "[infrastructure/environment/feature]",
+  intention: "[what they selected]",
+  timeframe: "soon",
+  fluxframeImpact: "[how this affects patterns/workflows]",
+  placeholder: "[what to create now]"
+})
+```
+
+### Step 2.7.3: Gather Aspirational Items (Tier 3)
+
+```markdown
+Any **nice-to-have** items you'd like documented for the future?
+
+These won't get active preparation - just recorded in your implementation plan's "Future Considerations" section for when you're ready.
+
+□ Advanced monitoring/alerting
+□ Multi-region deployment
+□ Performance optimization
+□ Feature flags system
+□ Other: _______________
+□ Nothing to document
+```
+
+**Log each as tier: "aspirational"**
+
+### Step 2.7.4: If User Skips
+
+```
+log_decision({
+  category: "future_state",
+  decision: "User chose to skip future state capture",
+  reasoning: "User wants to focus on current upgrade only",
+  implications: "FluxFrame configured for current state. User can add future items to implementation_plan.md later."
+})
+```
+
+---
+
 ## Phase 3: User Decisions
 
 ### Step 3.1: Present Differences
