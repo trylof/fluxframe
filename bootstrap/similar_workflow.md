@@ -402,7 +402,7 @@ Do you plan to use Infrastructure as Code to manage these environments?
 | IaC Tooling | [Choice] | [notes] |
 
 **Impact on Bootstrap:**
-- Environments marked "Needs Setup" will be added to implementation_plan.md
+- Environments marked "Needs Setup" will be added to ROADMAP.md
 - Infrastructure section will be populated in technical_status.md
 - infra_patterns.md will be created from template
 ```
@@ -427,7 +427,7 @@ Before we proceed, here's what a complete FluxFrame setup provides. I'll then sh
 ### Core Documentation
 - [ ] `context_master_guide.md` - Single source of truth for project context
 - [ ] `technical_status.md` - Real-time project state tracking
-- [ ] `implementation_plan.md` - Development roadmap with cycles
+- [ ] `ROADMAP.md` - Development roadmap with cycles
 - [ ] `api_contract_standards.md` - API type safety enforcement (if applicable)
 - [ ] `bootstrap_decisions.md` - Record of all setup decisions with reasoning
 
@@ -629,7 +629,7 @@ log_decision({
   category: "future_state",
   decision: "User chose to skip future state capture",
   reasoning: "User wants to focus on current upgrade only",
-  implications: "FluxFrame configured for current state. User can add future items to implementation_plan.md later."
+  implications: "FluxFrame configured for current state. User can add future items to ROADMAP.md later."
 })
 ```
 
@@ -818,7 +818,7 @@ Compare existing setup to full FluxFrame setup:
 ### Documentation
 - [x] context_master_guide.md - [exists as context_guide.md]
 - [x] technical_status.md - [exists as status.md]
-- [ ] implementation_plan.md - [missing - create]
+- [ ] ROADMAP.md - [missing - create]
 - [ ] api_contract_standards.md - [missing - create if has API]
 - [x] patterns/ - [exists]
 - [ ] workflows/ - [missing - create]
@@ -841,7 +841,7 @@ Based on Phase 2.5 assessment:
 - [ ] Missing secret management setup (if Q9 chose but not configured)
 
 **Suggested Implementation Cycles for Missing Infrastructure:**
-If environments need setup, suggest adding to implementation_plan.md:
+If environments need setup, suggest adding to ROADMAP.md:
 - Cycle X.X: Set up [Environment] environment on [Platform]
 - Cycle X.X: Configure CI/CD pipeline for [Environment]
 - Cycle X.X: Implement secret management with [Tool]
@@ -865,11 +865,11 @@ For each missing component:
 
 **Example dialogue:**
 ```
-I notice you're missing an implementation_plan.md. Based on your existing 
+I notice you're missing an ROADMAP.md. Based on your existing 
 documentation, I can create one with your current roadmap/backlog information.
 
 Should I:
-1. Create implementation_plan.md from FluxFrame template
+1. Create ROADMAP.md from FluxFrame template
 2. Skip this (you'll add it later)
 3. Point me to an existing file that serves this purpose
 
@@ -1631,12 +1631,12 @@ Your project's merged AI rules are now active, and FluxFrame template files have
 
 This project uses a two-tier implementation planning approach:
 
-### Tier 1: implementation_plan.md (Strategic Roadmap)
+### Tier 1: ROADMAP.md (Strategic Roadmap)
 - Lists ALL planned cycles with brief descriptions
 - Tracks status: 📋 PLANNING → 🏗️ IN PROGRESS → ✅ COMPLETE
 - Provides timeline estimates and dependencies
 
-### Tier 2: implementation_plans/ (Tactical Plans)
+### Tier 2: roadmap/ (Tactical Plans)
 - Created JUST-IN-TIME when ready to implement a cycle
 - Contains detailed research, scope analysis, technical design
 - Includes decomposition if feature is too large

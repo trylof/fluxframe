@@ -275,7 +275,7 @@ class ProjectDocsMCPServer {
                 },
                 documentation_file: {
                   type: 'string',
-                  description: 'Path to created change documentation in bug_fixes/ directory',
+                  description: 'Path to created change documentation in bugs/ directory',
                 },
               },
               required: ['change_id', 'documentation_file'],
@@ -448,7 +448,7 @@ class ProjectDocsMCPServer {
           },
           {
             name: 'approve_cycle_plan',
-            description: 'Validate plan structure, verify scope assessment was performed, and mark the cycle as ready for implementation. Updates implementation_plan.md status. ONLY call after user has reviewed and approved the detailed plan.',
+            description: 'Validate plan structure, verify scope assessment was performed, and mark the cycle as ready for implementation. Updates ROADMAP.md status. ONLY call after user has reviewed and approved the detailed plan.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -621,7 +621,7 @@ class ProjectDocsMCPServer {
 
   async validateCycleCompletion(cycleId, completedItems) {
     // Check if detailed plan exists
-    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'roadmap');
     const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
     const planPath = path.join(implementationPlansDir, planFileName);
 
@@ -958,7 +958,7 @@ class ProjectDocsMCPServer {
       .slice(0, 3)
       .join('_')
       .replace(/[^a-z0-9_]/g, '');
-    const suggestedFileName = `bug_fixes/${componentSlug}_${issueSlug}.md`;
+    const suggestedFileName = `bugs/${componentSlug}_${issueSlug}.md`;
 
     const template = `# ${this.currentChange.affectedFeature} ${this.currentChange.description} - ${this.currentChange.changeType}
 
@@ -1525,12 +1525,12 @@ This check applies to:
   // ============================================================
 
   async startCyclePlanning(cycleId) {
-    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'roadmap');
     const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
     const planPath = path.join(implementationPlansDir, planFileName);
 
-    // Check if implementation_plan.md exists
-    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'implementation_plan.md');
+    // Check if ROADMAP.md exists
+    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'ROADMAP.md');
     let roadmapContent = '';
     try {
       roadmapContent = await fs.readFile(roadmapPath, 'utf-8');
@@ -1538,7 +1538,7 @@ This check applies to:
       return {
         content: [{
           type: 'text',
-          text: `❌ ERROR: No implementation_plan.md found\n\n` +
+          text: `❌ ERROR: No ROADMAP.md found\n\n` +
             `Cannot find the high-level implementation plan at:\n${roadmapPath}\n\n` +
             `This file should exist with cycle definitions. ` +
             `Create it first or run the bootstrap process.`,
@@ -1672,7 +1672,7 @@ This check applies to:
         `- It establishes the foundation\n` +
         `- It's testable in isolation\n` +
         `- It delivers visible value quickly\n\n` +
-        `**Update the high-level implementation_plan.md** to reflect these sub-cycles.`;
+        `**Update the high-level ROADMAP.md** to reflect these sub-cycles.`;
     }
 
     return {
@@ -1702,7 +1702,7 @@ This check applies to:
   }
 
   async createCyclePlan(cycleId, cycleName, scopeAnalysisResult) {
-    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'roadmap');
     const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
     const planPath = path.join(implementationPlansDir, planFileName);
 
@@ -1729,18 +1729,112 @@ This check applies to:
 
     const today = new Date().toISOString().split('T')[0];
 
-    // Create the plan from template structure
+    // Create the plan from template structure - enhanced for autonomous AI execution
     const planContent = `# Cycle ${cycleId}: ${cycleName} — Implementation Plan
 
 **Parent Cycle:** <!-- Fill if this is a sub-cycle -->
-**High-Level Reference:** [implementation_plan.md](../implementation_plan.md) → Cycle ${cycleId}
+**High-Level Reference:** [ROADMAP.md](../ROADMAP.md) → Cycle ${cycleId}
 **Status:** 📋 PLANNING
 **Created:** ${today}
 **Last Updated:** ${today}
 
 ---
 
-## 1. Research Summary
+## Progress Tracker
+
+<!-- AI ASSISTANT: Update this section as you implement. Check items when complete. -->
+
+| Phase | Status | Notes |
+|-------|--------|-------|
+| Planning | 📋 In Progress | |
+| Research Complete | ⬜ Pending | |
+| User Approved | ⬜ Pending | |
+| Implementation | ⬜ Pending | |
+| Tests Passing | ⬜ Pending | |
+| Documentation Updated | ⬜ Pending | |
+| Cycle Complete | ⬜ Pending | |
+
+**Current Focus:** 
+**Blockers:** None
+
+---
+
+## 1. Executive Summary
+
+<!-- AI ASSISTANT: 3-5 sentences capturing the essence of this cycle. -->
+
+**What we're delivering:**
+<!-- Brief description of deliverable -->
+
+**Why it matters:**
+<!-- Business value and impact -->
+
+**Success looks like:**
+<!-- Definition of done summary -->
+
+---
+
+## 2. Target Users
+
+### Primary Users
+
+**User Type:** <!-- e.g., Admin, End User, Developer -->
+**Description:** <!-- Who they are -->
+**How they benefit:** <!-- What they gain from this feature -->
+
+### Secondary Users (if applicable)
+
+<!-- N/A if no secondary users -->
+
+---
+
+## 3. User Stories
+
+### Story 1: <!-- Title -->
+
+**As a** <!-- user type -->
+**I want** <!-- action or capability -->
+**So that** <!-- benefit or outcome -->
+
+**Acceptance Criteria:**
+- [ ] <!-- Criterion 1 -->
+- [ ] <!-- Criterion 2 -->
+
+### Story 2: <!-- Title -->
+
+**As a** <!-- user type -->
+**I want** <!-- action or capability -->
+**So that** <!-- benefit or outcome -->
+
+**Acceptance Criteria:**
+- [ ] <!-- Criterion 1 -->
+- [ ] <!-- Criterion 2 -->
+
+---
+
+## 4. Security Considerations
+
+<!-- N/A - [reason] if security is not applicable for this feature -->
+
+### Authentication & Authorization
+
+**Authentication Required:** <!-- Yes/No/Explain -->
+**Authorization Model:** <!-- Role/permission description -->
+
+### Data Sensitivity
+
+**Data Classification:** <!-- Public/Internal/Confidential/Restricted -->
+**PII Involved:** <!-- Yes/No/What type -->
+
+### Security Risks
+
+| Risk | Likelihood | Mitigation |
+|------|------------|------------|
+| | | |
+
+---
+
+## 5. Research Summary
 
 ### Problem Statement
 
@@ -1766,7 +1860,7 @@ This check applies to:
 
 ---
 
-## 2. Scope Assessment (MANDATORY)
+## 6. Scope Assessment (MANDATORY)
 
 ### Complexity Score
 
@@ -1788,9 +1882,9 @@ This check applies to:
 
 ---
 
-## 3. Decomposition (If Required)
+## 7. Decomposition (If Required)
 
-<!-- Remove this section if verdict is ✅ PROCEED -->
+<!-- N/A - Scope appropriate for single cycle (if verdict is ✅ PROCEED) -->
 
 ### Recommended Sub-Cycles
 
@@ -1808,7 +1902,7 @@ This check applies to:
 
 ---
 
-## 4. Technical Design
+## 8. Technical Design
 
 ### Architecture Decisions
 
@@ -1830,7 +1924,7 @@ This check applies to:
 
 ---
 
-## 5. Implementation Checklist
+## 9. Implementation Checklist
 
 ### Backend/Service Layer
 - [ ] <!-- Task -->
@@ -1843,22 +1937,36 @@ This check applies to:
 
 ---
 
-## 6. Test Strategy
+## 10. Success Criteria & Validation
 
-### Unit Tests
-- [ ] <!-- Test -->
+### Definition of Done
 
-### Integration Tests
-- [ ] <!-- Test -->
+- [ ] All user story acceptance criteria met
+- [ ] All tests passing (see Tests to Pass below)
+- [ ] Documentation updated
+- [ ] User has validated the feature works
+- [ ] No regressions in existing functionality
 
-### Manual Testing
-**Verification environment:** <!-- localhost/staging/etc -->
-**Test steps:**
-1. <!-- Step -->
+### Tests to Pass
+
+**Unit Tests:**
+- [ ] <!-- Test description -->
+
+**Integration Tests:**
+- [ ] <!-- Test description -->
+
+**End-to-End Tests:**
+- [ ] <!-- Test description -->
+
+**Manual Validation:**
+
+| Step | Expected Result | Actual Result |
+|------|-----------------|---------------|
+| | | ⬜ Pending |
 
 ---
 
-## 7. Risk Assessment
+## 11. Risk Assessment
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
@@ -1866,20 +1974,7 @@ This check applies to:
 
 ---
 
-## 8. Alignment Verification
-
-- [ ] Purpose matches \`implementation_plan.md\` description
-- [ ] Inputs/outputs match high-level plan
-- [ ] Timeline is realistic
-- [ ] Dependencies are accurate
-
-### Success Criteria
-
-<!-- Copy from high-level implementation_plan.md -->
-
----
-
-## 9. Approval
+## 12. Approval
 
 - [ ] **User approved this plan**
 - [ ] **Scope assessment reviewed**
@@ -1891,7 +1986,7 @@ This check applies to:
 
 ---
 
-## 10. Implementation Notes
+## 13. Implementation Notes
 
 <!-- Use during implementation -->
 
@@ -1924,7 +2019,7 @@ This check applies to:
   }
 
   async getCyclePlan(cycleId) {
-    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'roadmap');
     const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
     const planPath = path.join(implementationPlansDir, planFileName);
 
@@ -1970,7 +2065,7 @@ This check applies to:
       };
     }
 
-    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'roadmap');
     const planFileName = `CYCLE_${cycleId.replace(/\./g, '_')}_IMPLEMENTATION_PLAN.md`;
     const planPath = path.join(implementationPlansDir, planFileName);
 
@@ -1990,28 +2085,50 @@ This check applies to:
       };
     }
 
-    // Validate plan has required sections
+    // Validate plan has required sections - warn-only (don't block approval)
     const requiredSections = [
-      'Problem Statement',
+      'Executive Summary',
+      'Target Users',
+      'User Stories',
+      'Security Considerations',
+      'Research Summary',
       'Scope Assessment',
-      'Complexity Score',
       'Technical Design',
       'Implementation Checklist',
+      'Success Criteria',
+      'Tests to Pass',
+      'Risk Assessment',
+      'Approval',
     ];
 
     const missingSections = requiredSections.filter(
-      section => !planContent.includes(section)
+      section => !planContent.toLowerCase().includes(section.toLowerCase())
     );
 
+    // Check for unfilled sections (still have placeholder comments)
+    const unfilledSections = [];
+    for (const section of requiredSections) {
+      const sectionPattern = new RegExp(`##.*${section}[\\s\\S]*?(?=##|$)`, 'i');
+      const match = planContent.match(sectionPattern);
+      if (match) {
+        const sectionContent = match[0];
+        // Check if section is mostly placeholders
+        const placeholderCount = (sectionContent.match(/<!--.*?-->/g) || []).length;
+        const actualContentLines = sectionContent.split('\n').filter(line =>
+          line.trim() && !line.startsWith('#') && !line.includes('<!--') && !line.includes('|---')
+        ).length;
+        if (placeholderCount > actualContentLines && !sectionContent.toLowerCase().includes('n/a')) {
+          unfilledSections.push(section);
+        }
+      }
+    }
+
+    let warnings = [];
     if (missingSections.length > 0) {
-      return {
-        content: [{
-          type: 'text',
-          text: `⚠️ Plan is incomplete\n\n` +
-            `Missing sections:\n${missingSections.map(s => `- ${s}`).join('\n')}\n\n` +
-            `Complete these sections before approval.`,
-        }],
-      };
+      warnings.push(`⚠️ Missing sections:\n${missingSections.map(s => `  - ${s}`).join('\n')}`);
+    }
+    if (unfilledSections.length > 0) {
+      warnings.push(`⚠️ Sections may be incomplete:\n${unfilledSections.map(s => `  - ${s}`).join('\n')}`);
     }
 
     // Check scope assessment was done (look for filled scores)
@@ -2036,8 +2153,8 @@ This check applies to:
 
     await fs.writeFile(planPath, updatedContent, 'utf-8');
 
-    // Try to update the high-level implementation_plan.md status
-    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'implementation_plan.md');
+    // Try to update the high-level ROADMAP.md status
+    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'ROADMAP.md');
     try {
       let roadmapContent = await fs.readFile(roadmapPath, 'utf-8');
       // Update cycle status from PLANNING to IN PROGRESS
@@ -2050,28 +2167,35 @@ This check applies to:
       // Roadmap update is best-effort
     }
 
+    // Include warnings in approval message if any
+    const warningText = warnings.length > 0
+      ? `\n\n---\n\n## Warnings (Non-Blocking)\n\n${warnings.join('\n\n')}\n\n*Consider addressing these before implementation.*`
+      : '';
+
     return {
       content: [{
         type: 'text',
         text: `✅ CYCLE ${cycleId} APPROVED - READY FOR IMPLEMENTATION\n\n` +
           `**Plan:** \`${planFileName}\`\n` +
-          `**Approved:** ${today}\n\n` +
-          `---\n\n` +
+          `**Approved:** ${today}\n` +
+          warningText +
+          `\n\n---\n\n` +
           `## Implementation Workflow\n\n` +
           `Now you can proceed with implementation:\n\n` +
-          `1. **Follow the implementation checklist** in the plan\n` +
-          `2. **Check patterns** before coding: \`check_pattern_exists()\`\n` +
-          `3. **Update technical_status.md** as you progress\n` +
-          `4. **Document new patterns** as you establish them\n` +
-          `5. **Validate completion** when done: \`validate_cycle_completion("${cycleId}")\`\n\n` +
+          `1. **Update the Progress Tracker** as you complete phases\n` +
+          `2. **Follow the implementation checklist** in the plan\n` +
+          `3. **Check patterns** before coding: \`check_pattern_exists()\`\n` +
+          `4. **Update technical_status.md** as you progress\n` +
+          `5. **Document new patterns** as you establish them\n` +
+          `6. **Validate completion** when done: \`validate_cycle_completion("${cycleId}")\`\n\n` +
           `⚠️ If scope changes significantly, update the plan and re-approve.`,
       }],
     };
   }
 
   async getImplementationRoadmap() {
-    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'implementation_plan.md');
-    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'implementation_plans');
+    const roadmapPath = path.join(PROJECT_DOCS_DIR, 'ROADMAP.md');
+    const implementationPlansDir = path.join(PROJECT_DOCS_DIR, 'roadmap');
 
     // Read the high-level roadmap
     let roadmapContent;
@@ -2081,7 +2205,7 @@ This check applies to:
       return {
         content: [{
           type: 'text',
-          text: `❌ No implementation_plan.md found\n\n` +
+          text: `❌ No ROADMAP.md found\n\n` +
             `The high-level roadmap doesn't exist at:\n${roadmapPath}\n\n` +
             `This file should be created during bootstrap.`,
         }],
@@ -2111,8 +2235,8 @@ This check applies to:
 
     // Build summary
     let summary = `# Implementation Roadmap Overview\n\n`;
-    summary += `**High-level plan:** \`implementation_plan.md\`\n`;
-    summary += `**Detailed plans:** \`implementation_plans/\`\n\n`;
+    summary += `**High-level plan:** \`ROADMAP.md\`\n`;
+    summary += `**Detailed plans:** \`roadmap/\`\n\n`;
     summary += `---\n\n`;
     summary += `## Cycles\n\n`;
     summary += `| Cycle | Name | Status | Detailed Plan |\n`;

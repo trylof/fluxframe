@@ -73,7 +73,7 @@ For new {{CYCLE_TYPE_PLURAL}}, plans should include:
 |------|---------|
 | `{{DOCS_DIR}}/context_master_guide.md` | With user approval |
 | `{{DOCS_DIR}}/technical_status.md` | Implementation state |
-| `{{DOCS_DIR}}/implementation_plan.md` | Roadmap |
+| `{{DOCS_DIR}}/ROADMAP.md` | Roadmap |
 | `{{DOCS_DIR}}/patterns/*.md` | Pattern documentation |
 | `{{DOCS_DIR}}/workflows/*.md` | Workflow documentation |
 | Configuration files (`.json`, `.yaml`) | Project config |
@@ -141,7 +141,7 @@ When updating patterns:
 
 - **Source of Truth:** `{{DOCS_DIR}}/context_master_guide.md`
 - **Current State:** `{{DOCS_DIR}}/technical_status.md`
-- **Roadmap:** `{{DOCS_DIR}}/implementation_plan.md`
+- **Roadmap:** `{{DOCS_DIR}}/ROADMAP.md`
 - **Patterns:** `{{DOCS_DIR}}/patterns/`
 - **Workflows:** `{{DOCS_DIR}}/workflows/`
 

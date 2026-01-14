@@ -1,12 +1,14 @@
-# {{PROJECT_NAME}} — Implementation Plan (Development Cycle Roadmap)
+# {{PROJECT_NAME}} — ROADMAP
 
 <!-- 
 INSTRUCTIONS FOR AI ASSISTANT:
-This is your project's roadmap - the strategic plan for building the system incrementally.
+This is your project's strategic roadmap - the high-level plan for building the system incrementally.
 Replace {{PLACEHOLDERS}} based on project questionnaire responses.
 "Development Cycle" or "Iteration" NOT "Steel Thread" or "Sprint"
 Use numbered sequential approach: Cycle 1.1, 1.2, etc.
 Keep the output-focused methodology intact.
+
+NOTE: This is Tier 1 (Strategic). Detailed tactical plans for each cycle live in `roadmap/`.
 -->
 
 **Status:** {{CURRENT_STATUS}} — Updated {{LAST_UPDATE_DATE}}  
@@ -290,14 +292,14 @@ From {{STARTING_CYCLE}} onward, **EVERY new feature must:**
 
 ## 12) Two-Tier Planning System
 
-<!-- AI ASSISTANT: This is the HIGH-LEVEL strategic roadmap. Detailed tactical plans live in implementation_plans/ -->
+<!-- AI ASSISTANT: This is the HIGH-LEVEL strategic roadmap. Detailed tactical plans live in roadmap/ -->
 
 ### How It Works
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  THIS DOCUMENT (Strategic Roadmap)                                  │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│  THIS DOCUMENT (ROADMAP.md - Strategic)                             │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
 │  • Lists ALL planned cycles with brief descriptions                 │
 │  • Status tracking (📋 PLANNING → 🏗️ IN PROGRESS → ✅ COMPLETE)    │
 │  • Timeline estimates and dependencies                              │
@@ -308,8 +310,8 @@ From {{STARTING_CYCLE}} onward, **EVERY new feature must:**
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│  implementation_plans/CYCLE_X_X_IMPLEMENTATION_PLAN.md (Tactical)   │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
+│  roadmap/CYCLE_X_X_IMPLEMENTATION_PLAN.md (Tactical)                │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
 │  Created JUST-IN-TIME during research/planning phase:              │
 │  • Problem statement & research findings                            │
 │  • Scope analysis & complexity scoring                              │
@@ -327,7 +329,7 @@ From {{STARTING_CYCLE}} onward, **EVERY new feature must:**
 1. **Call `start_cycle_planning(cycle_id)`** - Initiates planning, checks for existing plan
 2. **Research the feature** - Understand problem, check patterns, review codebase
 3. **Call `analyze_cycle_scope()`** - Get complexity score and decomposition recommendation
-4. **Create detailed plan** - Use template in `implementation_plans/`
+4. **Create detailed plan** - Use template in `roadmap/`
 5. **Get user approval** - Review plan together
 6. **Call `approve_cycle_plan()`** - Validates plan and marks ready
 
@@ -343,7 +345,7 @@ This implementation plan MUST align with:
 - **`{{TECH_BLUEPRINT_FILE}}`** - Overall system architecture and vision
 - **`technical_status.md`** - Current implementation state
 - **`{{DOCS_DIR}}/patterns/`** - Established architectural patterns
-- **`implementation_plans/`** - Detailed cycle-specific plans (created just-in-time)
+- **`roadmap/`** - Detailed cycle-specific plans (created just-in-time)
 
 **Alignment Rules:**
 1. Cycle statuses must match between this document and `technical_status.md`

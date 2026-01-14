@@ -525,7 +525,7 @@ These questions (Q8, Q9, Q10, Q11) are **MANDATORY for ALL scenarios** (GREENFIE
 - Infrastructure decisions affect deployment, CI/CD, and team workflows
 - Detected configs may be outdated, incomplete, or aspirational
 - User may have different plans than what code suggests
-- These affect multiple generated documents (technical_status.md, implementation_plan.md, patterns)
+- These affect multiple generated documents (technical_status.md, ROADMAP.md, patterns)
 
 **If You Detect Existing Configuration:**
 Still ask the question, but phrase it as confirmation:
@@ -592,7 +592,7 @@ Do you plan to use Infrastructure as Code to manage these environments?
 ```
 
 **Impact of Infrastructure Questions:**
-- **Status "Needs Setup":** Automatically adds Environment Setup cycles to your initial `implementation_plan.md`.
+- **Status "Needs Setup":** Automatically adds Environment Setup cycles to your initial `ROADMAP.md`.
 - **Infrastructure Section:** Populates the dedicated Infrastructure docs in your master guide.
 - **Patterns:** Triggers the creation of infrastructure/deployment patterns.
 
@@ -711,7 +711,7 @@ Your choice (1-3):
 **Impact of Log Access Questions:**
 - **Option 1 (Full setup):** Creates `log_access_setup.md`, adds MCP tools configuration, researches platform-specific access methods
 - **Option 2 (Local only):** Configures basic local log access (Docker logs, file tails)
-- **Option 3 (Later):** Documents the opportunity in implementation_plan.md for future cycle
+- **Option 3 (Later):** Documents the opportunity in ROADMAP.md for future cycle
 - **Option 4 (No):** No log access configuration, AI provides manual checking guidance
 
 ---
@@ -815,7 +815,7 @@ These won't get active preparation - just recorded in your implementation plan's
 
 | Tier | What FluxFrame Does |
 |------|---------------------|
-| **Planned (Soon)** | Creates cycle entries in implementation_plan.md, placeholder patterns, notes in rules |
+| **Planned (Soon)** | Creates cycle entries in ROADMAP.md, placeholder patterns, notes in rules |
 | **Aspirational (Someday)** | Documents in "Future Considerations" section only |
 | **Skipped** | No future state captured, configured for current state only |
 
@@ -826,7 +826,7 @@ log_decision({
   category: "future_state",
   decision: "User chose to skip future state capture",
   reasoning: "User wants to focus on current implementation only",
-  implications: "FluxFrame configured for current state. User can add future items to implementation_plan.md later."
+  implications: "FluxFrame configured for current state. User can add future items to ROADMAP.md later."
 })
 ```
 
@@ -853,7 +853,7 @@ For example:
 - Analytics dashboard
 ```
 
-**Use answers for:** Populating initial implementation_plan.md with cycle ideas
+**Use answers for:** Populating initial ROADMAP.md with cycle ideas
 
 ---
 

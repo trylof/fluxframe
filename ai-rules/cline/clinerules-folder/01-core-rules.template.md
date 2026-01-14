@@ -62,7 +62,7 @@ Documentation during iteration leads to:
 |------|---------|
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state |
-| `{{DOCS_DIR}}/implementation_plan.md` | Roadmap and cycles |
+| `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles |
 | `{{DOCS_DIR}}/patterns/` | Reusable solution patterns |
 | `AGENTS.md` | Full agent guidelines |
 

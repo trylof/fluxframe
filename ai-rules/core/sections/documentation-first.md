@@ -21,7 +21,7 @@ In FluxFrame, documentation drives development:
 |------|---------|-----------------|
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth | Rarely (foundational) |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state | After every change |
-| `{{DOCS_DIR}}/implementation_plan.md` | Roadmap and cycles | When cycles complete |
+| `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles | When cycles complete |
 | `{{DOCS_DIR}}/patterns/` | Reusable solutions | When patterns discovered |
 | `{{DOCS_DIR}}/workflows/` | Process documentation | When processes change |
 
@@ -56,7 +56,7 @@ After any completed work:
 2. **patterns/** - Document new patterns or update existing ones
 3. **{{ADDITIONAL_CONTEXT_FILE}}** - Update if queryable data/capabilities changed
 4. **workflows/** - Update if conceptual process logic changed
-5. **implementation_plan.md** - Mark cycles/tasks as complete
+5. **ROADMAP.md** - Mark cycles/tasks as complete
 
 ## Documentation Standards
 

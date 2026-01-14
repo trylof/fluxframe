@@ -392,7 +392,7 @@ Once all 24 steps are done:
 
 4. **Start developing!**
    
-   Define Cycle 1.1 in `project_docs/implementation_plan.md` and begin using FluxFrame methodology.
+   Define Cycle 1.1 in `project_docs/ROADMAP.md` and begin using FluxFrame methodology.
 
 ---
 

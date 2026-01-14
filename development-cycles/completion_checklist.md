@@ -186,7 +186,7 @@ API contracts prevent integration failures. They are enforced independently beca
 
 ### ✅ Implementation Plan
 
-**Files:** `implementation_plan.md` + `implementation_plans/` (if detailed plan exists)
+**Files:** `ROADMAP.md` + `roadmap/` (if detailed plan exists)
 
 - [ ] **High-level plan updated**
   - Cycle status → COMPLETE

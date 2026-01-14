@@ -693,9 +693,9 @@ class BootstrapServer {
       "2.3": "Ask where documentation should live: project_docs/ (standard), existing location, or custom path. LOG DECISION: Use log_decision with category='docs_location' if user chooses non-standard location with a reason.",
       "2.4": "Ask about environments (Dev/Test/Staging/Prod status), config management, and IaC tooling. Use infrastructure questions from project_questionnaire.md. LOG DECISIONS: Use log_decision with categories 'infrastructure', 'config_management', 'iac', and 'verification' to capture each major decision with reasoning and tradeoffs discussed.",
       "2.5": "Ask about optional features: browser automation, log access. Offer to skip or configure later. LOG DECISIONS: Use log_decision with categories 'browser_automation' and 'log_access' to record choices. After this step, call sync_decisions_to_file to persist all Phase 2 decisions.",
-      "2.6": "OPTIONAL but recommended: Ask about FUTURE STATE. Explain the two tiers: PLANNED (soon - FluxFrame actively prepares with placeholders) vs ASPIRATIONAL (someday - documentation only). For each item: call log_future_item with tier='planned' or tier='aspirational'. Planned items create cycle entries in implementation_plan.md and pattern placeholders. Aspirational items go to 'Future Considerations' section. User can skip entirely.",
-      "3.1": "Create directory structure: {docs_location}/{patterns,workflows,implementation_plans,bug_fixes} and staging directory .fluxframe-pending/ for AI rules.",
-      "3.2": "Generate context_master_guide.md, technical_status.md, implementation_plan.md, bootstrap_decisions.md (from sync), and workflow docs using templates. Replace all placeholders. Documentation goes to final location, NOT staging.",
+      "2.6": "OPTIONAL but recommended: Ask about FUTURE STATE. Explain the two tiers: PLANNED (soon - FluxFrame actively prepares with placeholders) vs ASPIRATIONAL (someday - documentation only). For each item: call log_future_item with tier='planned' or tier='aspirational'. Planned items create cycle entries in ROADMAP.md and pattern placeholders. Aspirational items go to 'Future Considerations' section. User can skip entirely.",
+      "3.1": "Create directory structure: {docs_location}/{patterns,workflows,roadmap,bugs} and staging directory .fluxframe-pending/ for AI rules.",
+      "3.2": "Generate context_master_guide.md, technical_status.md, ROADMAP.md, bootstrap_decisions.md (from sync), and workflow docs using templates. Replace all placeholders. Documentation goes to final location, NOT staging.",
       "3.3": "CRITICAL: Generate AI rules to STAGING directory (.fluxframe-pending/), NOT final locations. Create .fluxframe-pending/AGENTS.md and tool-specific rules. This prevents project rules from interfering with bootstrap. Bootstrap-resume rules remain at final locations until cleanup.",
       "3.4": "Create mcp-server.js in project root from template. Configure paths to match docs_location.",
       "3.5": "Update or create package.json with MCP dependency and 'mcp' script. Run npm install.",
@@ -707,7 +707,7 @@ class BootstrapServer {
       "5.3": "Replace README.md with project-specific content. Include FluxFrame methodology mention and links to docs.",
       "6.1": "Show complete summary: what was created, what was preserved, backup location, configuration details. Verify AI rules are now at final locations (not 'Bootstrap In Progress'). Mention that bootstrap_decisions.md contains the reasoning behind all configuration choices.",
       "6.2": "CRITICAL: Guide user to add their project's mcp-server.js to their AI assistant's MCP settings (replacing bootstrap MCP). Provide tool-specific instructions.",
-      "6.3": "Congratulate user! Bootstrap complete. Call sync_decisions_to_file one final time to ensure all decisions are persisted. Guide them to define Cycle 1.1 in implementation_plan.md as next step."
+      "6.3": "Congratulate user! Bootstrap complete. Call sync_decisions_to_file one final time to ensure all decisions are persisted. Guide them to define Cycle 1.1 in ROADMAP.md as next step."
     };
 
     return instructions[stepId] || "Follow the step description and validation criteria.";

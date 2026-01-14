@@ -115,7 +115,7 @@ your-project/
 ├── project_docs/
 │   ├── context_master_guide.md      # Single source of truth
 │   ├── technical_status.md          # Real-time project state
-│   ├── implementation_plan.md       # Roadmap & cycles
+│   ├── ROADMAP.md       # Roadmap & cycles
 │   ├── api_contract_standards.md    # API enforcement rules
 │   └── patterns/                    # Pattern library
 │       └── README.md
@@ -259,11 +259,13 @@ fluxframe/
 │   ├── migration_workflow.md          # Adapt existing documentation
 │   ├── project_questionnaire.md       # Question reference by scenario
 │   └── validation_checklist.md        # Final validation
-│
 ├── doc-templates/                     # Project documentation templates
 │   ├── context_master_guide.template.md
 │   ├── technical_status.template.md
-│   ├── implementation_plan.template.md
+│   ├── roadmap.template.md
+│   ├── cycle_implementation_plan.template.md
+│   ├── bugs.template.md
+│   ├── bug_fix_plan.template.md
 │   └── api_contract_standards.template.md
 │
 ├── ai-rules/                          # AI assistant configuration

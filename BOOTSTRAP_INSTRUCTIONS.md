@@ -873,7 +873,7 @@ After workflow execution, validate:
 **Documentation:** `[docs_path]/`
 - context_master_guide.md - Single source of truth
 - technical_status.md - Project status
-- implementation_plan.md - Roadmap
+- ROADMAP.md - Roadmap
 - patterns/ - Pattern library
 - workflows/ - Development protocols
 - bug_fixes/ - Change documentation
@@ -895,12 +895,12 @@ After workflow execution, validate:
 
 1. Review generated documentation
 2. Test MCP server: `npm run mcp`
-3. Define Cycle 1.1 in implementation_plan.md
+3. Define Cycle 1.1 in ROADMAP.md
 4. Start developing with FluxFrame workflow!
 
 ### Quick Reference
 
-- **Start a cycle:** Define in implementation_plan.md, follow cycle_workflow.md
+- **Start a cycle:** Define in ROADMAP.md, follow cycle_workflow.md
 - **Fix a bug:** Use change_request_protocol.md
 - **Add a pattern:** Document in patterns/ following template
 - **Update status:** Keep technical_status.md current
@@ -1033,7 +1033,7 @@ FluxFrame template files have been removed. Your project now contains only:
 
 **Your project is ready for development!**
 
-Next: Define Cycle 1.1 in `[docs_path]/implementation_plan.md`
+Next: Define Cycle 1.1 in `[docs_path]/ROADMAP.md`
 ```
 
 ---
@@ -1047,7 +1047,7 @@ A successfully bootstrapped project will have:
 ├── [docs_location]/
 │   ├── context_master_guide.md      # Single source of truth
 │   ├── technical_status.md          # Real-time project state
-│   ├── implementation_plan.md       # Roadmap & cycles
+│   ├── ROADMAP.md       # Roadmap & cycles
 │   ├── api_contract_standards.md    # API enforcement (if applicable)
 │   ├── patterns/                    # Pattern library
 │   │   ├── README.md

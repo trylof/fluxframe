@@ -129,7 +129,7 @@ Please choose one of the options above.
 1. Directory structure
 2. context_master_guide.md (references everything)
 3. technical_status.md (initial state)
-4. implementation_plan.md (roadmap)
+4. ROADMAP.md (strategic roadmap)
 5. Pattern library structure
 6. API contract standards (if applicable)
 7. Workflow docs (if requested)
@@ -151,8 +151,8 @@ Please choose one of the options above.
 mkdir -p {{DOCS_DIR}}
 mkdir -p {{DOCS_DIR}}/patterns
 mkdir -p {{DOCS_DIR}}/workflows
-mkdir -p {{DOCS_DIR}}/implementation_plans
-mkdir -p {{DOCS_DIR}}/bug_fixes
+mkdir -p {{DOCS_DIR}}/roadmap
+mkdir -p {{DOCS_DIR}}/bugs
 ```
 
 **Validation:**
@@ -320,7 +320,7 @@ None yet - starting fresh with framework.
 ## Next Steps
 
 ### Immediate (This Week)
-1. **Define Cycle 1.1** in implementation_plan.md
+1. **Define Cycle 1.1** in ROADMAP.md
    - Choose first feature to implement
    - Define inputs, outputs, timeline
    - Plan testing approach
@@ -341,7 +341,7 @@ None yet - starting fresh with framework.
 - Build core functionality
 
 ### Long Term
-- See implementation_plan.md for roadmap
+- See ROADMAP.md for roadmap
 
 ---
 
@@ -356,7 +356,7 @@ None yet - starting fresh with framework.
 
 - ✅ context_master_guide.md - Complete
 - ✅ technical_status.md - This file
-- ✅ implementation_plan.md - Template ready
+- ✅ ROADMAP.md - Template ready
 - ⏹️ patterns/ - Empty, ready for patterns
 - ⏹️ workflows/ - [Created if requested, otherwise pending]
 
@@ -401,9 +401,9 @@ See context_master_guide.md for complete framework documentation.
 
 ---
 
-### Step 4: Generate implementation_plan.md
+### Step 4: Generate ROADMAP.md
 
-**Source:** `doc-templates/implementation_plan.template.md`
+**Source:** `doc-templates/roadmap.template.md`
 
 **Initial Content:**
 
@@ -462,7 +462,7 @@ This document tracks planned and completed development cycles (iterations) for [
 - [ ] All tests passing
 - [ ] Documentation updated
 
-**Detailed Plan:** To be created in `implementation_plans/CYCLE_1_1_IMPLEMENTATION_PLAN.md`
+**Detailed Plan:** To be created in `roadmap/CYCLE_1_1_IMPLEMENTATION_PLAN.md`
 
 ---
 
@@ -537,7 +537,7 @@ This project uses a two-tier planning approach:
 - Provides timeline estimates and dependencies
 - Points to detailed plans when ready to implement
 
-### Tier 2: implementation_plans/ (Tactical Plans)
+### Tier 2: roadmap/ (Tactical Plans)
 - Created JUST-IN-TIME when ready to implement a cycle
 - Contains detailed research, scope analysis, technical design
 - Includes decomposition if feature is too large
@@ -619,7 +619,7 @@ When ready to implement, create a development cycle.
 - `[PLANNED_ITEM_*]` → From `get_future_state({ tier: "planned" })`
 - `[ASPIRATIONAL_ITEM_*]` → From `get_future_state({ tier: "aspirational" })`
 
-**Output Location:** `{{DOCS_DIR}}/implementation_plan.md`
+**Output Location:** `{{DOCS_DIR}}/ROADMAP.md`
 
 **Validation:**
 - [ ] Cycle 1.1 has placeholder for user to fill
@@ -820,7 +820,7 @@ When implemented, this section will contain:
 
 Repeat for each Tier 2 item in the infrastructure/environment category.
 
-**Note:** Tier 3 (Aspirational) items do NOT get pattern placeholders - they're only documented in implementation_plan.md.
+**Note:** Tier 3 (Aspirational) items do NOT get pattern placeholders - they're only documented in ROADMAP.md.
 
 **Validation:**
 - [ ] ALL 5 pattern files created (README + 4 domain files)
@@ -1214,7 +1214,7 @@ This minimal setup requires no additional credentials.
 #### If User Chose Option 3 (Later) or Option 4 (No):
 
 **For Option 3 (Later):**
-Add to `implementation_plan.md`:
+Add to `ROADMAP.md`:
 
 ```markdown
 ### Future: Log Access Configuration
@@ -1249,7 +1249,7 @@ Log access is not configured for this project. When debugging:
 - [ ] Log access choice recorded
 - [ ] If full/local: Configuration documented in `log_access_setup.md`
 - [ ] If full/local: MCP tools configured appropriately
-- [ ] If deferred: Added to implementation_plan.md
+- [ ] If deferred: Added to ROADMAP.md
 - [ ] If declined: Manual guidance documented in AI rules
 
 ---
@@ -1414,7 +1414,8 @@ Before presenting to user, verify:
 **Documentation (in final location):**
 - [ ] `{{DOCS_DIR}}/context_master_guide.md`
 - [ ] `{{DOCS_DIR}}/technical_status.md`
-- [ ] `{{DOCS_DIR}}/implementation_plan.md`
+- [ ] `{{DOCS_DIR}}/ROADMAP.md`
+- [ ] `{{DOCS_DIR}}/BUGS.md`
 - [ ] `{{DOCS_DIR}}/bootstrap_decisions.md` **(NEW - decision log with reasoning)**
 - [ ] `{{DOCS_DIR}}/patterns/README.md`
 - [ ] `{{DOCS_DIR}}/patterns/*_patterns.md` (as applicable)
@@ -1731,7 +1732,7 @@ Your project's AI rules are now active, and FluxFrame template files have been r
 
 **Next Steps:**
 1. Configure your project's MCP server in your AI tool (replace bootstrap MCP with project MCP)
-2. Define Cycle 1.1 in `{{DOCS_DIR}}/implementation_plan.md`
+2. Define Cycle 1.1 in `{{DOCS_DIR}}/ROADMAP.md`
 3. Start developing!
 ```
 

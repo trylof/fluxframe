@@ -74,7 +74,7 @@ Located in `{{DOCS_DIR}}/workflows/`:
 
 ### C. The "How" - Implementation Roadmap: `{{IMPLEMENTATION_PLAN_FILE}}`
 
-<!-- AI ASSISTANT: Default filename is 'implementation_plan.md' -->
+<!-- AI ASSISTANT: Default filename is 'ROADMAP.md' -->
 
 *   **What it is:** The detailed, phased technical plan for building the system. It translates the {{TECH_BLUEPRINT_FILE}} vision and domain expertise into a concrete, step-by-step engineering plan.
 *   **How to use it:** This is the primary guide for development cycles. It defines the domain models, technology choices, and phased deliverables. It must be updated to reflect progress and any deviations from the original plan.
@@ -102,11 +102,11 @@ Located in `{{DOCS_DIR}}/workflows/`:
 
 **Structure:**
 *   **High-Level Roadmap:** `{{IMPLEMENTATION_PLAN_FILE}}` - Strategic development cycle roadmap
-*   **Detailed Plans:** `implementation_plans/` directory - Granular implementation guides for specific cycles
+*   **Detailed Plans:** `roadmap/` directory - Granular implementation guides for specific cycles
 
 **Hierarchy & Alignment:**
 *   The high-level plan provides strategic overview and references detailed plans
-*   Each cycle with a detailed plan MUST include: `**Detailed Plan:** See implementation_plans/{{CYCLE_PREFIX}}_X_X_IMPLEMENTATION_PLAN.md`
+*   Each cycle with a detailed plan MUST include: `**Detailed Plan:** See roadmap/{{CYCLE_PREFIX}}_X_X_IMPLEMENTATION_PLAN.md`
 *   Detailed plans expand on the high-level summary with technical specifications, timelines, and testing strategies
 
 **Critical Alignment Rules:**
@@ -150,9 +150,9 @@ Located in `{{DOCS_DIR}}/workflows/`:
 *   **Primary Inputs:** {{INPUTS}}
 *   **Visible Output:** {{OUTPUT}}
 *   **Timeline:** {{TIMELINE}}
-*   **Detailed Plan:** See `implementation_plans/{{CYCLE_PREFIX}}_1_1_IMPLEMENTATION_PLAN.md`
+*   **Detailed Plan:** See `roadmap/{{CYCLE_PREFIX}}_1_1_IMPLEMENTATION_PLAN.md`
 
-# Detailed Plan (implementation_plans/{{CYCLE_PREFIX}}_1_1_IMPLEMENTATION_PLAN.md)
+# Detailed Plan (roadmap/{{CYCLE_PREFIX}}_1_1_IMPLEMENTATION_PLAN.md)
 **Status:** 📋 PLANNING
 **Primary Inputs:** {{INPUTS}} (detailed)
 **Visible Output:** {{OUTPUT}} (detailed description)

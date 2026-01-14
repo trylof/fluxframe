@@ -16,7 +16,7 @@ Run through this checklist systematically. Fix any issues before showing results
 ```
 ✓ {{DOCS_DIR}}/context_master_guide.md
 ✓ {{DOCS_DIR}}/technical_status.md  
-✓ {{DOCS_DIR}}/implementation_plan.md
+✓ {{DOCS_DIR}}/ROADMAP.md
 ✓ {{DOCS_DIR}}/fluxframe_guide.md
 ✓ {{DOCS_DIR}}/patterns/README.md
 ✓ AGENTS.md (Universal AI baseline)
@@ -81,7 +81,7 @@ grep -r "<!-- TEMPLATE:" {{DOCS_DIR}}/
 **Search for project name in:**
 - context_master_guide.md (title and references)
 - technical_status.md (title and content)
-- implementation_plan.md (title and references)
+- ROADMAP.md (title and references)
 - .clinerules (project name field)
 - mcp-server.js (PROJECT_NAME constant)
 - package.json (name field)
@@ -148,7 +148,7 @@ grep -r "project_docs\|{{DOCS_DIR}}" .clinerules mcp-server.js {{DOCS_DIR}}/
 - [ ] Backend tech matches user info
 - [ ] Database matches user info
 
-**In implementation_plan.md:**
+**In ROADMAP.md:**
 - [ ] Tech stack section accurate
 - [ ] Architecture type correct
 
@@ -165,12 +165,12 @@ grep -r "project_docs\|{{DOCS_DIR}}" .clinerules mcp-server.js {{DOCS_DIR}}/
 
 **Check:**
 - technical_status.md → Last Updated
-- implementation_plan.md → Last Updated
+- ROADMAP.md → Last Updated
 - Change log entries → Should be today
 
 **Command:**
 ```bash
-grep -r "Last Updated\|Date:" {{DOCS_DIR}}/technical_status.md {{DOCS_DIR}}/implementation_plan.md
+grep -r "Last Updated\|Date:" {{DOCS_DIR}}/technical_status.md {{DOCS_DIR}}/ROADMAP.md
 ```
 
 **Validation:**
@@ -265,7 +265,7 @@ npm install
 - [ ] Next Steps are actionable
 - [ ] Bootstrap completion noted
 
-**implementation_plan.md:**
+**ROADMAP.md:**
 - [ ] Cycle 1.1 has placeholder for definition
 - [ ] Roadmap structure is clear
 - [ ] Alignment rules are included
@@ -307,7 +307,7 @@ Required sections:
 
 **In context_master_guide.md:**
 - [ ] References to patterns/ directory are correct
-- [ ] Links to implementation_plan.md work
+- [ ] Links to ROADMAP.md work
 - [ ] References to .clinerules workflow are accurate
 
 **In .clinerules:**
@@ -315,13 +315,13 @@ Required sections:
 - [ ] References patterns/ directory correctly
 - [ ] References technical_status.md correctly
 
-**In implementation_plan.md:**
+**In ROADMAP.md:**
 - [ ] References context_master_guide.md methodology
-- [ ] Points to implementation_plans/ directory
+- [ ] Points to roadmap/ directory
 - [ ] Two-tier planning system explanation included
 - [ ] Planning workflow (MCP tools) documented
 
-**In implementation_plans/:**
+**In roadmap/:**
 - [ ] Directory exists (may be empty initially)
 - [ ] Template is referenced in planning workflow
 
@@ -657,7 +657,7 @@ Your project's AI rules are now active, and FluxFrame template files have been r
 
 **Next Steps:**
 1. Configure your project's MCP server in your AI tool (replace bootstrap MCP with project MCP)
-2. Define Cycle 1.1 in `{{DOCS_DIR}}/implementation_plan.md`
+2. Define Cycle 1.1 in `{{DOCS_DIR}}/ROADMAP.md`
 3. When ready to implement Cycle 1.1:
    - Call `start_cycle_planning("1.1")` to initiate planning
    - Call `analyze_cycle_scope()` to assess complexity

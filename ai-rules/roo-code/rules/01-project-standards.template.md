@@ -21,7 +21,7 @@ This project follows the FluxFrame methodology:
 |------|---------|----------------|
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth | Rarely (foundational) |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state | After EVERY change |
-| `{{DOCS_DIR}}/implementation_plan.md` | Roadmap and cycles | When cycles complete |
+| `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles | When cycles complete |
 | `{{DOCS_DIR}}/patterns/` | Reusable solutions | When patterns discovered |
 
 ## Universal Rules

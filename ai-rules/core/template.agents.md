@@ -54,8 +54,8 @@ This project follows the FluxFrame development methodology - a documentation-fir
 |------|---------|
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth for all project context |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state and recent changes |
-| `{{DOCS_DIR}}/implementation_plan.md` | High-level roadmap (Tier 1 - strategic) |
-| `{{DOCS_DIR}}/implementation_plans/` | Detailed cycle plans (Tier 2 - tactical) |
+| `{{DOCS_DIR}}/ROADMAP.md` | High-level roadmap (Tier 1 - strategic) |
+| `{{DOCS_DIR}}/roadmap/` | Detailed cycle plans (Tier 2 - tactical) |
 | `{{DOCS_DIR}}/patterns/` | Reusable solution patterns |
 
 ---
@@ -72,18 +72,50 @@ Before implementing ANY development cycle:
 2. **Research the feature** - Understand problem, check patterns, review codebase
 3. **Call `analyze_cycle_scope()`** - Get complexity score and decomposition recommendation
 4. **If complexity > 10: MUST decompose** - Break into smaller sub-cycles
-5. **Call `create_cycle_plan()`** - Create detailed plan in `implementation_plans/`
-6. **Review with user** - Walk through the plan together
-7. **Call `approve_cycle_plan()`** - Validate and mark ready
+5. **Call `create_cycle_plan()`** - Create detailed plan in `roadmap/`
+6. **Fill ALL required sections** - See mandatory sections below
+7. **Review with user** - Walk through the plan together
+8. **Call `approve_cycle_plan()`** - Validate and mark ready
 
 **Only THEN proceed with implementation.**
+
+### Cycle Plan Required Sections
+
+**ALL sections are MANDATORY** when creating a detailed implementation plan:
+
+| Section | Purpose |
+|---------|---------|
+| Progress Tracker | Track implementation status |
+| Executive Summary | WHY: Business context at a glance |
+| Target Users | WHO: Primary and secondary audiences |
+| User Stories | WHAT: User perspective on capabilities |
+| Security Considerations | Protection requirements for this feature |
+| Research Summary | Problem statement and existing patterns |
+| Scope Assessment | Complexity scoring (CRITICAL) |
+| Technical Design | HOW: Architecture and code structure |
+| Implementation Checklist | Step-by-step tasks |
+| Success Criteria & Validation | Definition of done + tests to pass |
+| Risk Assessment | What could go wrong |
+| Approval | User sign-off before implementation |
+
+**If a section doesn't apply, write:** "N/A - [reason]"
+**Never skip a section without explanation.**
+
+### During Implementation (Autonomous Execution)
+
+When implementing an approved cycle plan:
+
+1. **Follow the plan** - The plan contains everything needed
+2. **Update Progress Tracker** - Check phases as you complete them
+3. **Still follow other rules** - Check patterns, read technical_status, etc.
+4. **Call `validate_cycle_completion()`** when done
 
 ### Before Any Implementation
 
 1. **Read Context** - Review `{{DOCS_DIR}}/context_master_guide.md` for full project context
 2. **Check Patterns** - Search `{{DOCS_DIR}}/patterns/` for existing solutions
 3. **Read Status** - Check `{{DOCS_DIR}}/technical_status.md` for current state
-4. **Review Cycle Plan** - Follow the approved plan in `{{DOCS_DIR}}/implementation_plans/`¬
+4. **Review Cycle Plan** - Follow the approved plan in `{{DOCS_DIR}}/roadmap/`¬
 
 ### During Implementation
 
@@ -208,7 +240,7 @@ For bug fixes, refinements, and modifications:
 ### What to Document
 
 - **Always Update:** `{{DOCS_DIR}}/technical_status.md` after any changes
-- **When Applicable:** patterns/, workflows/, implementation_plan.md
+- **When Applicable:** patterns/, workflows/, ROADMAP.md
 - **Change Tracking:** All bug fixes documented in `{{CHANGES_DIR}}/`
 
 ### When to Document

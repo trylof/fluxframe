@@ -157,7 +157,7 @@ After any completed work:
 3. **workflows/** (if applicable)
    - Process logic changed
 
-4. **implementation_plan.md** (if cycle)
+4. **ROADMAP.md** (if cycle)
    - Mark cycle/task complete
 
 ---

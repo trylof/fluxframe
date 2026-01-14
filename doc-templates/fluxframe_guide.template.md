@@ -10,7 +10,8 @@
 |------|-------|
 | Project context | `{{DOCS_DIR}}/context_master_guide.md` |
 | Current status | `{{DOCS_DIR}}/technical_status.md` |
-| Development roadmap | `{{DOCS_DIR}}/implementation_plan.md` |
+| Development roadmap | `{{DOCS_DIR}}/ROADMAP.md` |
+| Bug tracker | `{{DOCS_DIR}}/BUGS.md` |
 | Pattern library | `{{DOCS_DIR}}/patterns/` |
 | AI rules | `AGENTS.md` {{TOOL_SPECIFIC_FILES}} |
 | MCP server | `mcp-server.js` |
@@ -49,14 +50,15 @@
 {{DOCS_DIR}}/
 ├── context_master_guide.md    # Single source of truth
 ├── technical_status.md        # Current project state
-├── implementation_plan.md     # Roadmap & cycles
+├── ROADMAP.md     # Roadmap & cycles
 ├── api_contract_standards.md  # API enforcement (if applicable)
 ├── patterns/                  # Your pattern library
 │   ├── README.md
 │   ├── api_patterns.md
 │   ├── ui_patterns.md
 │   └── data_patterns.md
-└── implementation_plans/      # Detailed cycle plans
+├── roadmap/      # Detailed cycle plans
+└── bugs/                      # Bug fix plans
 ```
 
 ### API Contract Approach
@@ -68,14 +70,36 @@
 
 ### Starting a New Development Cycle
 
-1. **Define the cycle** in `implementation_plan.md`
+1. **Define the cycle** in `ROADMAP.md`
 2. **Call** `start_cycle_planning("X.Y")` to initiate
 3. **Analyze scope** with `analyze_cycle_scope()`
 4. **Create detailed plan** with `create_cycle_plan()`
-5. **Get approval**, then `approve_cycle_plan()`
-6. **Implement** following patterns
-7. **Complete** with `validate_cycle_completion()`
-8. **Update docs** - technical_status, patterns, context guide
+5. **Fill ALL required sections** (see below)
+6. **Get approval**, then `approve_cycle_plan()`
+7. **Implement** following the plan and patterns
+8. **Complete** with `validate_cycle_completion()`
+9. **Update docs** - technical_status, patterns, context guide
+
+### Cycle Plan Sections (All Required)
+
+Each detailed cycle plan in `roadmap/` contains these sections:
+
+| Section | Purpose |
+|---------|---------|
+| **Progress Tracker** | Track implementation phases |
+| **Executive Summary** | WHY: Business context at a glance |
+| **Target Users** | WHO: Primary/secondary audiences |
+| **User Stories** | WHAT: "As a [user], I want [X], so that [Y]" |
+| **Security Considerations** | Protection requirements |
+| **Research Summary** | Problem statement + existing patterns |
+| **Scope Assessment** | Complexity scoring (triggers decomposition) |
+| **Technical Design** | Architecture + files to create/modify |
+| **Implementation Checklist** | Step-by-step tasks |
+| **Success Criteria** | Definition of done + Tests to Pass |
+| **Risk Assessment** | What could go wrong |
+| **Approval** | User sign-off |
+
+> **For Autonomous AI Execution:** These sections provide complete context (WHY, WHO, WHAT, HOW) so an AI agent can implement the cycle without asking clarifying questions.
 
 ### Fixing Bugs / Change Requests
 
@@ -85,7 +109,17 @@
 4. **Confirm** - user validates it works
 5. **Document** - update ALL affected docs
 
-> **Key:** Never document during iteration. Only after user confirms success.
+### Tracking and Fixing Bugs
+
+Bugs are tracked separately from the development roadmap:
+
+1. **Log bug** in `BUGS.md` with severity (Critical/High/Low)
+2. **Bug ID format:** `BUG_YYYY_MM_short_name` (e.g., `BUG_2026_01_login_crash`)
+3. **For complex bugs:** Create fix plan in `bugs/BUG_XXX_FIX_PLAN.md`
+4. **Fix and test** with regression tests
+5. **Update BUGS.md** status when verified
+
+> **Key:** Bugs follow a streamlined process—no scope analysis or decomposition like development cycles.
 
 ---
 
@@ -176,7 +210,7 @@ FluxFrame is designed to be removed after bootstrap. Your project-specific docum
 ## Additional Resources
 
 - **Pattern Library System:** See `{{DOCS_DIR}}/patterns/README.md` for how to create and maintain patterns
-- **Development Cycles:** The two-tier planning system is documented in `implementation_plan.md`
+- **Development Cycles:** The two-tier planning system is documented in `ROADMAP.md`
 - **API Contracts:** {{API_APPROACH_SECTION}}
 
 ---

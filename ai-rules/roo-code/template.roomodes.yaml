@@ -91,7 +91,7 @@ customModes:
       ## Key Files to Reference
       - project_docs/context_master_guide.md - Source of truth
       - project_docs/technical_status.md - Current state
-      - project_docs/implementation_plan.md - Roadmap
+      - project_docs/ROADMAP.md - Roadmap
       - project_docs/patterns/ - Existing patterns
       
       ## MCP Tools to Use

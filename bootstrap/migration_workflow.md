@@ -231,7 +231,7 @@ Map existing docs to FluxFrame structure:
 | `docs/api/` | `api_contract_standards.md` | Partial - needs structuring |
 | `CHANGELOG.md` | Part of `technical_status.md` | Reference |
 | `docs/conventions/` | `patterns/` | Good match - migrate |
-| None found | `implementation_plan.md` | Create new |
+| None found | `ROADMAP.md` | Create new |
 | None found | `workflows/` | Create new |
 ```
 
@@ -393,7 +393,7 @@ Your choice (1/2/3)?
 ### New Documents to Create
 - [ ] `context_master_guide.md` - [Create/Adapt existing]
 - [ ] `technical_status.md` - [Create/Adapt existing]
-- [ ] `implementation_plan.md` - [Create]
+- [ ] `ROADMAP.md` - [Create]
 - [ ] `patterns/` - [Create/Adapt existing]
 - [ ] `workflows/` - [Create]
 ```
@@ -445,7 +445,7 @@ Follow the same questionnaire format as similar_workflow Phase 2.5:
 | IaC Tooling | [Choice] | [notes] |
 
 **Impact on Migration:**
-- Environments marked "Needs Setup" will be added to implementation_plan.md
+- Environments marked "Needs Setup" will be added to ROADMAP.md
 - Infrastructure section will be populated in technical_status.md with Environment Matrix
 - infra_patterns.md will be created from template
 ```
@@ -470,7 +470,7 @@ Before we proceed with migration, here's what a complete FluxFrame setup provide
 ### Core Documentation
 - [ ] `context_master_guide.md` - Single source of truth for project context
 - [ ] `technical_status.md` - Real-time project state tracking
-- [ ] `implementation_plan.md` - Development roadmap with cycles
+- [ ] `ROADMAP.md` - Development roadmap with cycles
 - [ ] `api_contract_standards.md` - API type safety enforcement (if applicable)
 - [ ] `bootstrap_decisions.md` - Record of all setup decisions with reasoning
 
@@ -673,7 +673,7 @@ log_decision({
   category: "future_state",
   decision: "User chose to skip future state capture",
   reasoning: "User wants to focus on migration only",
-  implications: "FluxFrame configured based on migration. User can add future items to implementation_plan.md later."
+  implications: "FluxFrame configured based on migration. User can add future items to ROADMAP.md later."
 })
 ```
 
@@ -699,10 +699,10 @@ Based on location decision:
 
 ```bash
 # If using FluxFrame standard
-mkdir -p project_docs/{patterns,workflows,implementation_plans,bug_fixes}
+mkdir -p project_docs/{patterns,workflows,roadmap,bugs}
 
 # If using existing location
-mkdir -p [detected_path]/{patterns,workflows,implementation_plans,bug_fixes}
+mkdir -p [detected_path]/{patterns,workflows,roadmap,bugs}
 ```
 
 ### Step 3.3: Process Each Category
@@ -872,16 +872,16 @@ Special handling for existing bug fix documentation:
 
 **Options presented to user:**
 
-1. **Import into FluxFrame bug_fixes/**
-   - Copy/move files to `{{DOCS_DIR}}/bug_fixes/`
+1. **Import into FluxFrame bugs/**
+   - Copy/move files to `{{DOCS_DIR}}/bugs/`
    - Optionally reformat to FluxFrame template
 
 2. **Keep in place, reference in FluxFrame**
    - Add reference in context_master_guide
-   - Create index in bug_fixes/ pointing to original
+   - Create index in bugs/ pointing to original
 
 3. **Archive and start fresh**
-   - Archive existing to `archive/bug_fixes/`
+   - Archive existing to `archive/bugs/`
    - Start fresh with FluxFrame format
 
 **User chose:** [option]
@@ -1343,7 +1343,7 @@ FluxFrame cycle workflow includes step: "Create ADR if architecture change"
 
 ### Step 5.3: Generate Implementation Plan
 
-Create `implementation_plan.md` based on:
+Create `ROADMAP.md` based on:
 - Existing roadmap (if found)
 - Existing backlog (if found)
 - Or: Template with placeholder for user to fill
@@ -1392,7 +1392,7 @@ Create `implementation_plan.md` based on:
 - [ ] technical_status.md reflects current state
 - [ ] patterns/ has initial content or index
 - [ ] workflows/ has FluxFrame protocols
-- [ ] bug_fixes/ structure in place
+- [ ] bugs/ structure in place
 
 ### AI Configuration
 - [ ] AGENTS.md created with correct paths
@@ -1422,7 +1422,7 @@ Create `implementation_plan.md` based on:
 **New documentation created:**
 - `context_master_guide.md` - Single source of truth
 - `technical_status.md` - Project status tracking
-- `implementation_plan.md` - Development roadmap
+- `ROADMAP.md` - Development roadmap
 - `workflows/` - Development protocols
 
 **AI Configuration:**
@@ -1437,13 +1437,13 @@ Create `implementation_plan.md` based on:
 ├── [docs location]/
 │   ├── context_master_guide.md
 │   ├── technical_status.md
-│   ├── implementation_plan.md
+│   ├── ROADMAP.md
 │   ├── patterns/
 │   │   └── [migrated or new]
 │   ├── workflows/
 │   │   ├── cycle_workflow.md
 │   │   └── change_request_protocol.md
-│   └── bug_fixes/
+│   └── bugs/
 │       └── [migrated or indexed]
 ├── [original docs if kept]/
 │   └── [referenced content]
@@ -1471,7 +1471,7 @@ Your original documentation was backed up to:
    - Ask it about the project - it should find context
    
 4. **Begin first FluxFrame cycle**
-   - Define Cycle 1.1 in implementation_plan.md
+   - Define Cycle 1.1 in ROADMAP.md
    - Follow the development cycle workflow
 ```
 
@@ -1485,7 +1485,7 @@ Provide guidance on maintaining the new structure:
 ### Documentation Updates
 - When updating project info → Update `context_master_guide.md`
 - When completing work → Update `technical_status.md`
-- When fixing bugs → Add to `bug_fixes/` (after confirmed)
+- When fixing bugs → Add to `bugs/` (after confirmed)
 - When establishing patterns → Add to `patterns/`
 
 ### If You Chose "Reference" Strategy
@@ -1885,7 +1885,7 @@ Your project's AI rules are now active, and FluxFrame template files have been r
 
 **Next Steps:**
 1. Configure your project's MCP server in your AI tool (replace bootstrap MCP with project MCP)
-2. Define Cycle 1.1 in `{{DOCS_DIR}}/implementation_plan.md`
+2. Define Cycle 1.1 in `{{DOCS_DIR}}/ROADMAP.md`
 3. When ready to implement Cycle 1.1:
    - Call `start_cycle_planning("1.1")` to initiate planning
    - Call `analyze_cycle_scope()` to assess complexity
@@ -1901,12 +1901,12 @@ Your project's AI rules are now active, and FluxFrame template files have been r
 
 This project uses a two-tier implementation planning approach:
 
-### Tier 1: implementation_plan.md (Strategic Roadmap)
+### Tier 1: ROADMAP.md (Strategic Roadmap)
 - Lists ALL planned cycles with brief descriptions
 - Tracks status: 📋 PLANNING → 🏗️ IN PROGRESS → ✅ COMPLETE
 - Provides timeline estimates and dependencies
 
-### Tier 2: implementation_plans/ (Tactical Plans)
+### Tier 2: roadmap/ (Tactical Plans)
 - Created JUST-IN-TIME when ready to implement a cycle
 - Contains detailed research, scope analysis, technical design
 - Includes decomposition if feature is too large

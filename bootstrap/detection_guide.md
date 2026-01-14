@@ -76,7 +76,7 @@ Check for documentation directories:
 **Within docs, look for:**
 - `context_master_guide.md` or similar "single source of truth"
 - `technical_status.md` or `STATUS.md` or `ARCHITECTURE.md`
-- `implementation_plan.md` or `ROADMAP.md`
+- `ROADMAP.md` or `ROADMAP.md`
 - `api_contract*.md` or `API.md`
 
 ### 3. Existing Bug Fix/Change History
