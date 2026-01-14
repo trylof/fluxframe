@@ -881,13 +881,13 @@ Repeat for each Tier 2 item in the infrastructure/environment category.
 
 ---
 
-### Step 7.5: Generate FluxFrame Guide (REQUIRED)
+### Step 7.5: Generate FluxFrame Manual (REQUIRED)
 
-**Purpose:** Create a persistent guide that remains after bootstrap, explaining how to work with FluxFrame and keep rules updated.
+**Purpose:** Create a persistent manual that remains after bootstrap, explaining how to work with FluxFrame and keep rules updated. This file is placed in the project root for high visibility.
 
-**Source:** `doc-templates/fluxframe_guide.template.md`
+**Source:** `doc-templates/fluxframe_manual.template.md`
 
-**Output:** `{{DOCS_DIR}}/fluxframe_guide.md`
+**Output:** `FLUXFRAME_MANUAL.md` (in project root)
 
 **Placeholder Replacements:**
 
@@ -938,7 +938,7 @@ Based on user's API choice:
 - None: "No API contract approach configured. Add one when APIs are introduced."
 
 **Validation:**
-- [ ] File created at `{{DOCS_DIR}}/fluxframe_guide.md`
+- [ ] File created at `FLUXFRAME_MANUAL.md` (in project root)
 - [ ] All placeholders replaced
 - [ ] Tool-specific sections match configured tools
 - [ ] API approach section accurate

@@ -1352,9 +1352,9 @@ Create `ROADMAP.md` based on:
 
 **Purpose:** Create a persistent guide that remains after bootstrap, explaining how to work with FluxFrame and keep rules updated.
 
-**Source:** `doc-templates/fluxframe_guide.template.md`
+**Source:** `doc-templates/fluxframe_manual.template.md`
 
-**Output:** `{{DOCS_DIR}}/fluxframe_guide.md`
+**Output:** `FLUXFRAME_MANUAL.md` (in project root)
 
 **Process:**
 1. Read template file
@@ -1367,7 +1367,7 @@ Create `ROADMAP.md` based on:
 4. Reference any existing documentation that was kept alongside FluxFrame
 
 **Validation:**
-- [ ] File created at `{{DOCS_DIR}}/fluxframe_guide.md`
+- [ ] File created at `FLUXFRAME_MANUAL.md` (in project root)
 - [ ] All placeholders replaced
 - [ ] Tool sections match configured tools
 - [ ] References existing/migrated documentation correctly

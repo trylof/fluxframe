@@ -1,6 +1,6 @@
-# FluxFrame Development Guide
+# FluxFrame Instruction Manual
 
-**Your project was bootstrapped with FluxFrame.** This guide explains how to work effectively with the framework and keep your AI-assisted development running smoothly.
+**Your project was bootstrapped with FluxFrame.** This manual explains how to work effectively with the framework and keep your AI-assisted development running smoothly.
 
 ---
 
@@ -8,6 +8,7 @@
 
 | What | Where |
 |------|-------|
+| **This Manual** | `FLUXFRAME_MANUAL.md` (Project Root) |
 | Project context | `{{DOCS_DIR}}/context_master_guide.md` |
 | Current status | `{{DOCS_DIR}}/technical_status.md` |
 | Development roadmap | `{{DOCS_DIR}}/ROADMAP.md` |
@@ -222,4 +223,4 @@ FluxFrame is designed to be removed after bootstrap. Your project-specific docum
 
 ---
 
-*This guide was generated during FluxFrame bootstrap. Keep it updated as your project evolves.*
+*This manual was generated during FluxFrame bootstrap. Keep it updated as your project evolves.*

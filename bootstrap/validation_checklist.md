@@ -17,7 +17,7 @@ Run through this checklist systematically. Fix any issues before showing results
 ✓ {{DOCS_DIR}}/context_master_guide.md
 ✓ {{DOCS_DIR}}/technical_status.md  
 ✓ {{DOCS_DIR}}/ROADMAP.md
-✓ {{DOCS_DIR}}/fluxframe_guide.md
+✓ FLUXFRAME_MANUAL.md (in project root)
 ✓ {{DOCS_DIR}}/patterns/README.md
 ✓ AGENTS.md (Universal AI baseline)
 ✓ mcp-server.js
