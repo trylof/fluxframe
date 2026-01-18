@@ -153,12 +153,26 @@ mkdir -p {{DOCS_DIR}}/patterns
 mkdir -p {{DOCS_DIR}}/workflows
 mkdir -p {{DOCS_DIR}}/roadmap
 mkdir -p {{DOCS_DIR}}/bugs
+mkdir -p {{DOCS_DIR}}/reference_library
+mkdir -p {{DOCS_DIR}}/reference_library/open_questions
+mkdir -p {{DOCS_DIR}}/reference_library/correspondence
+mkdir -p {{DOCS_DIR}}/reference_library/user_research
+mkdir -p {{DOCS_DIR}}/reference_library/market_research
+mkdir -p {{DOCS_DIR}}/reference_library/domain_knowledge
+mkdir -p {{DOCS_DIR}}/reference_library/specifications
+mkdir -p seed_data
+mkdir -p seed_data/fixtures
+mkdir -p seed_data/samples
+mkdir -p seed_data/factories
+mkdir -p seed_data/schemas
 ```
 
 **Validation:**
 - [ ] All directories created successfully
 - [ ] Correct paths for user's OS (Windows vs Unix)
 - [ ] No permission errors
+- [ ] `seed_data/` directory created at project root (sibling to `{{DOCS_DIR}}/`)
+- [ ] `reference_library/` directory created with all subdirectories
 
 **If errors:** Check user has write permissions in project directory.
 
@@ -830,6 +844,190 @@ Repeat for each Tier 2 item in the infrastructure/environment category.
 
 ---
 
+### Step 5.6: Create Seed Data Infrastructure (ALWAYS)
+
+> [!IMPORTANT]
+> **Seed data is ALWAYS created**, similar to pattern files.
+> This provides consistent structure for AI context, testing, and development.
+> The Q-Data answer determines content depth, not whether the directory exists.
+
+**Source:** `doc-templates/data_seeding.template.md`
+
+**Files to Create:**
+
+**5.6.1: `seed_data/README.md`** (ALWAYS)
+
+Generate from template with these replacements:
+- `{{PROJECT_NAME}}` → User's project name
+- `{{DOCS_DIR}}` → Documentation directory path
+- `{{DATA_FORMAT}}` → JSON (default) or user's choice from Q-Data
+- `{{TODAY_DATE}}` → Current date
+- `{{LANGUAGE}}` → Primary language (TypeScript/Python/etc.)
+
+**5.6.2: Directory `.gitkeep` files** (Based on Q-Data answer)
+
+**If Q-Data = "Full Setup" or "Basic Structure":**
+```bash
+touch seed_data/fixtures/.gitkeep
+touch seed_data/samples/.gitkeep
+touch seed_data/factories/.gitkeep
+touch seed_data/schemas/.gitkeep
+```
+
+**If Q-Data = "Minimal":**
+Only `seed_data/README.md` - no subdirectories yet.
+
+**5.6.3: Starter Fixtures** (Only if Q-Data = "Full Setup")
+
+Based on detected domain entities, create example fixtures:
+
+```json
+// seed_data/fixtures/example_{{ENTITY}}.json
+{
+  "_meta": {
+    "description": "Example {{ENTITY}} fixture for testing",
+    "created": "{{TODAY_DATE}}"
+  },
+  "data": {
+    // Infer structure from database models or API schemas
+  }
+}
+```
+
+**5.6.4: Sample Data** (Only if Q-Data = "Full Setup")
+
+Create representative samples for AI context:
+
+```json
+// seed_data/samples/{{ENTITY}}.sample.json
+{
+  "_meta": {
+    "description": "Sample {{ENTITY}} data for AI context and development",
+    "purpose": "Shows AI agents what {{ENTITY}} objects look like"
+  },
+  "examples": [
+    // 2-3 realistic examples with variety
+  ]
+}
+```
+
+**Content for data_patterns.md:**
+
+Add this section to `{{DOCS_DIR}}/patterns/data_patterns.md`:
+
+```markdown
+## Seed Data Patterns
+
+### Fixture Loading Pattern
+
+**Use for:** Loading test fixtures in unit/integration tests
+
+**Location:** `seed_data/fixtures/`
+
+**Pattern:**
+- One fixture per test scenario
+- Descriptive names: `{entity}_{state}.json`
+- Include `_meta` section for documentation
+- Keep fixtures minimal but complete
+
+### Factory Pattern
+
+**Use for:** Generating varied test data programmatically
+
+**Location:** `seed_data/factories/`
+
+**Pattern:**
+- Functions that return valid domain objects
+- Accept overrides for specific fields
+- Use realistic but randomized data
+
+### Sample Data Pattern
+
+**Use for:** Providing AI agents with domain context
+
+**Location:** `seed_data/samples/`
+
+**Pattern:**
+- Representative examples, not edge cases
+- Include variety (different states, types)
+- Document relationships between entities
+- Update when schema changes
+```
+
+**Validation:**
+- [ ] `seed_data/README.md` created with correct placeholders filled
+- [ ] Directory structure matches Q-Data choice
+- [ ] If Full Setup: starter fixtures created for detected entities
+- [ ] `data_patterns.md` updated with seed data patterns
+
+---
+
+### Step 5.7: Create Reference Library (ALWAYS)
+
+> [!IMPORTANT]
+> **Reference Library is ALWAYS created**, similar to pattern files and seed data.
+> This provides a consistent location for capturing real-world context, user research,
+> and external inputs that inform product decisions.
+
+**Purpose:** The Reference Library stores DESCRIPTIVE information (what the real world looks like)
+as opposed to PRESCRIPTIVE documentation (what to do and how). This distinction is critical:
+- **Prescriptive:** patterns/, workflows/, context_master_guide.md - tell you WHAT to do
+- **Descriptive:** reference_library/ - tells you WHAT EXISTS in the real world
+
+**Source:** `doc-templates/reference_library_readme.template.md`
+
+**Files to Create:**
+
+**5.7.1: `{{DOCS_DIR}}/reference_library/README.md`** (ALWAYS)
+
+Generate from template with these replacements:
+- `{{PROJECT_NAME}}` → User's project name
+- `{{TODAY_DATE}}` → Current date
+
+**5.7.2: Directory `.gitkeep` files**
+
+```bash
+touch {{DOCS_DIR}}/reference_library/correspondence/.gitkeep
+touch {{DOCS_DIR}}/reference_library/user_research/.gitkeep
+touch {{DOCS_DIR}}/reference_library/market_research/.gitkeep
+touch {{DOCS_DIR}}/reference_library/domain_knowledge/.gitkeep
+touch {{DOCS_DIR}}/reference_library/specifications/.gitkeep
+```
+
+**Key Philosophy to Convey:**
+
+When presenting the Reference Library to the user, explain:
+
+```markdown
+## Reference Library (Descriptive Context)
+
+I've created a Reference Library for storing real-world context:
+
+**Location:** `{{DOCS_DIR}}/reference_library/`
+
+**What goes here:**
+- `correspondence/` - Emails, Slack threads, meeting notes with stakeholders
+- `user_research/` - Interviews, feedback, usage scenarios from users
+- `market_research/` - Competitor analysis, industry reports
+- `domain_knowledge/` - Expert input, terminology, business context
+- `specifications/` - External specs, PDFs, partner documentation
+
+**Key principle:** This library is DESCRIPTIVE (what exists) not PRESCRIPTIVE (what to do).
+It INFORMS decisions but doesn't DICTATE them. Contradictions are valuable information.
+
+**When to use it:**
+- Before planning features (check user_research/)
+- When designing tests (reference real usage scenarios)
+- When making product decisions (consider market context)
+```
+
+**Validation:**
+- [ ] `reference_library/README.md` created with philosophy documented
+- [ ] All subdirectories created with .gitkeep files
+- [ ] User understands descriptive vs prescriptive distinction
+
+---
+
 ### Step 6: Create API Contract Standards (Conditional)
 
 **Only if:** User chose specific API contract approach
@@ -1436,6 +1634,21 @@ Before presenting to user, verify:
 **Other project files:**
 - [ ] `mcp-server.js`
 - [ ] `package.json`
+
+**Seed Data (always created):**
+- [ ] `seed_data/README.md`
+- [ ] `seed_data/fixtures/.gitkeep` (if Q-Data = Full or Basic)
+- [ ] `seed_data/samples/.gitkeep` (if Q-Data = Full or Basic)
+- [ ] `seed_data/factories/.gitkeep` (if Q-Data = Full or Basic)
+- [ ] `seed_data/schemas/.gitkeep` (if Q-Data = Full or Basic)
+
+**Reference Library (always created):**
+- [ ] `{{DOCS_DIR}}/reference_library/README.md`
+- [ ] `{{DOCS_DIR}}/reference_library/correspondence/.gitkeep`
+- [ ] `{{DOCS_DIR}}/reference_library/user_research/.gitkeep`
+- [ ] `{{DOCS_DIR}}/reference_library/market_research/.gitkeep`
+- [ ] `{{DOCS_DIR}}/reference_library/domain_knowledge/.gitkeep`
+- [ ] `{{DOCS_DIR}}/reference_library/specifications/.gitkeep`
 
 ### Content Quality
 - [ ] No `{{PLACEHOLDER}}` syntax remaining

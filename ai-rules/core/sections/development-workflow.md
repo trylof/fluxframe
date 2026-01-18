@@ -26,14 +26,17 @@ This project follows the FluxFrame development methodology with systematic {{CYC
 ### AFTER Phase (Documentation & Validation)
 
 1. **Get User Confirmation** - Never document until user confirms the change works.
-2. **Archive Technical Status** - If a cycle is COMPLETE, move detailed records (Implementation Status, Features) to `{{DOCS_DIR}}/tech-status/archived_cycle_X.md`.
-3. **Update ALL Affected Documentation**:
-   - `{{DOCS_DIR}}/technical_status.md` (Update summary, add archive link, move aged fixes to `change_history.md`)
+2. **Validation Gate (MANDATORY)**:
+   - Call `get_completion_checklist()` MCP tool.
+   - This exact tool call is REQUIRED before marking *anything* as complete.
+   - Review the output and verify every single item.
+3. **Archive Technical Status** - If a cycle is COMPLETE, move detailed records to archive.
+4. **Update ALL Affected Documentation**:
+   - `{{DOCS_DIR}}/technical_status.md` (Update summary, add archive link)
+   - `{{DOCS_DIR}}/ROADMAP.md` (Mark cycle as complete)
    - `{{DOCS_DIR}}/patterns/` (if new pattern)
-   - `{{DOCS_DIR}}/workflows/` (if logic changed)
    - `{{IMPLEMENTATION_PLAN_FILE}}` (mark complete)
-4. **Document New Patterns** - If solution is reusable, add to pattern library.
-5. **Validate Completion** - Review checklist before marking complete.
+5. **Finalize**: Call `validate_cycle_completion()`.
 
 ## Key Principles
 

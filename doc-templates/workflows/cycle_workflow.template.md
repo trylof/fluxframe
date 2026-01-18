@@ -54,7 +54,32 @@ Each phase has mandatory steps that ensure quality, consistency, and knowledge p
 
 **Why:** Don't reinvent solved problems. Reuse proven solutions.
 
-### 3. Read Relevant Documentation
+### 3. Check Reference Library (Descriptive Context)
+
+**MCP Tool:** `search_reference_library(query="[feature/domain]", context="feature_planning")`
+
+**Actions:**
+- Search for relevant user research and feedback
+- Check for domain knowledge related to the feature
+- Review any specifications or external constraints
+- Note any contradictions in user needs (valuable insight!)
+
+**What to look for:**
+| Category | Relevance |
+|----------|-----------|
+| `user_research/` | User needs, feedback, usage scenarios |
+| `domain_knowledge/` | Business rules, terminology, constraints |
+| `specifications/` | External integration requirements |
+| `correspondence/` | Stakeholder expectations, commitments |
+| `market_research/` | Competitive context, industry standards |
+
+**Critical Distinction:**
+- **Reference Library = DESCRIPTIVE** (what the real world looks like)
+- **Patterns = PRESCRIPTIVE** (what to do and how)
+
+**Why:** Real-world context INFORMS decisions. You may choose to deviate from user wishes for good reasons, but you should KNOW what those wishes are first.
+
+### 4. Read Relevant Documentation
 
 **Based on context, read:**
 - Technical architecture docs
@@ -64,7 +89,7 @@ Each phase has mandatory steps that ensure quality, consistency, and knowledge p
 
 **Why:** Deep understanding prevents rework and misalignment.
 
-### 4. Plan Implementation Approach
+### 5. Plan Implementation Approach
 
 **Create mental model:**
 - What components need changes?

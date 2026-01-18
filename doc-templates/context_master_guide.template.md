@@ -18,6 +18,30 @@ This approach ensures that all team members, technical and non-technical, are al
 
 ---
 
+## 1.5. Agent Protocol: Explicit Boundaries
+
+**CRITICAL INSTRUCTION FOR AI AGENTS:**
+
+To prevent "hallucinated progress" and ensure user control, you must strictly adhere to the **Two-Tier Planning System**.
+
+**1. STRICT SEPARATION OF PLANNING AND EXECUTION**
+- **NEVER** offer to "plan and build" in a single response.
+- **NEVER** ask "Should I start building?" before the plan is approved.
+- **ALWAYS** act in discrete turns:
+  1. **Phase 1: Plan** → `create_cycle_plan()` → **STOP & WAIT**
+  2. **Phase 2: Review** → User reviews → `approve_cycle_plan()` → **STOP & WAIT**
+  3. **Phase 3: Build** → Only AFTER approval → Start implementation
+
+**2. THE "STOP" RULE**
+- When you complete a planning step (research, scoping, or plan creation), you must **STOP** and ask the user for confirmation.
+- Do not chain tools that cross the boundary from Planning to Execution.
+
+**3. VERIFICATION FIRST**
+- Before implementing features, you must verify the existence of patterns (`check_pattern_exists`).
+- Before marking complete, you must verify against the plan (`validate_cycle_completion`).
+
+---
+
 ## 2. The Core Context Documents
 
 This directory contains the essential guides for understanding and building the {{PROJECT_NAME}} platform. All key documents referenced below are located in the `{{DOCS_DIR}}` directory.
@@ -166,12 +190,12 @@ Located in `{{DOCS_DIR}}/workflows/`:
 - ❌ Detailed plan exists but high-level doesn't reference it
 - ❌ Contradictory scope or output descriptions
 
-### G. The Unknowns - Stakeholder Questions: `open_questions.md`
+### G. The Unknowns - Stakeholder Questions: `reference_library/open_questions/` subdirectory
 
 <!-- AI ASSISTANT: Optional - include if project has stakeholder involvement -->
 
-*   **What it is:** A living list of strategic questions that the development team cannot answer alone. These are questions about business logic, user experience, and priorities that require input from project leadership or clients.
-*   **How to use it:** The development team adds questions here as they arise to avoid making assumptions. The project lead is responsible for driving these questions to resolution and ensuring the answers are then reflected in the other context documents.
+*   **What it is:** A living archive of strategic questions that the development team cannot answer alone. These are questions about business logic, user experience, and priorities that require input from project leadership or clients.
+*   **How to use it:** The development team adds question files here as they arise to avoid making assumptions. The project lead is responsible for driving these questions to resolution. Once answered, the solution is promoted to `ROADMAP.md` (as a feature) or `patterns/` (as a decision) and the question is archived.
 
 ### H. The Pattern Library - Architectural Patterns & Templates: `patterns/` Directory
 
@@ -216,6 +240,63 @@ Located in `{{DOCS_DIR}}/workflows/`:
     - **CI/CD Pipeline:** How code is built, tested, and deployed.
     - **Config Management:** How secrets and environment variables are handled.
     - **IaC Tooling:** What tools manage cloud resources (Terraform, Pulumi, etc.).
+
+### J.5. Seed Data & Test Fixtures: `seed_data/` Directory
+
+<!-- AI ASSISTANT: This section documents the seed data infrastructure for AI context, testing, and development -->
+
+*   **What it is:** Reference data for AI context, automated testing, and local development. Contains fixtures, sample data, and factory functions that help AI agents understand the domain and provide consistent test data.
+*   **How to use it:**
+    - **AI Agents:** Point to `seed_data/samples/` when asking AI to build features. This gives concrete examples of domain entities.
+    - **Tests:** Import from `seed_data/fixtures/` for deterministic test data with known values.
+    - **Development:** Use sample data for realistic UI rendering and feature development.
+*   **Directory Structure:**
+    - `fixtures/` - Deterministic test data (JSON/YAML)
+    - `samples/` - Representative examples for AI context
+    - `factories/` - Functions that generate varied test data
+    - `schemas/` - Data type definitions for validation
+*   **Update triggers:**
+    - New entity types added to the system
+    - Schema changes (fields added/removed)
+    - New test scenarios needed
+    - Edge cases discovered during development
+*   **Reference:** See `seed_data/README.md` for detailed usage and conventions.
+
+### J.6. The Reference Library (Descriptive Context): `reference_library/` Directory
+
+<!-- AI ASSISTANT: This section documents the Reference Library - real-world context that INFORMS but doesn't DICTATE -->
+
+*   **What it is:** An archive of real-world context, user research, and external inputs that inform product decisions. This library stores **DESCRIPTIVE** information (what the real world looks like) as opposed to **PRESCRIPTIVE** documentation (what to do and how).
+
+*   **Critical Distinction:**
+    | Documentation Type | Location | Nature |
+    |-------------------|----------|--------|
+    | **Prescriptive** | `patterns/`, `workflows/`, `context_master_guide.md` | Rules, standards, how-to guides |
+    | **Descriptive** | `reference_library/` | Real-world inputs, research, context |
+
+*   **Key Principle:** This library **INFORMS decisions but does NOT DICTATE them.** You may intentionally deviate from user wishes or market trends when there's good reason. Contradictions within this library are valuable information, not problems to solve.
+
+*   **Directory Structure:**
+    - `open_questions/` - Research topics and unanswered questions requiring investigation
+    - `correspondence/` - Emails, Slack threads, meeting notes with stakeholders
+    - `user_research/` - Interviews, feedback, usage scenarios from users
+    - `market_research/` - Competitor analysis, industry reports, market trends
+    - `domain_knowledge/` - Expert input, terminology glossaries, business context
+    - `specifications/` - External specs, PDFs, partner documentation
+
+*   **How to use it:**
+    - **Before planning features:** Check `user_research/` for relevant user needs
+    - **When designing tests:** Reference real usage scenarios from `user_research/`
+    - **When making product decisions:** Consider market context from `market_research/`
+    - **When understanding domain:** Consult `domain_knowledge/` for terminology and business rules
+
+*   **Update triggers:**
+    - New correspondence received from stakeholders
+    - User research conducted (interviews, surveys, feedback)
+    - Market research updated (competitor analysis, industry reports)
+    - Domain knowledge expanded (expert input, regulatory changes)
+
+*   **Reference:** See `reference_library/README.md` for philosophy, document templates, and maintenance guidelines.
 
 ### K. Additional Domain-Specific Documents
 
@@ -354,7 +435,20 @@ As {{PROJECT_NAME}} grows in complexity, maintaining architectural consistency b
 
 When a change request is made (bug, refinement, requirement change, misinterpretation, or alteration), follow this structured workflow:
 
-### **Phase 1: Change Analysis (Immediate)**
+### **The User Classification Rule (ABSOLUTE)**
+
+**If the user calls it a "Bug", it is a BUG.**
+
+- **Do NOT reclassify** a user-reported bug as a "refinement" because it is a design flaw.
+- **Do NOT reclassify** a user-reported bug as a "cycle" because the fix is complex.
+- **Inconsistent State = Bug.** If the system presents conflicting information (e.g., UI says X, Data says Y), that is a bug, not a refinement.
+
+### **Complexity vs. Workflow**
+
+- **Complexity does NOT dictate workflow.** A bug fix can be complex (require migration, schema changes, multiple files) and still be a BUG.
+- **Workflow is dictated by INTENT:**
+    - **Fixing something broken/incorrect?** → **Change Request Protocol** (even if hard)
+    - **Building new value/capability?** → **Cycle Workflow**
 
 1. **Classify & Document:**
    - MCP tool: `start_change_request(description, change_type, affected_feature, severity)`

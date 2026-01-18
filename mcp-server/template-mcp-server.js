@@ -223,7 +223,7 @@ class ProjectDocsMCPServer {
           },
           {
             name: 'start_change_request',
-            description: 'Initialize change request tracking when user reports bug, refinement, requirement change, misinterpretation, or alteration. Creates tracking state.',
+            description: 'Initialize change request tracking when user reports bug, refinement, requirement change, misinterpretation, or alteration. NOTE: If user calls it a BUG, it is a BUG, regardless of complexity or file count. Do NOT escalate to a Cycle.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -358,7 +358,7 @@ class ProjectDocsMCPServer {
           // ============================================================
           {
             name: 'start_cycle_planning',
-            description: 'Initiate the planning phase for a development cycle. CALL THIS BEFORE implementing any cycle. Returns research guidance, checks for existing plan, and enforces the planning-first workflow.',
+            description: 'Initiate the planning phase for a development cycle. Returns research guidance. CRITICAL: DO NOT offer to implement/build in the same step. You must PLAN first, then STOP for user approval.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -372,7 +372,7 @@ class ProjectDocsMCPServer {
           },
           {
             name: 'analyze_cycle_scope',
-            description: 'Scope Analysis Engine. Evaluates feature complexity, estimates effort, and recommends decomposition if the feature is too large for a single cycle. CRITICAL: Be honest about complexity - a senior engineer knows to ship small, test, iterate.',
+            description: 'Scope Analysis Engine. Evaluates feature complexity and recommends decomposition. CRITICAL: Use during planning phase. DO NOT start implementation based on this analysis alone.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -412,7 +412,7 @@ class ProjectDocsMCPServer {
           },
           {
             name: 'create_cycle_plan',
-            description: 'Create a new detailed implementation plan from the template. Use after research and scope analysis are complete.',
+            description: 'Create a new detailed implementation plan. CRITICAL: For NEW FEATURES only. DO NOT use for bugs (use start_change_request). After calling this, you must STOP and ask user for review.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -448,7 +448,7 @@ class ProjectDocsMCPServer {
           },
           {
             name: 'approve_cycle_plan',
-            description: 'Validate plan structure, verify scope assessment was performed, and mark the cycle as ready for implementation. Updates ROADMAP.md status. ONLY call after user has reviewed and approved the detailed plan.',
+            description: 'Mark the cycle as ready for implementation. THIS IS THE ONLY GATEWAY TO EXECUTION. Call this ONLY after the user has explicitly said "Approved" or "Proceed" in response to the plan.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -467,6 +467,83 @@ class ProjectDocsMCPServer {
           {
             name: 'get_implementation_roadmap',
             description: 'Get overview of all cycles with their planning status, decomposition relationships, and which cycles have detailed plans. Use at session start to understand project state.',
+            inputSchema: {
+              type: 'object',
+              properties: {},
+            },
+          },
+          // ============================================================
+          // SEED DATA TOOLS (AI Context & Test Fixtures)
+          // ============================================================
+          {
+            name: 'get_seed_data_overview',
+            description: 'Get overview of available seed data categories, fixtures, and samples. Use this to understand what reference data exists for AI context and testing.',
+            inputSchema: {
+              type: 'object',
+              properties: {},
+            },
+          },
+          {
+            name: 'get_sample_data',
+            description: 'Retrieve sample data for a specific entity/category. Use this when you need to understand what domain objects look like before implementing features.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                category: {
+                  type: 'string',
+                  description: 'Entity/category name (e.g., "users", "tasks", "products")',
+                },
+                include_schema: {
+                  type: 'boolean',
+                  description: 'Whether to include the data schema/type definition',
+                },
+              },
+              required: ['category'],
+            },
+          },
+          {
+            name: 'list_fixtures',
+            description: 'List available test fixtures with their descriptions. Use this to find existing test data before writing tests.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                category: {
+                  type: 'string',
+                  description: 'Optional: filter by entity category',
+                },
+              },
+            },
+          },
+          // ============================================================
+          // REFERENCE LIBRARY TOOLS (Descriptive Context)
+          // ============================================================
+          {
+            name: 'search_reference_library',
+            description: 'Search the Reference Library for real-world context that INFORMS (but does not dictate) decisions. Use this before planning features, designing tests, or making product decisions. Searches across correspondence, user research, market research, domain knowledge, and specifications.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                query: {
+                  type: 'string',
+                  description: 'Search term or topic (e.g., "onboarding", "competitor", "user feedback")',
+                },
+                category: {
+                  type: 'string',
+                  enum: ['all', 'correspondence', 'user_research', 'market_research', 'domain_knowledge', 'specifications'],
+                  description: 'Category to search (default: all)',
+                },
+                context: {
+                  type: 'string',
+                  enum: ['feature_planning', 'test_design', 'product_decision', 'domain_understanding', 'general'],
+                  description: 'Why you are searching - helps prioritize results',
+                },
+              },
+              required: ['query'],
+            },
+          },
+          {
+            name: 'get_reference_library_overview',
+            description: 'Get overview of Reference Library contents and structure. Use at session start or when you need to understand what real-world context is available. The Reference Library stores DESCRIPTIVE information (what the real world looks like) vs PRESCRIPTIVE docs (patterns, workflows).',
             inputSchema: {
               type: 'object',
               properties: {},
@@ -535,6 +612,23 @@ class ProjectDocsMCPServer {
 
         case 'get_implementation_roadmap':
           return await this.getImplementationRoadmap();
+
+        // Seed Data Tools
+        case 'get_seed_data_overview':
+          return await this.getSeedDataOverview();
+
+        case 'get_sample_data':
+          return await this.getSampleData(args.category, args.include_schema);
+
+        case 'list_fixtures':
+          return await this.listFixtures(args.category);
+
+        // Reference Library Tools
+        case 'search_reference_library':
+          return await this.searchReferenceLibrary(args.query, args.category, args.context);
+
+        case 'get_reference_library_overview':
+          return await this.getReferenceLibraryOverview();
 
         default:
           throw new Error(`Unknown tool: ${name}`);
@@ -2283,6 +2377,390 @@ This check applies to:
       content: [{
         type: 'text',
         text: summary,
+      }],
+    };
+  }
+
+  // ============================================================
+  // SEED DATA METHODS
+  // ============================================================
+
+  async getSeedDataOverview() {
+    const seedDataDir = path.join(__dirname, 'seed_data');
+
+    try {
+      await fs.access(seedDataDir);
+    } catch {
+      return {
+        content: [{
+          type: 'text',
+          text: `## Seed Data Overview\n\n**Status:** seed_data/ directory not found\n\n**Action:** Run bootstrap or create seed_data/ directory manually.\n\nSee the FluxFrame documentation for seed data setup.`,
+        }],
+      };
+    }
+
+    let overview = `## Seed Data Overview\n\n`;
+    overview += `**Location:** \`seed_data/\`\n\n`;
+
+    // Check each subdirectory
+    const subdirs = ['fixtures', 'samples', 'factories', 'schemas'];
+
+    for (const subdir of subdirs) {
+      const subdirPath = path.join(seedDataDir, subdir);
+      try {
+        const files = await fs.readdir(subdirPath);
+        const dataFiles = files.filter(f => !f.startsWith('.') && (f.endsWith('.json') || f.endsWith('.yaml') || f.endsWith('.yml') || f.endsWith('.ts') || f.endsWith('.js')));
+
+        overview += `### ${subdir}/\n`;
+        if (dataFiles.length > 0) {
+          for (const file of dataFiles) {
+            overview += `- \`${file}\`\n`;
+          }
+        } else {
+          overview += `- *(empty)*\n`;
+        }
+        overview += `\n`;
+      } catch {
+        overview += `### ${subdir}/\n- *(directory not found)*\n\n`;
+      }
+    }
+
+    overview += `---\n\n`;
+    overview += `**Usage:**\n`;
+    overview += `- Use \`get_sample_data(category)\` to retrieve sample data for AI context\n`;
+    overview += `- Use \`list_fixtures()\` to see available test fixtures\n`;
+    overview += `- Point tests to \`seed_data/fixtures/\` for test data\n`;
+
+    return {
+      content: [{
+        type: 'text',
+        text: overview,
+      }],
+    };
+  }
+
+  async getSampleData(category, includeSchema = false) {
+    const samplesDir = path.join(__dirname, 'seed_data', 'samples');
+    const schemasDir = path.join(__dirname, 'seed_data', 'schemas');
+
+    // Try different file extensions
+    const extensions = ['.sample.json', '.json', '.sample.yaml', '.yaml', '.yml'];
+    let sampleContent = null;
+    let sampleFile = null;
+
+    for (const ext of extensions) {
+      const filePath = path.join(samplesDir, `${category}${ext}`);
+      try {
+        sampleContent = await fs.readFile(filePath, 'utf-8');
+        sampleFile = `${category}${ext}`;
+        break;
+      } catch {
+        continue;
+      }
+    }
+
+    if (!sampleContent) {
+      return {
+        content: [{
+          type: 'text',
+          text: `## Sample Data: ${category}\n\n**Status:** No sample data found for "${category}"\n\n**Available samples:** Check \`seed_data/samples/\` directory or run \`get_seed_data_overview()\` to see what's available.\n\n**To add:** Create \`seed_data/samples/${category}.sample.json\` with example data.`,
+        }],
+      };
+    }
+
+    let result = `## Sample Data: ${category}\n\n`;
+    result += `**File:** \`seed_data/samples/${sampleFile}\`\n\n`;
+    result += `\`\`\`json\n${sampleContent}\n\`\`\`\n`;
+
+    if (includeSchema) {
+      const schemaExtensions = ['.schema.json', '.d.ts', '.ts'];
+      for (const ext of schemaExtensions) {
+        const schemaPath = path.join(schemasDir, `${category}${ext}`);
+        try {
+          const schemaContent = await fs.readFile(schemaPath, 'utf-8');
+          result += `\n---\n\n### Schema\n\n`;
+          result += `**File:** \`seed_data/schemas/${category}${ext}\`\n\n`;
+          result += `\`\`\`${ext.endsWith('.json') ? 'json' : 'typescript'}\n${schemaContent}\n\`\`\`\n`;
+          break;
+        } catch {
+          continue;
+        }
+      }
+    }
+
+    return {
+      content: [{
+        type: 'text',
+        text: result,
+      }],
+    };
+  }
+
+  async listFixtures(category = null) {
+    const fixturesDir = path.join(__dirname, 'seed_data', 'fixtures');
+
+    try {
+      await fs.access(fixturesDir);
+    } catch {
+      return {
+        content: [{
+          type: 'text',
+          text: `## Test Fixtures\n\n**Status:** No fixtures directory found\n\n**Action:** Create \`seed_data/fixtures/\` and add test fixture files.`,
+        }],
+      };
+    }
+
+    const files = await fs.readdir(fixturesDir);
+    const fixtureFiles = files.filter(f => !f.startsWith('.') && (f.endsWith('.json') || f.endsWith('.yaml') || f.endsWith('.yml')));
+
+    // Filter by category if provided
+    const filteredFiles = category
+      ? fixtureFiles.filter(f => f.toLowerCase().includes(category.toLowerCase()))
+      : fixtureFiles;
+
+    let result = `## Test Fixtures${category ? ` (filtered: ${category})` : ''}\n\n`;
+    result += `**Location:** \`seed_data/fixtures/\`\n\n`;
+
+    if (filteredFiles.length === 0) {
+      result += category
+        ? `No fixtures found matching "${category}".\n\nAll available fixtures:\n`
+        : `No fixtures found.\n\n**To add:** Create JSON/YAML files in \`seed_data/fixtures/\` with test data.\n`;
+
+      if (category && fixtureFiles.length > 0) {
+        for (const file of fixtureFiles) {
+          result += `- \`${file}\`\n`;
+        }
+      }
+    } else {
+      result += `| Fixture | Description |\n`;
+      result += `|---------|-------------|\n`;
+
+      for (const file of filteredFiles) {
+        const filePath = path.join(fixturesDir, file);
+        try {
+          const content = await fs.readFile(filePath, 'utf-8');
+          const parsed = JSON.parse(content);
+          const description = parsed._meta?.description || parsed.description || 'No description';
+          result += `| \`${file}\` | ${description} |\n`;
+        } catch {
+          result += `| \`${file}\` | *(unable to read description)* |\n`;
+        }
+      }
+    }
+
+    result += `\n---\n\n`;
+    result += `**Usage:** Import fixtures in your tests:\n`;
+    result += `\`\`\`javascript\n`;
+    result += `import userData from '../seed_data/fixtures/user_admin.json';\n`;
+    result += `\`\`\`\n`;
+
+    return {
+      content: [{
+        type: 'text',
+        text: result,
+      }],
+    };
+  }
+
+  // ============================================================
+  // REFERENCE LIBRARY METHODS (Descriptive Context)
+  // ============================================================
+
+  async getReferenceLibraryOverview() {
+    const refLibDir = path.join(PROJECT_DOCS_DIR, 'reference_library');
+
+    try {
+      await fs.access(refLibDir);
+    } catch {
+      return {
+        content: [{
+          type: 'text',
+          text: `## Reference Library\n\n**Status:** Not found at \`${PROJECT_DOCS_DIR}/reference_library/\`\n\n**Note:** The Reference Library stores DESCRIPTIVE information (what the real world looks like) vs PRESCRIPTIVE docs (patterns, workflows). It INFORMS but doesn't DICTATE decisions.\n\n**Action:** Create the reference_library directory structure.`,
+        }],
+      };
+    }
+
+    const categories = [
+      { name: 'correspondence', desc: 'Emails, Slack threads, meeting notes' },
+      { name: 'user_research', desc: 'Interviews, feedback, usage scenarios' },
+      { name: 'market_research', desc: 'Competitor analysis, industry reports' },
+      { name: 'domain_knowledge', desc: 'Expert input, terminology, business context' },
+      { name: 'specifications', desc: 'External specs, PDFs, partner docs' },
+    ];
+
+    let result = `## Reference Library Overview\n\n`;
+    result += `**Location:** \`${PROJECT_DOCS_DIR}/reference_library/\`\n\n`;
+    result += `**Philosophy:** DESCRIPTIVE (what exists) vs PRESCRIPTIVE (what to do)\n`;
+    result += `The Reference Library INFORMS decisions but does NOT DICTATE them.\n\n`;
+
+    result += `### Contents by Category\n\n`;
+    result += `| Category | Description | Files |\n`;
+    result += `|----------|-------------|-------|\n`;
+
+    for (const cat of categories) {
+      const catDir = path.join(refLibDir, cat.name);
+      let fileCount = 0;
+      try {
+        const files = await fs.readdir(catDir);
+        fileCount = files.filter(f => !f.startsWith('.') && f !== '.gitkeep').length;
+      } catch {
+        // Directory doesn't exist
+      }
+      result += `| \`${cat.name}/\` | ${cat.desc} | ${fileCount} |\n`;
+    }
+
+    result += `\n### When to Use\n\n`;
+    result += `- **Before planning features:** Check \`user_research/\` for user needs\n`;
+    result += `- **When designing tests:** Reference real usage scenarios\n`;
+    result += `- **When making product decisions:** Consider market context\n`;
+    result += `- **When understanding domain:** Consult \`domain_knowledge/\`\n\n`;
+    result += `### Key Principle\n\n`;
+    result += `> **Contradictions are valuable information.** Don't resolve them artificially.\n`;
+    result += `> Different user needs reveal complexity - the contradiction IS the insight.\n`;
+
+    return {
+      content: [{
+        type: 'text',
+        text: result,
+      }],
+    };
+  }
+
+  async searchReferenceLibrary(query, category = 'all', context = 'general') {
+    const refLibDir = path.join(PROJECT_DOCS_DIR, 'reference_library');
+
+    try {
+      await fs.access(refLibDir);
+    } catch {
+      return {
+        content: [{
+          type: 'text',
+          text: `## Reference Library Search\n\n**Status:** Reference Library not found.\n\n**Query:** "${query}"\n\n**Note:** The Reference Library stores DESCRIPTIVE context (real-world inputs) that INFORMS but doesn't DICTATE decisions.`,
+        }],
+      };
+    }
+
+    const categories = category === 'all'
+      ? ['correspondence', 'user_research', 'market_research', 'domain_knowledge', 'specifications']
+      : [category];
+
+    const searchResults = [];
+    const queryLower = query.toLowerCase();
+
+    for (const cat of categories) {
+      const catDir = path.join(refLibDir, cat);
+      try {
+        const files = await fs.readdir(catDir);
+        const mdFiles = files.filter(f => f.endsWith('.md') && !f.startsWith('.'));
+
+        for (const file of mdFiles) {
+          const filePath = path.join(catDir, file);
+          const content = await fs.readFile(filePath, 'utf-8');
+
+          // Check if query matches filename or content
+          if (file.toLowerCase().includes(queryLower) || content.toLowerCase().includes(queryLower)) {
+            // Extract relevant snippet
+            const lines = content.split('\n');
+            const matchingLines = [];
+
+            for (let i = 0; i < lines.length; i++) {
+              if (lines[i].toLowerCase().includes(queryLower)) {
+                // Get surrounding context (2 lines before and after)
+                const start = Math.max(0, i - 2);
+                const end = Math.min(lines.length - 1, i + 2);
+                const snippet = lines.slice(start, end + 1).join('\n');
+                matchingLines.push({ lineNum: i + 1, snippet });
+                i = end; // Skip ahead to avoid duplicate context
+              }
+            }
+
+            // Get document title and summary
+            const titleMatch = content.match(/^#\s+(.+)$/m);
+            const title = titleMatch ? titleMatch[1] : file;
+            const summaryMatch = content.match(/## Summary\n\n([^\n]+)/);
+            const summary = summaryMatch ? summaryMatch[1] : null;
+
+            searchResults.push({
+              category: cat,
+              file,
+              title,
+              summary,
+              matches: matchingLines.slice(0, 3), // Limit to 3 matches per file
+              relevance: file.toLowerCase().includes(queryLower) ? 'high' : 'medium',
+            });
+          }
+        }
+      } catch {
+        // Category directory doesn't exist or is empty
+      }
+    }
+
+    // Sort by relevance
+    searchResults.sort((a, b) => {
+      if (a.relevance === 'high' && b.relevance !== 'high') return -1;
+      if (b.relevance === 'high' && a.relevance !== 'high') return 1;
+      return 0;
+    });
+
+    let result = `## Reference Library Search Results\n\n`;
+    result += `**Query:** "${query}"\n`;
+    result += `**Categories searched:** ${categories.join(', ')}\n`;
+    result += `**Context:** ${context}\n`;
+    result += `**Results found:** ${searchResults.length}\n\n`;
+
+    if (searchResults.length === 0) {
+      result += `No matches found for "${query}".\n\n`;
+      result += `### Suggestions\n\n`;
+      result += `- Try broader search terms\n`;
+      result += `- Search different categories\n`;
+      result += `- Use \`get_reference_library_overview()\` to see what's available\n`;
+    } else {
+      result += `---\n\n`;
+      result += `> **Remember:** This is DESCRIPTIVE context. It INFORMS but doesn't DICTATE decisions.\n`;
+      result += `> Contradictions between sources are valuable information.\n\n`;
+
+      for (const item of searchResults.slice(0, 5)) { // Limit to 5 results
+        result += `### ${item.title}\n\n`;
+        result += `**File:** \`reference_library/${item.category}/${item.file}\`\n`;
+        result += `**Category:** ${item.category}\n`;
+        if (item.summary) {
+          result += `**Summary:** ${item.summary}\n`;
+        }
+        result += `\n`;
+
+        if (item.matches.length > 0) {
+          result += `**Relevant excerpts:**\n`;
+          for (const match of item.matches) {
+            result += `\`\`\`\n${match.snippet}\n\`\`\`\n`;
+          }
+        }
+        result += `\n---\n\n`;
+      }
+
+      if (searchResults.length > 5) {
+        result += `*${searchResults.length - 5} more results not shown. Narrow your search for more specific results.*\n`;
+      }
+    }
+
+    // Add context-specific guidance
+    if (context === 'feature_planning') {
+      result += `\n### Feature Planning Guidance\n\n`;
+      result += `When using this context for feature planning:\n`;
+      result += `- User feedback reveals WHAT users want, not necessarily WHAT we should build\n`;
+      result += `- Consider contradictions as indicators of needed configurability\n`;
+      result += `- Market research shows landscape, not required direction\n`;
+    } else if (context === 'test_design') {
+      result += `\n### Test Design Guidance\n\n`;
+      result += `When using this context for test design:\n`;
+      result += `- User scenarios provide realistic test cases\n`;
+      result += `- Domain knowledge helps identify valid test data\n`;
+      result += `- Specifications define integration requirements\n`;
+    }
+
+    return {
+      content: [{
+        type: 'text',
+        text: result,
       }],
     };
   }

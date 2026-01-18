@@ -56,28 +56,49 @@ This project follows the FluxFrame development methodology - a documentation-fir
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state and recent changes |
 | `{{DOCS_DIR}}/ROADMAP.md` | High-level roadmap (Tier 1 - strategic) |
 | `{{DOCS_DIR}}/roadmap/` | Detailed cycle plans (Tier 2 - tactical) |
-| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns |
+| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns (PRESCRIPTIVE) |
+| `{{DOCS_DIR}}/reference_library/` | Real-world context, user research, market data (DESCRIPTIVE) |
+
+### Reference Library (Descriptive Context)
+
+The Reference Library stores DESCRIPTIVE information (what the real world looks like) as opposed to PRESCRIPTIVE documentation (patterns, workflows, rules).
+
+**Key Distinction:**
+- **Prescriptive docs** (patterns/, workflows/, context_master_guide.md) → Tell you WHAT to do and HOW
+- **Descriptive docs** (reference_library/) → Tell you WHAT EXISTS in the real world
+
+**The Reference Library INFORMS decisions but does NOT DICTATE them.**
+
+| Category | Contents |
+|----------|----------|
+| `open_questions/` | Research topics and unanswered questions |
+| `correspondence/` | Emails, Slack threads, meeting notes |
+| `user_research/` | Interviews, feedback, usage scenarios |
+| `market_research/` | Competitor analysis, industry reports |
+| `domain_knowledge/` | Expert input, terminology, business context |
+| `specifications/` | External specs, PDFs, partner docs |
+
+**Important:** Contradictions within the Reference Library are valuable information, not problems to solve.
 
 ---
 
 ## Development Workflow
 
-### Before Starting Any Cycle
+### Before Implementation (Preparation Gate)
 
-**CRITICAL: Planning-First Approach**
+**Process Rule:** You are prohibited from writing code until you pass this gate.
 
-Before implementing ANY development cycle:
-
-1. **Call `start_cycle_planning(cycle_id)`** - Initiate planning for the cycle
-2. **Research the feature** - Understand problem, check patterns, review codebase
-3. **Call `analyze_cycle_scope()`** - Get complexity score and decomposition recommendation
-4. **If complexity > 10: MUST decompose** - Break into smaller sub-cycles
-5. **Call `create_cycle_plan()`** - Create detailed plan in `roadmap/`
-6. **Fill ALL required sections** - See mandatory sections below
-7. **Review with user** - Walk through the plan together
-8. **Call `approve_cycle_plan()`** - Validate and mark ready
-
-**Only THEN proceed with implementation.**
+1. **Context & Patterns**:
+   - Call `check_pattern_exists(description)` to find prescriptive patterns.
+   - **Crucial**: You must explicitly confirm if a pattern exists or not.
+2. **Planning**:
+   - Call `start_cycle_planning(cycle_id)`.
+   - Call `analyze_cycle_scope()` -> If > 10, DECOMPOSE.
+   - Create detailed plan in `roadmap/` if scope > 3.
+3. **Approval**:
+   - Review plan with user.
+   - Call `approve_cycle_plan()`.
+   - Only AFTER approval can you start the "Execution" phase.
 
 ### Cycle Plan Required Sections
 
@@ -113,9 +134,10 @@ When implementing an approved cycle plan:
 ### Before Any Implementation
 
 1. **Read Context** - Review `{{DOCS_DIR}}/context_master_guide.md` for full project context
-2. **Check Patterns** - Search `{{DOCS_DIR}}/patterns/` for existing solutions
-3. **Read Status** - Check `{{DOCS_DIR}}/technical_status.md` for current state
-4. **Review Cycle Plan** - Follow the approved plan in `{{DOCS_DIR}}/roadmap/`¬
+2. **Check Patterns** - Search `{{DOCS_DIR}}/patterns/` for existing solutions (PRESCRIPTIVE)
+3. **Check Reference Library** - Search `{{DOCS_DIR}}/reference_library/` for relevant user research, domain knowledge (DESCRIPTIVE)
+4. **Read Status** - Check `{{DOCS_DIR}}/technical_status.md` for current state
+5. **Review Cycle Plan** - Follow the approved plan in `{{DOCS_DIR}}/roadmap/`
 
 ### During Implementation
 
@@ -125,13 +147,22 @@ When implementing an approved cycle plan:
 - **Write Aligned Tests** - Tests should validate actual behavior
 - **Follow the Plan** - Stick to the approved implementation plan
 
-### After Implementation
+### After Implementation (Validation Gate)
 
-1. **Get User Confirmation** - Never document until user confirms the change works
-2. **Update ALL Affected Documentation** - technical_status.md, patterns/, workflows/
-3. **Document New Patterns** - If solution is reusable, add to pattern library
-4. **Update Implementation Plan** - Mark cycle as complete, document any deviations
-5. **Call `validate_cycle_completion()`** - Verify all completion criteria met
+**Process Rule:** You are prohibited from declaring a cycle "complete" without passing this gate.
+
+1. **User Confirmation**: Demonstrate functionality and get explicit user approval ("yes, it works").
+2. **Tool Validation (MANDATORY)**:
+   - Call `get_completion_checklist()` to get the project-specific validation criteria.
+   - **Crucial**: If you have not called this tool, you are NOT ready to complete.
+3. **Execute Checklist**:
+   - Fulfill every item in the returned checklist.
+   - Update `technical_status.md` (Required).
+   - Update `ROADMAP.md` (Required).
+   - Document patterns/workflows if changed.
+4. **Final Validation**:
+   - Call `validate_cycle_completion()`.
+   - Only NOW is the cycle complete.
 
 ---
 
@@ -166,14 +197,20 @@ After implementing a reusable solution:
 
 For bug fixes, refinements, and modifications:
 
-### 1. Initialize
-- Identify the issue clearly
-- Classify: bug, refinement, requirement change, misinterpretation
+### 1. Initialization Gate (MANDATORY)
 
-### 2. Analyze (No Code Changes Yet)
-- Find root cause
-- Understand impact
-- Propose fix approach
+**Process Rule:** You are prohibited from fixing bugs without this initialization.
+
+1. **Classify**:
+   - If user says "Bug", it is a BUG. Do not reclassify.
+2. **Initialize Tool**:
+   - Call `start_change_request(...)` with description and severity.
+   - **STOP**: This tool call is the required entry point.
+
+### 2. Analysis Phase (No Code Changes)
+- Investigate root cause.
+- Understand impact.
+- **Rule:** Write NO code until analysis is complete.
 
 ### 3. Iterate
 - Make targeted changes
@@ -279,7 +316,8 @@ Always use the current date from environment details, not training data dates.
 - [ ] Check technical_status.md
 - [ ] Call `get_implementation_roadmap()` to see cycle status
 - [ ] Identify task type (new cycle, continue cycle, bug fix)
-- [ ] Search patterns for existing solutions
+- [ ] Search patterns for existing solutions (PRESCRIPTIVE)
+- [ ] Check reference_library for relevant context (DESCRIPTIVE)
 
 ### Before Starting a New Cycle
 - [ ] Call `start_cycle_planning(cycle_id)` 

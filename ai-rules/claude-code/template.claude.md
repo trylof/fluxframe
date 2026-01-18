@@ -52,7 +52,11 @@ When the FluxFrame MCP server is connected, use these tools:
 **Context Gathering:**
 - `get_context_for_task` - Extract relevant context from master guide
 - `get_current_implementation_status` - Read technical_status.md
-- `check_pattern_exists` - Search pattern library
+- `check_pattern_exists` - Search pattern library (PRESCRIPTIVE)
+
+**Reference Library (Descriptive Context):**
+- `search_reference_library` - Search user research, market data, domain knowledge
+- `get_reference_library_overview` - See what real-world context is available
 
 **Workflow Management:**
 - `validate_workflow_documentation` - Check if docs need updates
@@ -103,4 +107,5 @@ Rules in `.claude/rules/` are automatically loaded when working on matching file
 - Always check patterns before implementing new features
 - Never document during iteration - only after user confirmation
 - Update ALL affected documentation when marking work complete
+- Call `get_completion_checklist` BEFORE marking work complete
 - Use MCP tools for context gathering when available

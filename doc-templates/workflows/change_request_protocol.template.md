@@ -32,6 +32,23 @@ This protocol ensures that ALL changes to existing code - whether bug fixes, ref
 
 ---
 
+## Handling Complex Bugs
+
+**Defining "Complex":**
+- Requires schema changes
+- Requires data migration
+- Affects many files (>10)
+- Requires refactoring
+
+**Rule:** **Complex bugs are STILL BUGS.**
+
+**DO NOT** switch to the Cycle Workflow just because a bug fix is complex.
+- **Why?** Cycles are for *New Value*. Change Requests are for *Restoring Correctness*.
+- **How to handle:** Use the "Phase 2: Iteration" of this protocol to plan and execute the complex fix.
+- **You CAN** create a mini-plan within the Change Request if needed, but do NOT execute `create_cycle_plan`.
+
+---
+
 ## The Anti-Pattern (What NOT to Do)
 
 ```
@@ -367,17 +384,35 @@ close_change_request(
 
 ---
 
-## Classification Guide
+## Classification Rules (MANDATORY)
 
-### Bug
-**What:** Something broken/incorrect  
-**Example:** "API returns 500 error on valid input"  
-**Fix approach:** Root cause analysis → Fix → Test → Document
+### User Classification Takes Precedence
+If the user explicitly labels something as a "bug", classify it as a bug.
+Do NOT reclassify based on perceived complexity or scope.
 
-### Refinement
-**What:** Works but could be better  
-**Example:** "Upload shows no progress indicator"  
-**Fix approach:** Understand improvement → Implement → Validate UX → Document
+### Bug Definition (Expanded)
+A bug is "something broken or incorrect", including:
+- Code that crashes or errors
+- **Data inconsistency** (fields showing conflicting information)
+- **Misleading UI state** (user sees incorrect/contradictory data)
+- Behavior that doesn't match documented/expected behavior
+
+### Refinement Definition (Tightened)
+A refinement is "works correctly but could be improved":
+- UX polish (styling, layout improvements)
+- Performance optimization (when current is acceptable)
+- Code cleanup (when behavior is correct)
+
+**Key distinction:** If users see INCORRECT information → Bug. If users see correct but UGLY information → Refinement.
+
+### Complexity Does NOT Change Classification
+A bug requiring 7 files to fix is still a bug.
+A bug requiring schema migration is still a bug.
+The scope of the FIX does not change the nature of the PROBLEM.
+
+### Never "Promote" Bugs to Cycles
+Bug fixes belong in `bug_fixes/` directory and follow the change request workflow.
+Do NOT create cycle implementation plans for bugs, regardless of complexity.
 
 ### Requirement Change
 **What:** Specs changed, need to adapt  

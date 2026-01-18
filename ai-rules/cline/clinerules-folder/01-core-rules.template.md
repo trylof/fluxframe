@@ -63,8 +63,16 @@ Documentation during iteration leads to:
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state |
 | `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles |
-| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns |
+| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns (PRESCRIPTIVE) |
+| `{{DOCS_DIR}}/reference_library/` | Real-world context, research (DESCRIPTIVE) |
 | `AGENTS.md` | Full agent guidelines |
+
+### Reference Library
+
+The `reference_library/` stores DESCRIPTIVE information that INFORMS but doesn't DICTATE decisions:
+- `user_research/` - User feedback, interviews, usage scenarios
+- `domain_knowledge/` - Expert input, terminology, business context
+- `market_research/` - Competitor analysis, industry reports
 
 ---
 
@@ -86,7 +94,11 @@ When FluxFrame MCP server is connected:
 **Context:**
 - `get_context_for_task(task_type)` - Get relevant context
 - `get_current_implementation_status()` - Read status
-- `check_pattern_exists(feature_description)` - Search patterns
+- `check_pattern_exists(feature_description)` - Search patterns (PRESCRIPTIVE)
+
+**Reference Library:**
+- `search_reference_library(query, category, context)` - Search real-world context (DESCRIPTIVE)
+- `get_reference_library_overview()` - See what context is available
 
 **Changes:**
 - `start_change_request(...)` - Begin change tracking

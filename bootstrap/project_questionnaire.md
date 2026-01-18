@@ -510,6 +510,67 @@ Choose option (1-2):
 
 ---
 
+## Seed Data & Test Fixtures (ALWAYS OFFERED)
+
+### Q-Data: Seed Data Setup
+
+**Context:** A `seed_data/` directory will be created for your project to provide:
+- Sample data for AI agents to understand your domain when building features
+- Test fixtures for automated testing
+- Development data for UI rendering and local development
+
+This is crucial regardless of whether your final app needs data in production.
+
+**Ask:**
+```
+How detailed should your initial seed data setup be?
+
+1. **Full Setup** - Generate example fixtures based on your domain
+   - Starter fixtures inferred from your tech stack/entities
+   - Schema definitions for your data models
+   - Example factory functions
+   - Best for: Projects with clear domain entities
+
+2. **Basic Structure** - Empty directories ready to fill
+   - Directory structure created (fixtures/, samples/, factories/, schemas/)
+   - README with instructions
+   - .gitkeep files in all subdirectories
+   - Best for: Projects where domain is still being defined
+
+3. **Minimal** - Just the README
+   - Only seed_data/README.md explaining the structure
+   - Add directories as needed later
+   - Best for: Very early exploration
+
+Choose option (1-3):
+```
+
+**Default:** Option 2 (Basic Structure)
+
+### Q-Data Follow-up (If Option 1 Chosen)
+
+**Ask:**
+```
+For your domain fixtures, what format do you prefer?
+
+1. **JSON** (Default) - Simple, universal, easy to edit
+2. **YAML** - More readable for complex structures
+3. **Code-based factories** - TypeScript/Python/etc. functions that generate data
+
+And what are your primary domain entities? (I'll infer from your database/API if possible)
+Examples: Users, Products, Orders, Tasks, etc.
+```
+
+### Impact of Q-Data Answer
+
+| Choice | What Gets Created |
+|--------|-------------------|
+| **Full Setup** | seed_data/ with README, all subdirectories, starter fixtures, schemas |
+| **Basic Structure** | seed_data/ with README, all subdirectories with .gitkeep |
+| **Minimal** | seed_data/ with README.md only |
+
+**Note:** The `seed_data/` directory is always created (like pattern files). This question determines content depth, not existence.
+
 ---
 
 ## Infrastructure & Environment Strategy (MANDATORY - CANNOT BE SKIPPED)
@@ -1230,6 +1291,7 @@ Your choice?
 | API contracts | If has backend | If not in rules | If has backend |
 | Docs location | Always (offer default) | Keep existing | Ask preference |
 | Verification env | Always | If not in rules | Always |
+| **Q-Data Seed Data** | **ALWAYS OFFER** | **ALWAYS OFFER** | **ALWAYS OFFER** |
 | **Q8 Environment Map** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
 | **Q9 Config/Secrets** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |
 | **Q10 IaC** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** | **ALWAYS (MANDATORY)** |

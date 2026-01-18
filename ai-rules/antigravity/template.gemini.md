@@ -47,19 +47,36 @@ This project follows the FluxFrame development methodology.
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state |
 | `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles |
-| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns |
+| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns (PRESCRIPTIVE) |
+| `{{DOCS_DIR}}/reference_library/` | Real-world context, research (DESCRIPTIVE) |
 | `AGENTS.md` | Full agent guidelines |
+
+### Reference Library (Descriptive Context)
+
+The `reference_library/` stores DESCRIPTIVE information that INFORMS but doesn't DICTATE decisions:
+- `open_questions/` - Research topics and unanswered questions
+- `user_research/` - User feedback, interviews, usage scenarios
+- `domain_knowledge/` - Expert input, terminology, business context
+- `market_research/` - Competitor analysis, industry reports
+- `specifications/` - External specs, partner documentation
+
+**Key:** Contradictions in the library are valuable information, not problems to solve.
 
 ---
 
 ## Development Workflow
 
-### BEFORE Phase (Context Gathering)
+### BEFORE Phase (Preparation Gate)
 
-1. Read `{{DOCS_DIR}}/context_master_guide.md` for full context
-2. Check `{{DOCS_DIR}}/patterns/` for existing solutions
-3. Read `{{DOCS_DIR}}/technical_status.md` for current state
-4. Understand scope before starting
+**Process Rule:** Do not write code until this gate is passed.
+
+1. **Context & Patterns (MANDATORY)**:
+   - Call `check_pattern_exists()` to search specifically for patterns.
+2. **Planning**:
+   - Call `start_cycle_planning()` if starting a cycle.
+   - Verify scope and requirements.
+3. **Approval**:
+   - Get explicit user approval on the plan.
 
 ### DURING Phase (Implementation)
 
@@ -68,11 +85,19 @@ This project follows the FluxFrame development methodology.
 - **Follow Existing Patterns** - Use patterns exactly
 - **Write Aligned Tests** - Tests validate actual behavior
 
-### AFTER Phase (Documentation)
+### AFTER Phase (Documentation & Validation)
 
-1. **Get User Confirmation** - Don't document until user confirms
-2. **Update Documentation** - technical_status.md, patterns/, etc.
-3. **Document New Patterns** - If solution is reusable
+**CRITICAL RULE**: You CANNOT declare completion without this validation sequence.
+
+1. **User Confirmation**: Get explicit "it works" from user.
+2. **Validation Gate (MANDATORY)**:
+   - Call `get_completion_checklist()` tool.
+   - **STOP**: Do not proceed until you have the checklist output.
+3. **Execution**:
+   - Verify every item in the checklist is done.
+   - Update `technical_status.md` and `ROADMAP.md`.
+4. **Finalize**:
+   - Call `validate_cycle_completion()`.
 
 ---
 
@@ -94,8 +119,12 @@ All patterns: `{{DOCS_DIR}}/patterns/`
 
 For bugs, refinements, and modifications:
 
-1. **Initialize** - Identify and classify the issue
-2. **Analyze** - Find root cause (no code changes yet)
+### 1. Initialization Gate (MANDATORY)
+
+**Process Rule:** Do not fix bugs without initialization.
+
+1. **Initialize**: Call `start_change_request()` tool.
+2. **Analysis**: Find root cause (no code changes yet).
 3. **Iterate** - Make changes, test, refine
 4. **Confirm** - User validates the fix works
 5. **Document** - Only after confirmation
@@ -156,10 +185,12 @@ Use current date from environment, not training data dates.
 - [ ] Read context_master_guide.md
 - [ ] Check technical_status.md
 - [ ] Identify task type
-- [ ] Search patterns
+- [ ] Search patterns (PRESCRIPTIVE)
+- [ ] Check reference_library (DESCRIPTIVE)
 
 ### Before Code
 - [ ] Pattern search completed
+- [ ] Reference library checked for context
 - [ ] Understand current state
 - [ ] Clear acceptance criteria
 

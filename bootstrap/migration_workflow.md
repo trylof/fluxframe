@@ -231,9 +231,15 @@ Map existing docs to FluxFrame structure:
 | `docs/api/` | `api_contract_standards.md` | Partial - needs structuring |
 | `CHANGELOG.md` | Part of `technical_status.md` | Reference |
 | `docs/conventions/` | `patterns/` | Good match - migrate |
+| `fixtures/` or `test_data/` | `seed_data/` | Migrate or symlink |
+| `user_research/`, `market_research/`, `specs/` | `reference_library/` | Migrate or reference |
 | None found | `ROADMAP.md` | Create new |
 | None found | `workflows/` | Create new |
+| None found | `reference_library/` | Create new |
 ```
+
+**Note on Reference Library:**
+The Reference Library stores DESCRIPTIVE information (real-world context, user research, external inputs) as opposed to PRESCRIPTIVE documentation (patterns, workflows). If the project has existing user research, market analysis, correspondence archives, or external specifications, these should be considered for migration to `reference_library/`.
 
 ### Step 1.4: Identify Content for Each FluxFrame Document
 
@@ -255,6 +261,19 @@ Map existing docs to FluxFrame structure:
 - UI patterns (from: ___)
 - API patterns (from: ___)
 
+**seed_data/ needs:**
+- Test fixtures (from: ___)
+- Sample data for AI context (from: ___ or create new)
+- Data factories (from: ___)
+- Data schemas (from: ___ or infer from models)
+
+**reference_library/ needs:**
+- User research/feedback (from: ___ or create new)
+- Market research/competitor analysis (from: ___ or create new)
+- Domain knowledge/terminology (from: ___ or create new)
+- External specifications (from: ___ or create new)
+- Correspondence archives (from: ___ or create new)
+
 ### Step 1.5: Detect Existing Infrastructure
 
 Analyze the codebase for infrastructure configuration:
@@ -269,6 +288,21 @@ Analyze the codebase for infrastructure configuration:
 - [ ] `terraform/` or `infra/` - Infrastructure as Code
 - [ ] `vercel.json`, `netlify.toml`, `railway.json` - Platform configs
 - [ ] Cloud provider configs (AWS, GCP, Azure)
+
+### Seed Data / Test Fixtures Found
+- [ ] `seed_data/` - FluxFrame standard location
+- [ ] `fixtures/` or `__fixtures__/` - Common test fixtures location
+- [ ] `test_data/` or `testdata/` - Alternative test data location
+- [ ] `seeds/` or `db/seeds/` - Database seeding location
+- [ ] `mocks/` or `__mocks__/` - Mock data location
+- [ ] `factories/` - Factory functions location
+- [ ] Within test directories (`tests/fixtures/`, `spec/fixtures/`, etc.)
+
+**Seed Data Assessment:**
+- **Format:** [JSON/YAML/SQL/Code-based/Mixed]
+- **Coverage:** [Which entities have fixtures?]
+- **Quality:** [Well-organized or scattered?]
+- **Test integration:** [How do tests import fixtures?]
 
 ### Inferred Environments
 Based on detected files and configs:
@@ -503,6 +537,15 @@ Before we proceed with migration, here's what a complete FluxFrame setup provide
 - [ ] Secrets management documentation
 - [ ] IaC configuration (if applicable)
 
+### Reference Library (Descriptive Context)
+- [ ] `reference_library/README.md` - Index and philosophy **(REQUIRED)**
+- [ ] `reference_library/open_questions/` - Research topics and unanswered questions
+- [ ] `reference_library/correspondence/` - Emails, meeting notes, stakeholder input
+- [ ] `reference_library/user_research/` - Interviews, feedback, usage scenarios
+- [ ] `reference_library/market_research/` - Competitor analysis, industry reports
+- [ ] `reference_library/domain_knowledge/` - Expert input, terminology, business context
+- [ ] `reference_library/specifications/` - External specs, PDFs, partner documentation
+
 ### Optional Features
 - [ ] Browser automation setup (Claude Chrome, Puppeteer)
 - [ ] Log access configuration (observability)
@@ -700,9 +743,11 @@ Based on location decision:
 ```bash
 # If using FluxFrame standard
 mkdir -p project_docs/{patterns,workflows,roadmap,bugs}
+mkdir -p project_docs/reference_library/{open_questions,correspondence,user_research,market_research,domain_knowledge,specifications}
 
 # If using existing location
 mkdir -p [detected_path]/{patterns,workflows,roadmap,bugs}
+mkdir -p [detected_path]/reference_library/{open_questions,correspondence,user_research,market_research,domain_knowledge,specifications}
 ```
 
 ### Step 3.3: Process Each Category
@@ -975,6 +1020,76 @@ Create MCP server configured for:
 - Pattern library location
 - Bug fixes location
 - Any custom paths from migration
+
+### Step 4.4.5: Seed Data Migration (ALWAYS)
+
+**Purpose:** Ensure project has FluxFrame-standard seed data structure, migrating existing fixtures if found.
+
+**If seed data/fixtures were found in Phase 1.5:**
+
+Present migration options based on what was detected:
+
+```markdown
+## Seed Data Migration Options
+
+I found existing test fixtures/seed data:
+- Location(s): [DETECTED_LOCATIONS]
+- Format: [FORMAT]
+- Entities covered: [LIST]
+
+**Migration Options:**
+
+1. **Full Migration** - Move all fixtures to seed_data/ with FluxFrame organization
+   - Preserves existing data
+   - Reorganizes into fixtures/, samples/, factories/, schemas/
+   - Updates test imports (may require code changes)
+
+2. **Copy & Reorganize** - Copy to seed_data/, keep originals
+   - Both locations coexist
+   - Original tests unchanged
+   - New FluxFrame structure available for AI context
+
+3. **Symlink Integration** - Create seed_data/ with symlinks to existing locations
+   - No file moves
+   - Single source of truth
+   - Tests unchanged
+
+4. **Reference Only** - Create seed_data/README.md pointing to existing locations
+   - Minimal changes
+   - Documents where data lives
+   - No reorganization
+
+Your choice?
+```
+
+**If no seed data/fixtures were found:**
+
+Create FluxFrame standard structure:
+```bash
+mkdir -p seed_data/fixtures
+mkdir -p seed_data/samples
+mkdir -p seed_data/factories
+mkdir -p seed_data/schemas
+```
+
+Generate `seed_data/README.md` from template.
+
+**For any choice, always:**
+1. Create `seed_data/README.md` explaining the project's seed data approach
+2. Update `patterns/data_patterns.md` with fixture and factory patterns
+3. Add seed data section to context_master_guide.md
+
+**Content generation based on Q-Data answer:**
+- **Full Setup:** Generate starter samples based on detected domain entities
+- **Basic Structure:** Create directories with .gitkeep files
+- **Minimal:** Just create seed_data/README.md
+
+**Validation:**
+- [ ] seed_data/ directory exists (or symlinks configured)
+- [ ] seed_data/README.md explains the project's data approach
+- [ ] Existing fixtures accessible (migrated, symlinked, or referenced)
+- [ ] data_patterns.md includes seed data patterns
+- [ ] No broken test imports (if fixtures were moved)
 
 ---
 
@@ -1393,6 +1508,8 @@ Create `ROADMAP.md` based on:
 - [ ] patterns/ has initial content or index
 - [ ] workflows/ has FluxFrame protocols
 - [ ] bugs/ structure in place
+- [ ] reference_library/ structure created with README.md
+- [ ] Existing research/correspondence migrated or referenced (if applicable)
 
 ### AI Configuration
 - [ ] AGENTS.md created with correct paths

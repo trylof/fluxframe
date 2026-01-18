@@ -14,6 +14,7 @@
 | Development roadmap | `{{DOCS_DIR}}/ROADMAP.md` |
 | Bug tracker | `{{DOCS_DIR}}/BUGS.md` |
 | Pattern library | `{{DOCS_DIR}}/patterns/` |
+| **Reference library** | `{{DOCS_DIR}}/reference_library/` |
 | AI rules | `AGENTS.md` {{TOOL_SPECIFIC_FILES}} |
 | MCP server | `mcp-server.js` |
 
@@ -51,14 +52,22 @@
 {{DOCS_DIR}}/
 ├── context_master_guide.md    # Single source of truth
 ├── technical_status.md        # Current project state
-├── ROADMAP.md     # Roadmap & cycles
+├── ROADMAP.md                 # Roadmap & cycles
 ├── api_contract_standards.md  # API enforcement (if applicable)
-├── patterns/                  # Your pattern library
+├── patterns/                  # Prescriptive: Your pattern library
 │   ├── README.md
 │   ├── api_patterns.md
 │   ├── ui_patterns.md
 │   └── data_patterns.md
-├── roadmap/      # Detailed cycle plans
+├── reference_library/         # Descriptive: Real-world context
+│   ├── README.md              # Philosophy & guidelines
+│   ├── open_questions/        # Research topics & questions
+│   ├── correspondence/        # Emails, meeting notes
+│   ├── user_research/         # Interviews, feedback
+│   ├── market_research/       # Competitor analysis
+│   ├── domain_knowledge/      # Expert input, terminology
+│   └── specifications/        # External specs, PDFs
+├── roadmap/                   # Detailed cycle plans
 └── bugs/                      # Bug fix plans
 ```
 
@@ -213,6 +222,45 @@ FluxFrame is designed to be removed after bootstrap. Your project-specific docum
 - **Pattern Library System:** See `{{DOCS_DIR}}/patterns/README.md` for how to create and maintain patterns
 - **Development Cycles:** The two-tier planning system is documented in `ROADMAP.md`
 - **API Contracts:** {{API_APPROACH_SECTION}}
+- **Reference Library:** See `{{DOCS_DIR}}/reference_library/README.md` for philosophy and guidelines
+
+---
+
+## The Reference Library
+
+### Descriptive vs Prescriptive Documentation
+
+FluxFrame distinguishes between two types of documentation:
+
+| Type | Examples | Purpose |
+|------|----------|---------|
+| **Prescriptive** | patterns/, workflows/, context_master_guide.md | Tell you WHAT to do and HOW |
+| **Descriptive** | reference_library/ | Tell you WHAT EXISTS in the real world |
+
+### What Goes in the Reference Library
+
+The `reference_library/` stores real-world context that **informs but doesn't dictate** decisions:
+
+- **correspondence/** - Stakeholder emails, Slack threads, meeting notes
+- **user_research/** - User interviews, feedback, usage scenarios
+- **market_research/** - Competitor analysis, industry reports
+- **domain_knowledge/** - Expert input, terminology, business context
+- **specifications/** - External specs, PDFs, partner documentation
+
+### Key Principles
+
+1. **Informs, doesn't dictate** - You may intentionally deviate from user wishes or market trends
+2. **Contradictions are valuable** - Different user needs reveal complexity; don't resolve artificially
+3. **Date and source everything** - Context changes; attribution matters
+
+### When to Consult
+
+- **Before planning features** - Check user_research/ for relevant needs
+- **When designing tests** - Reference real usage scenarios
+- **When making product decisions** - Consider market context
+- **When understanding domain** - Consult domain_knowledge/
+
+See `{{DOCS_DIR}}/reference_library/README.md` for detailed guidelines.
 
 ---
 

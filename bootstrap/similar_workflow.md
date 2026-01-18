@@ -182,6 +182,14 @@ Create a complete inventory of the existing setup:
 - **Exists:** [Yes/No]
 - **Location:** [path if exists]
 - **Configured:** [Yes/No/Partial]
+
+### Seed Data / Test Fixtures
+- **Exists:** [Yes/No]
+- **Location(s):** [seed_data/, fixtures/, test_data/, mocks/, __fixtures__/, etc.]
+- **Format:** [JSON/YAML/SQL/Code-based/Mixed]
+- **Categories found:**
+  - [List entity types with fixtures, e.g., "users", "tasks", "products"]
+- **Integration:** [How tests import fixtures, if detectable]
 ```
 
 ### Step 1.2: Read and Understand Content
@@ -222,6 +230,14 @@ Analyze the codebase for infrastructure configuration:
 - [ ] `terraform/` or `infra/` - Infrastructure as Code
 - [ ] `vercel.json`, `netlify.toml`, `railway.json` - Platform configs
 - [ ] Cloud provider configs (AWS, GCP, Azure)
+
+### Seed Data Directories Found
+- [ ] `seed_data/` - FluxFrame standard location
+- [ ] `fixtures/` or `__fixtures__/` - Common test fixtures location
+- [ ] `test_data/` or `testdata/` - Alternative test data location
+- [ ] `seeds/` - Database seeding location
+- [ ] `mocks/` - Mock data location
+- [ ] `factories/` - Factory functions location
 
 ### Inferred Environments
 Based on detected files and configs:
@@ -459,6 +475,19 @@ Before we proceed, here's what a complete FluxFrame setup provides. I'll then sh
 - [ ] Environment matrix (dev/test/staging/prod)
 - [ ] Secrets management documentation
 - [ ] IaC configuration (if applicable)
+
+### Reference Library (Descriptive Context)
+
+> [!NOTE]
+> The Reference Library stores DESCRIPTIVE information (real-world context) as opposed to PRESCRIPTIVE documentation (patterns, workflows). It INFORMS decisions but doesn't DICTATE them.
+
+- [ ] `reference_library/README.md` - Index and philosophy (descriptive vs prescriptive) **(REQUIRED)**
+- [ ] `reference_library/open_questions/` - Research topics and unanswered questions
+- [ ] `reference_library/correspondence/` - Emails, meeting notes, stakeholder input
+- [ ] `reference_library/user_research/` - Interviews, feedback, usage scenarios
+- [ ] `reference_library/market_research/` - Competitor analysis, industry reports
+- [ ] `reference_library/domain_knowledge/` - Expert input, terminology, business context
+- [ ] `reference_library/specifications/` - External specs, PDFs, partner documentation
 
 ### Optional Features
 - [ ] Browser automation setup (Claude Chrome, Puppeteer)
@@ -850,6 +879,14 @@ If environments need setup, suggest adding to ROADMAP.md:
 - [ ] mcp-server.js - [missing - create]
 - [ ] package.json updates - [needed]
 
+### Seed Data
+- [ ] seed_data/ directory - [missing/exists at different location]
+- [ ] seed_data/README.md - [missing - create]
+- [ ] fixtures/ - [exists at __fixtures__/ - migrate or symlink?]
+- [ ] samples/ - [missing - create for AI context]
+- [ ] factories/ - [exists/missing]
+- [ ] schemas/ - [missing - create]
+
 ### Other
 - [ ] Workflow documentation - [needed]
 ```
@@ -913,6 +950,48 @@ If MCP server exists but is different:
 - [ ] All placeholders replaced
 - [ ] Tool sections match configured tools
 - [ ] References existing user documentation correctly
+
+### Step 5.4.5: Seed Data Setup (ALWAYS)
+
+**Purpose:** Ensure project has FluxFrame-standard seed data structure for AI context, testing, and development.
+
+**If seed data exists at different location:**
+
+Present migration options:
+```
+I found existing test fixtures/seed data at: [DETECTED_LOCATION]
+
+Options:
+1. **Migrate to FluxFrame structure** - Move/copy to seed_data/ with FluxFrame organization
+2. **Create symlinks** - Keep existing location, create seed_data/ with symlinks
+3. **Parallel structure** - Create seed_data/ alongside existing location
+4. **Reference only** - Create seed_data/README.md pointing to existing location
+
+Your choice?
+```
+
+**If no seed data exists:**
+
+Create FluxFrame standard structure:
+```bash
+mkdir -p seed_data/fixtures
+mkdir -p seed_data/samples
+mkdir -p seed_data/factories
+mkdir -p seed_data/schemas
+```
+
+Generate `seed_data/README.md` from template.
+
+**Content generation based on Q-Data answer:**
+- **Full Setup:** Generate starter fixtures based on detected domain entities
+- **Basic Structure:** Create directories with .gitkeep files
+- **Minimal:** Just create seed_data/README.md
+
+**Validation:**
+- [ ] seed_data/ directory exists (or symlinks configured)
+- [ ] seed_data/README.md created with project-specific instructions
+- [ ] Existing fixtures integrated or referenced
+- [ ] data_patterns.md updated with seed data patterns
 
 ---
 

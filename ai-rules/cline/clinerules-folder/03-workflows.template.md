@@ -62,6 +62,12 @@ FluxFrame uses systematic development cycles ({{CYCLE_TYPE_PLURAL}}).
    ```
    MCP: get_completion_checklist()
    ```
+
+   **Cycle Completion Protocol:**
+   1. MUST call `get_completion_checklist` FIRST
+   2. Verify each item systematically
+   3. Fix any gaps before declaring complete
+   4. Never skip this step
    
    Update in order:
    - `{{DOCS_DIR}}/technical_status.md` (always)

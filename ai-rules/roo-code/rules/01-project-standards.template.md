@@ -22,14 +22,26 @@ This project follows the FluxFrame methodology:
 | `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth | Rarely (foundational) |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state | After EVERY change |
 | `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles | When cycles complete |
-| `{{DOCS_DIR}}/patterns/` | Reusable solutions | When patterns discovered |
+| `{{DOCS_DIR}}/patterns/` | Reusable solutions (PRESCRIPTIVE) | When patterns discovered |
+| `{{DOCS_DIR}}/reference_library/` | Real-world context (DESCRIPTIVE) | When new research added |
+
+### Reference Library (Descriptive Context)
+
+The `reference_library/` stores DESCRIPTIVE information that INFORMS but doesn't DICTATE decisions:
+- `user_research/` - User feedback, interviews, usage scenarios
+- `domain_knowledge/` - Expert input, terminology, business context
+- `market_research/` - Competitor analysis, industry reports
+- `specifications/` - External specs, partner documentation
+
+**Key:** Contradictions in the library are valuable information, not problems to solve.
 
 ## Universal Rules
 
 ### Before Any Work
 1. Read `{{DOCS_DIR}}/context_master_guide.md` for full context
-2. Check `{{DOCS_DIR}}/patterns/` for existing solutions
-3. Read `{{DOCS_DIR}}/technical_status.md` for current state
+2. Check `{{DOCS_DIR}}/patterns/` for existing solutions (PRESCRIPTIVE)
+3. Check `{{DOCS_DIR}}/reference_library/` for relevant context (DESCRIPTIVE)
+4. Read `{{DOCS_DIR}}/technical_status.md` for current state
 
 ### During Implementation
 - Build real components, not stubs or placeholders
@@ -39,9 +51,13 @@ This project follows the FluxFrame methodology:
 
 ### After Implementation
 1. **Get user confirmation** before updating any docs
-2. Update `{{DOCS_DIR}}/technical_status.md` (always)
-3. Document new patterns in `{{DOCS_DIR}}/patterns/` (if applicable)
-4. Update other docs as needed
+2. **Cycle Completion Protocol:**
+   - MUST call `get_completion_checklist()` MCP tool FIRST
+   - Verify each item systematically
+   - Fix any gaps before declaring complete
+3. Update `{{DOCS_DIR}}/technical_status.md` (always)
+4. Document new patterns in `{{DOCS_DIR}}/patterns/` (if applicable)
+5. Update other docs as needed
 
 ### Critical Rule
 **NEVER document during iteration on a fix. Only after user confirms it works.**
@@ -53,7 +69,11 @@ Use these tools for context gathering and workflow management:
 ### Context Gathering
 - `get_context_for_task(task_type)` - Get relevant context
 - `get_current_implementation_status()` - Read technical_status.md
-- `check_pattern_exists(feature_description)` - Search pattern library
+- `check_pattern_exists(feature_description)` - Search pattern library (PRESCRIPTIVE)
+
+### Reference Library (Descriptive Context)
+- `search_reference_library(query, category, context)` - Search user research, domain knowledge
+- `get_reference_library_overview()` - See what real-world context is available
 
 ### Workflow Management
 - `validate_workflow_documentation(changes_made, description)` - Check doc needs
