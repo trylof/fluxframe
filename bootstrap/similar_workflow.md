@@ -1480,228 +1480,59 @@ Include this in handoff documentation.
 
 ---
 
-## Phase 7: Cleanup and Activate Project Rules
+## Phase 7: Finalize Bootstrap (Atomic)
 
-**CRITICAL:** After user confirms bootstrap is complete and working:
-1. **Activate merged project rules** by moving from staging to final locations
-2. **Remove FluxFrame template files** that are no longer needed
+**MANDATORY:** After user approves validation, finalization happens automatically. Do NOT ask for additional confirmation.
 
-### Why This Two-Step Process
+### Why Finalization Is Atomic
 
-During bootstrap, temporary "bootstrap-resume" rules existed at final locations (CLAUDE.md, AGENTS.md, etc.) telling the AI to continue bootstrap on restart. The MERGED project rules were generated to `.fluxframe-pending/` staging directory.
+Previous bootstrap iterations suffered from "soft completion" - agents would ask for cleanup confirmation, the user would context-switch, and cleanup never happened. The `finalize_bootstrap` MCP tool handles everything in one call.
 
-Now we:
-1. Replace temporary bootstrap-resume rules with merged project rules
-2. Remove all FluxFrame template/framework files
+### Step 7.1: Verify Ready
 
-### Step 7.1: Present Cleanup Summary
+Before calling finalization, verify:
+- `.fluxframe-pending/` directory has merged `AGENTS.md` and tool-specific rules
+- `mcp-server.js` exists at project root
+- `{{DOCS_DIR}}/` exists with generated documentation
 
-Ask user for confirmation:
+If anything is missing, fix it first. Otherwise, proceed immediately.
 
-```markdown
-## Cleanup: Activate Project Rules & Remove Templates
+### Step 7.2: Execute Finalization
 
-Your project upgrade is complete. I'll now:
-1. **Activate your merged AI rules** (move from staging to final locations)
-2. **Remove FluxFrame template files** that are no longer needed
+Call the `finalize_bootstrap` MCP tool. This atomically:
 
-### AI Rules to ACTIVATE (move from staging):
-- `.fluxframe-pending/AGENTS.md` → `AGENTS.md`
-- `.fluxframe-pending/CLAUDE.md` → `CLAUDE.md` (if generated)
-- `.fluxframe-pending/.clinerules/` → `.clinerules/` (if generated)
-- `.fluxframe-pending/.roomodes` → `.roomodes` (if generated)
-- `.fluxframe-pending/GEMINI.md` → `GEMINI.md` (if generated)
-- `.fluxframe-pending/.claude/` → `.claude/` (if generated)
-- `.fluxframe-pending/.roo/` → `.roo/` (if generated)
+1. **Activates merged rules** - moves from `.fluxframe-pending/` to final locations
+2. **Removes FluxFrame templates** - deletes `fluxframe/`, `.fluxframe-pending/`, `BOOTSTRAP_INSTRUCTIONS.md`
+3. **Updates README.md** - replaces with project-specific content
+4. **Cleans up state** - removes `.fluxframe-bootstrap-state.json`
 
-### Files to REMOVE (redundant templates):
-- `fluxframe/` - The entire FluxFrame directory (bootstrap complete)
-- `.fluxframe-pending/` - Staging directory (after moving files)
-- `.fluxframe-bootstrap-state.json` - Bootstrap state tracking (optional: keep as record)
+Note: `.fluxframe-backup/` is preserved for rollback.
 
-### Files that STAY (your project files):
-- `{{DOCS_DIR}}/` - Your project documentation
-- `AGENTS.md` - Your merged AI baseline rules (activated from staging)
-- `[tool-specific files]` - Your merged tool configurations (activated from staging)
-- `mcp-server.js` - Your MCP server
-- `package.json` - Your project config
-- `README.md` - Your project readme (will be updated)
-- `.fluxframe-backup/` - Your backup (keep until confident)
+After the tool completes:
+1. Call `sync_decisions_to_file` one final time
+2. Show the user the finalization summary
+3. **CRITICAL:** Guide user to replace bootstrap MCP with project `mcp-server.js` in their AI tool config
+4. Tell user to restart their AI tool
 
-Shall I activate your merged rules and remove the template files now?
-```
-
-### Step 7.2: Activate Project Rules (Move from Staging)
-
-**CRITICAL: Do this BEFORE removing FluxFrame directory**
-
-**Commands (Unix/macOS):**
-```bash
-# Move merged AI rules from staging to final locations
-# (overwrites temporary bootstrap-resume rules)
-
-# Universal baseline - always present
-mv .fluxframe-pending/AGENTS.md ./AGENTS.md
-
-# Claude Code (if generated)
-[ -f .fluxframe-pending/CLAUDE.md ] && mv .fluxframe-pending/CLAUDE.md ./CLAUDE.md
-[ -d .fluxframe-pending/.claude ] && rm -rf .claude && mv .fluxframe-pending/.claude ./.claude
-
-# Cline (if generated)
-[ -d .fluxframe-pending/.clinerules ] && rm -rf .clinerules && mv .fluxframe-pending/.clinerules ./.clinerules
-[ -f .fluxframe-pending/.clinerules ] && mv .fluxframe-pending/.clinerules ./.clinerules
-
-# Roo Code (if generated)
-[ -f .fluxframe-pending/.roomodes ] && mv .fluxframe-pending/.roomodes ./.roomodes
-[ -d .fluxframe-pending/.roo ] && rm -rf .roo && mv .fluxframe-pending/.roo ./.roo
-
-# Antigravity (if generated)
-[ -f .fluxframe-pending/GEMINI.md ] && mv .fluxframe-pending/GEMINI.md ./GEMINI.md
-
-# Cursor (if generated)
-[ -f .fluxframe-pending/.cursorrules ] && mv .fluxframe-pending/.cursorrules ./.cursorrules
-```
-
-**Commands (Windows PowerShell):**
-```powershell
-# Move merged AI rules from staging to final locations
-Move-Item -Force .fluxframe-pending\AGENTS.md .\AGENTS.md
-
-if (Test-Path .fluxframe-pending\CLAUDE.md) { Move-Item -Force .fluxframe-pending\CLAUDE.md .\CLAUDE.md }
-if (Test-Path .fluxframe-pending\.claude) { Remove-Item -Recurse -Force .\.claude -ErrorAction SilentlyContinue; Move-Item -Force .fluxframe-pending\.claude .\.claude }
-
-if (Test-Path .fluxframe-pending\.clinerules) { Remove-Item -Recurse -Force .\.clinerules -ErrorAction SilentlyContinue; Move-Item -Force .fluxframe-pending\.clinerules .\.clinerules }
-
-if (Test-Path .fluxframe-pending\.roomodes) { Move-Item -Force .fluxframe-pending\.roomodes .\.roomodes }
-if (Test-Path .fluxframe-pending\.roo) { Remove-Item -Recurse -Force .\.roo -ErrorAction SilentlyContinue; Move-Item -Force .fluxframe-pending\.roo .\.roo }
-
-if (Test-Path .fluxframe-pending\GEMINI.md) { Move-Item -Force .fluxframe-pending\GEMINI.md .\GEMINI.md }
-if (Test-Path .fluxframe-pending\.cursorrules) { Move-Item -Force .fluxframe-pending\.cursorrules .\.cursorrules }
-```
-
-### Step 7.3: Remove FluxFrame Template Files
-
-**Commands (Unix/macOS):**
-```bash
-# Remove the FluxFrame directory entirely
-rm -rf fluxframe/
-
-# Remove staging directory (should be empty or nearly empty now)
-rm -rf .fluxframe-pending/
-
-# Optional: Remove or keep bootstrap state as a record
-rm -f .fluxframe-bootstrap-state.json
-
-# Keep backup until user is confident: .fluxframe-backup/
-```
-
-**Commands (Windows PowerShell):**
-```powershell
-Remove-Item -Recurse -Force fluxframe -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force .fluxframe-pending -ErrorAction SilentlyContinue
-Remove-Item -Force .fluxframe-bootstrap-state.json -ErrorAction SilentlyContinue
-# Keep .fluxframe-backup until user is confident
-```
-
-### Step 7.4: Update README.md
-
-Replace FluxFrame's README with project-specific content:
+### Step 7.3: Final Confirmation
 
 ```markdown
-# [PROJECT_NAME]
+## Bootstrap Upgrade Finalized!
 
-[PROJECT_PURPOSE]
-
-## Quick Start
-
-[Basic setup instructions]
-
-## Development
-
-This project uses the FluxFrame methodology for AI-assisted development.
-
-### Documentation
-- See `{{DOCS_DIR}}/context_master_guide.md` for development guidelines
-- See `{{DOCS_DIR}}/technical_status.md` for current project state
-
-### AI Assistance
-- MCP Server: `npm run mcp`
-- AI Rules: See `AGENTS.md` and tool-specific configurations
-
-## License
-
-[License information]
-```
-
-### Step 7.5: Verify Cleanup Complete
-
-```bash
-# Verify only project files remain
-ls -la
-
-# Verify AI rules are now the real merged rules (not bootstrap-resume)
-head -5 AGENTS.md  # Should NOT say "Bootstrap In Progress"
-
-# Test MCP server still works
-node mcp-server.js
-
-# Verify docs still accessible
-ls {{DOCS_DIR}}/
-
-# Verify staging and fluxframe directories are gone
-[ -d .fluxframe-pending ] && echo "ERROR: staging still exists" || echo "OK: staging removed"
-[ -d fluxframe ] && echo "ERROR: fluxframe still exists" || echo "OK: fluxframe removed"
-
-# Verify backup is still available
-ls .fluxframe-backup/
-```
-
-**Validation:**
-- [ ] Only project files remain
-- [ ] No `fluxframe/` directory
-- [ ] No `.fluxframe-pending/` directory
-- [ ] `AGENTS.md` contains real merged project rules (not "Bootstrap In Progress")
-- [ ] Tool-specific rules (CLAUDE.md, .clinerules, etc.) contain real merged rules
-- [ ] MCP server still works
-- [ ] Documentation accessible
-- [ ] Backup still available at `.fluxframe-backup/`
-
-### Step 7.6: Final Confirmation
-
-```markdown
-## ✅ Bootstrap Upgrade Complete!
-
-Your project's merged AI rules are now active, and FluxFrame template files have been removed.
-
-### What Was Done:
-1. **Backed up original rules** to `.fluxframe-backup/pre-bootstrap/`
-2. **Merged your rules with FluxFrame** based on your decisions
-3. **Activated merged rules** - moved from staging to final locations
-4. **Removed templates** - FluxFrame directory and staging cleaned up
-
-### Your Project Now Contains:
-- Your documentation in `{{DOCS_DIR}}/`
-- Your bootstrap decisions log (`{{DOCS_DIR}}/bootstrap_decisions.md`) - **reference this for why choices were made**
-- Your merged AI rules (`AGENTS.md` + tool-specific files) - **now active**
-- Your MCP server (`mcp-server.js`)
-- Your preserved customizations
-- Your project configuration
+Your merged project rules are now active and all template files have been removed.
 
 **Backup available at:** `.fluxframe-backup/` (includes pre-bootstrap originals)
 
-**Your project is ready for development!**
-
-**Important:** The `bootstrap_decisions.md` file contains the reasoning behind all merge and configuration choices. Reference this when questions arise.
-
-**Next Steps:**
-1. Configure your project's MCP server in your AI tool (replace bootstrap MCP with project MCP)
-2. When starting your next development cycle:
+**IMPORTANT - Next Steps:**
+1. Update your AI tool's MCP config to use `mcp-server.js` (replace the bootstrap MCP)
+2. Restart your AI tool
+3. When starting your next development cycle, use the two-tier planning system:
    - Call `start_cycle_planning("[cycle_id]")` to initiate planning
    - Call `analyze_cycle_scope()` to assess complexity
    - Call `create_cycle_plan("[cycle_id]", "Cycle Name")` to create detailed plan
    - Get user approval, then call `approve_cycle_plan("[cycle_id]")`
-   - THEN start implementing
-3. Start developing! Use the two-tier planning system for all cycles.
+
+Your `{{DOCS_DIR}}/bootstrap_decisions.md` contains the reasoning behind all merge and configuration choices.
 ```
 
 ---
@@ -1729,7 +1560,7 @@ This project uses a two-tier implementation planning approach:
 
 ---
 
-## Final Success Criteria (After Cleanup)
+## Final Success Criteria (After Finalization)
 
 Bootstrap upgrade is fully complete when:
 
@@ -1740,7 +1571,7 @@ Bootstrap upgrade is fully complete when:
 5. ✅ No errors in any file
 6. ✅ User can read generated docs
 7. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md in docs directory)
-8. ✅ Template files cleaned up
+8. ✅ Template files cleaned up (via `finalize_bootstrap`)
 9. ✅ README.md updated for project
 10. ✅ Backup preserved for rollback
 11. ✅ Ready to define next cycle using two-tier planning system

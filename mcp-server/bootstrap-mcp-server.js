@@ -202,56 +202,21 @@ const BOOTSTRAP_WORKFLOW = {
     },
     {
       id: "phase_5",
-      name: "Cleanup",
-      description: "Remove FluxFrame template files",
+      name: "Finalization",
+      description: "Atomically activate project rules, clean up templates, and complete bootstrap",
       steps: [
         {
           id: "5.1",
-          name: "Present Cleanup Plan",
-          description: "Show what will be removed/kept",
-          validation: "User approves cleanup",
+          name: "Validate Ready for Finalization",
+          description: "Verify all bootstrap artifacts exist before finalization",
+          validation: "All artifacts verified: staged rules, mcp-server.js, docs directory",
           requiredInfo: []
         },
         {
           id: "5.2",
-          name: "Execute Cleanup",
-          description: "Remove template files and directories",
-          validation: "Template files removed",
-          requiredInfo: []
-        },
-        {
-          id: "5.3",
-          name: "Update README",
-          description: "Create project-specific README",
-          validation: "README updated",
-          requiredInfo: []
-        }
-      ]
-    },
-    {
-      id: "phase_6",
-      name: "Handoff",
-      description: "Complete bootstrap and hand off to user",
-      steps: [
-        {
-          id: "6.1",
-          name: "Present Summary",
-          description: "Show what was created and next steps",
-          validation: "Summary presented",
-          requiredInfo: []
-        },
-        {
-          id: "6.2",
-          name: "Configure Project MCP",
-          description: "Help user add project MCP server to their AI assistant",
-          validation: "User has project MCP configured",
-          requiredInfo: []
-        },
-        {
-          id: "6.3",
-          name: "Complete Bootstrap",
-          description: "Mark bootstrap as complete",
-          validation: "Bootstrap complete",
+          name: "Execute Finalization",
+          description: "Call finalize_bootstrap tool to atomically activate rules, clean up templates, and update README. Then guide user to swap MCP config.",
+          validation: "finalize_bootstrap completed successfully, user informed to swap MCP",
           requiredInfo: []
         }
       ]
@@ -496,6 +461,31 @@ class BootstrapServer {
             },
           },
         },
+        {
+          name: "finalize_bootstrap",
+          description: "Atomically finalize the bootstrap process: activate project rules from staging, remove FluxFrame template files, update README, and clean up state. Call this as the final step of bootstrap - it replaces all manual cleanup commands. MANDATORY before bootstrap is considered complete.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              projectName: {
+                type: "string",
+                description: "Project name (optional, read from bootstrap state if not provided)",
+              },
+              docsDir: {
+                type: "string",
+                description: "Documentation directory path (optional, read from bootstrap state if not provided)",
+              },
+              projectPurpose: {
+                type: "string",
+                description: "One-line project purpose for README (optional, read from bootstrap state if not provided)",
+              },
+              keepStateFile: {
+                type: "boolean",
+                description: "Keep .fluxframe-bootstrap-state.json as a record (default: false)",
+              },
+            },
+          },
+        },
       ],
     }));
 
@@ -526,6 +516,8 @@ class BootstrapServer {
             return await this.logFutureItem(request.params.arguments);
           case "get_future_state":
             return await this.getFutureState(request.params.arguments);
+          case "finalize_bootstrap":
+            return await this.finalizeBootstrap(request.params.arguments);
           default:
             throw new Error(`Unknown tool: ${request.params.name}`);
         }
@@ -701,13 +693,9 @@ class BootstrapServer {
       "3.5": "Update or create package.json with MCP dependency and 'mcp' script. Run npm install.",
       "4.1": "Check all expected files exist: documentation at final locations, AI rules in .fluxframe-pending/ staging. No placeholders remain, paths are consistent, markdown is valid. Verify bootstrap_decisions.md exists and has content.",
       "4.2": "Test: node mcp-server.js starts without errors. Show output to user.",
-      "4.3": "Show user summary of generated files (note: AI rules are in staging, will be activated during cleanup). Ask them to review key files including bootstrap_decisions.md. Confirm they approve before cleanup.",
-      "5.1": "Present cleanup plan: 1) ACTIVATE project rules by moving from .fluxframe-pending/ to final locations (overwrites bootstrap-resume rules), 2) Remove fluxframe/ directory and staging. Get approval.",
-      "5.2": "Execute cleanup in order: FIRST move rules from staging (mv .fluxframe-pending/AGENTS.md ./AGENTS.md, etc.), THEN remove fluxframe/ directory and .fluxframe-pending/. Optionally keep .fluxframe-bootstrap-state.json as a record.",
-      "5.3": "Replace README.md with project-specific content. Include FluxFrame methodology mention and links to docs.",
-      "6.1": "Show complete summary: what was created, what was preserved, backup location, configuration details. Verify AI rules are now at final locations (not 'Bootstrap In Progress'). Mention that bootstrap_decisions.md contains the reasoning behind all configuration choices.",
-      "6.2": "CRITICAL: Guide user to add their project's mcp-server.js to their AI assistant's MCP settings (replacing bootstrap MCP). Provide tool-specific instructions.",
-      "6.3": "Congratulate user! Bootstrap complete. Call sync_decisions_to_file one final time to ensure all decisions are persisted. Guide them to define Cycle 1.1 in ROADMAP.md as next step."
+      "4.3": "Show user summary of generated files (note: AI rules are in staging, will be activated during finalization). Ask them to review key files including bootstrap_decisions.md. Confirm they approve. IMPORTANT: After user approves, finalization is MANDATORY and automatic - do NOT ask for additional confirmation before proceeding to Phase 5.",
+      "5.1": "Verify all bootstrap artifacts exist before finalization: 1) .fluxframe-pending/ directory has AGENTS.md and any tool-specific rules, 2) mcp-server.js exists at project root, 3) docs directory exists with generated files. If anything is missing, report it. Otherwise, immediately proceed to step 5.2.",
+      "5.2": "Call the finalize_bootstrap tool to atomically activate rules, remove templates, and update README. Then: 1) Call sync_decisions_to_file one final time, 2) Show the user what was done (from the tool response), 3) CRITICAL: Guide user to replace the bootstrap MCP server with their project's mcp-server.js in their AI tool's MCP config, 4) Tell user to restart their AI tool. Bootstrap is now complete."
     };
 
     return instructions[stepId] || "Follow the step description and validation criteria.";
@@ -1261,6 +1249,170 @@ This document captures the reasoning behind key decisions made during the FluxFr
         {
           type: "text",
           text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  }
+
+  async finalizeBootstrap(args) {
+    const state = await this.loadState();
+    const projectRoot = process.cwd();
+    const projectName = args?.projectName || state.collectedInfo?.project_name || 'Project';
+    const docsDir = args?.docsDir || state.collectedInfo?.docs_location || 'project_docs';
+    const projectPurpose = args?.projectPurpose || state.collectedInfo?.project_purpose || '';
+    const keepStateFile = args?.keepStateFile || false;
+
+    const actions = [];
+    const errors = [];
+
+    // --- Step 1: Activate project rules from staging ---
+    const stagingDir = path.join(projectRoot, '.fluxframe-pending');
+    const ruleFiles = [
+      { src: 'AGENTS.md', dest: 'AGENTS.md' },
+      { src: 'CLAUDE.md', dest: 'CLAUDE.md' },
+      { src: '.clinerules', dest: '.clinerules' },
+      { src: '.roomodes', dest: '.roomodes' },
+      { src: '.roo', dest: '.roo' },
+      { src: '.claude', dest: '.claude' },
+      { src: 'GEMINI.md', dest: 'GEMINI.md' },
+      { src: '.cursorrules', dest: '.cursorrules' },
+      { src: '.codex', dest: '.codex' },
+    ];
+
+    for (const { src, dest } of ruleFiles) {
+      const srcPath = path.join(stagingDir, src);
+      const destPath = path.join(projectRoot, dest);
+      try {
+        const stat = await fs.stat(srcPath);
+        // Remove existing destination if it's a directory
+        if (stat.isDirectory()) {
+          try { await fs.rm(destPath, { recursive: true, force: true }); } catch {}
+        }
+        await fs.rename(srcPath, destPath);
+        actions.push(`Activated: ${src} → ${dest}`);
+      } catch (err) {
+        if (err.code !== 'ENOENT') {
+          errors.push(`Failed to activate ${src}: ${err.message}`);
+        }
+        // ENOENT = file doesn't exist in staging, skip silently
+      }
+    }
+
+    // --- Step 2: Delete fluxframe/ directory ---
+    const fluxframeDir = path.join(projectRoot, 'fluxframe');
+    try {
+      await fs.rm(fluxframeDir, { recursive: true, force: true });
+      actions.push('Removed: fluxframe/ directory');
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        errors.push(`Failed to remove fluxframe/: ${err.message}`);
+      }
+    }
+
+    // --- Step 3: Delete staging directory ---
+    try {
+      await fs.rm(stagingDir, { recursive: true, force: true });
+      actions.push('Removed: .fluxframe-pending/ staging directory');
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        errors.push(`Failed to remove .fluxframe-pending/: ${err.message}`);
+      }
+    }
+
+    // --- Step 4: Delete bootstrap state file (optional) ---
+    if (!keepStateFile) {
+      try {
+        await fs.unlink(STATE_FILE);
+        actions.push('Removed: .fluxframe-bootstrap-state.json');
+      } catch (err) {
+        if (err.code !== 'ENOENT') {
+          errors.push(`Failed to remove state file: ${err.message}`);
+        }
+      }
+    } else {
+      actions.push('Kept: .fluxframe-bootstrap-state.json (as record)');
+    }
+
+    // --- Step 5: Remove BOOTSTRAP_INSTRUCTIONS.md if at root ---
+    const bootstrapInstructions = path.join(projectRoot, 'BOOTSTRAP_INSTRUCTIONS.md');
+    try {
+      await fs.unlink(bootstrapInstructions);
+      actions.push('Removed: BOOTSTRAP_INSTRUCTIONS.md');
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        errors.push(`Failed to remove BOOTSTRAP_INSTRUCTIONS.md: ${err.message}`);
+      }
+    }
+
+    // --- Step 6: Remove RESTRUCTURE_PLAN.md if exists ---
+    const restructurePlan = path.join(projectRoot, 'RESTRUCTURE_PLAN.md');
+    try {
+      await fs.unlink(restructurePlan);
+      actions.push('Removed: RESTRUCTURE_PLAN.md');
+    } catch (err) {
+      // Silently skip if doesn't exist
+    }
+
+    // --- Step 7: Update README.md ---
+    const readmePath = path.join(projectRoot, 'README.md');
+    const readmeContent = `# ${projectName}
+
+${projectPurpose}
+
+## Quick Start
+
+[Basic setup instructions]
+
+## Development
+
+This project uses the FluxFrame methodology for AI-assisted development.
+
+### Documentation
+- See \`${docsDir}/context_master_guide.md\` for development guidelines
+- See \`${docsDir}/technical_status.md\` for current project state
+
+### AI Assistance
+- MCP Server: \`npm run mcp\`
+- AI Rules: See \`AGENTS.md\` and tool-specific configurations
+
+## License
+
+[License information]
+`;
+    try {
+      await fs.writeFile(readmePath, readmeContent, 'utf-8');
+      actions.push('Updated: README.md with project-specific content');
+    } catch (err) {
+      errors.push(`Failed to update README.md: ${err.message}`);
+    }
+
+    // --- Step 8: Remove PHILOSOPHY.md ---
+    try {
+      await fs.unlink(path.join(projectRoot, 'PHILOSOPHY.md'));
+      actions.push('Removed: PHILOSOPHY.md');
+    } catch (err) {
+      // Silently skip
+    }
+
+    const success = errors.length === 0;
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            success,
+            message: success
+              ? "Bootstrap finalized successfully. All template files removed and project rules activated."
+              : "Bootstrap finalized with some errors. Review the errors below.",
+            actions,
+            errors: errors.length > 0 ? errors : undefined,
+            nextSteps: [
+              "IMPORTANT: Update your AI tool's MCP configuration to use the project's mcp-server.js instead of the bootstrap MCP server.",
+              "Restart your AI tool to pick up the new MCP configuration and project rules.",
+              `Define Cycle 1.1 in ${docsDir}/ROADMAP.md to begin development.`
+            ]
+          }, null, 2),
         },
       ],
     };
