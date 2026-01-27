@@ -1511,29 +1511,30 @@ Note: `.fluxframe-backup/` is preserved for rollback.
 After the tool completes:
 1. Call `sync_decisions_to_file` one final time
 2. Show the user the finalization summary
-3. **CRITICAL:** Guide user to replace bootstrap MCP with project `mcp-server.js` in their AI tool config
-4. Tell user to restart their AI tool
+3. **CRITICAL: Walk the user through the MCP config swap interactively.** The `finalize_bootstrap` response includes a `mcpSwapGuide` object — use it.
 
-### Step 7.3: Final Confirmation
+### Step 7.3: Guided MCP Config Swap
 
-```markdown
-## Bootstrap Upgrade Finalized!
+Do NOT just print a generic "update your config" message. The user may not know what an MCP config is. Follow these steps:
 
-Your merged project rules are now active and all template files have been removed.
+1. **Explain what's happening:** Tell the user: *"I now need to help you switch from the bootstrap MCP server to your project's own MCP server. This is the last step before you're fully set up."*
 
-**Backup available at:** `.fluxframe-backup/` (includes pre-bootstrap originals)
+2. **For each detected AI tool** (from `mcpSwapGuide.detectedTools`):
+   - Show the **exact config file path** (e.g., "Open the file at `<path>`")
+   - Show the **exact JSON** to paste (from `mcpSwapGuide.newMcpConfigJson`)
+   - Explain they should **replace** the `fluxframe-bootstrap` entry, not add alongside it
 
-**IMPORTANT - Next Steps:**
-1. Update your AI tool's MCP config to use `mcp-server.js` (replace the bootstrap MCP)
-2. Restart your AI tool
-3. When starting your next development cycle, use the two-tier planning system:
-   - Call `start_cycle_planning("[cycle_id]")` to initiate planning
-   - Call `analyze_cycle_scope()` to assess complexity
-   - Call `create_cycle_plan("[cycle_id]", "Cycle Name")` to create detailed plan
-   - Get user approval, then call `approve_cycle_plan("[cycle_id]")`
+3. **Offer to write the file for them.** If the config file is inside the project directory, say: *"I can update this file for you right now, or you can do it manually. Which do you prefer?"* If they say yes, write the file.
 
-Your `{{DOCS_DIR}}/bootstrap_decisions.md` contains the reasoning behind all merge and configuration choices.
-```
+4. **Give tool-specific restart instructions** (e.g., "Close and reopen your terminal / Claude Code session completely"). Be explicit, not vague.
+
+5. **Tell them what to expect after restart:** *"After restarting, your project MCP tools will be available (cycle planning, status updates, etc.) and your AI rules will guide development."*
+
+6. **Remind them of next steps:**
+   - *"Your backup is available at `.fluxframe-backup/` (includes pre-bootstrap originals)."*
+   - When starting the next development cycle, use the two-tier planning system: `start_cycle_planning("[cycle_id]")` → `analyze_cycle_scope()` → `create_cycle_plan("[cycle_id]", "Cycle Name")` → `approve_cycle_plan("[cycle_id]")`
+
+7. **Stay available.** Do NOT end the conversation until the user confirms the swap is done or says they'll do it later. Help troubleshoot if needed.
 
 ---
 

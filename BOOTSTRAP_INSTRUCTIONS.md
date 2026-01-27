@@ -937,21 +937,28 @@ Call the `finalize_bootstrap` MCP tool. This single tool call atomically:
 After the tool completes:
 1. Call `sync_decisions_to_file` one final time to persist all decisions
 2. Show the user what was done (from the tool's response)
-3. **CRITICAL:** Guide user to replace the bootstrap MCP server with their project's `mcp-server.js` in their AI tool's MCP configuration
-4. Tell user to restart their AI tool
+3. **CRITICAL: Walk the user through the MCP config swap using the `mcpSwapGuide` from the tool response.** Do NOT just print a generic message. Follow these steps:
 
-```markdown
-## Bootstrap Finalized!
+#### Step-by-step MCP swap guidance (agent instructions)
 
-Your project rules are now active and all template files have been removed.
+The `finalize_bootstrap` response includes a `mcpSwapGuide` object with everything you need. Use it as follows:
 
-**IMPORTANT - Next Steps:**
-1. Update your AI tool's MCP config to use `mcp-server.js` (replace the bootstrap MCP)
-2. Restart your AI tool
-3. Define Cycle 1.1 in `[docs_path]/ROADMAP.md`
+1. **Explain what's happening:** Tell the user: *"I now need to help you switch from the bootstrap MCP server to your project's own MCP server. This is the last step before you're fully set up."*
 
-Your `[docs_path]/bootstrap_decisions.md` contains the reasoning behind all configuration choices.
-```
+2. **For each detected AI tool** (from `mcpSwapGuide.detectedTools`):
+   - Show them the **exact config file path** (e.g., "Open the file at `/path/to/project/.mcp.json`")
+   - Show them the **exact JSON** to paste (from `mcpSwapGuide.newMcpConfigJson`)
+   - Explain they should **replace** the `fluxframe-bootstrap` entry, not add alongside it
+
+3. **Offer to write the file for them.** If the config file is inside the project directory (`.mcp.json`, `.vscode/`, `.roo/`, `.cursor/`, etc.), say: *"I can update this file for you right now, or you can do it manually. Which do you prefer?"* If they say yes, write the file.
+
+4. **Give tool-specific restart instructions** (from `mcpSwapGuide.detectedTools[].restartInstructions`). Be explicit — e.g., *"Close and reopen your terminal / Claude Code session completely"* rather than just "restart."
+
+5. **Tell them what to expect after restart:** *"After restarting, your project MCP tools will be available (cycle planning, status updates, etc.) and your AI rules will guide development."*
+
+6. **Remind them of the first next action:** *"Your first step after restart is to define Cycle 1.1 in `[docs_path]/ROADMAP.md`."*
+
+7. **Stay available.** Do NOT end the conversation until the user confirms the swap is done or explicitly says they'll do it later. If they have questions or something goes wrong, help them troubleshoot.
 
 ---
 

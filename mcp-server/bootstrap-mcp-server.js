@@ -695,7 +695,7 @@ class BootstrapServer {
       "4.2": "Test: node mcp-server.js starts without errors. Show output to user.",
       "4.3": "Show user summary of generated files (note: AI rules are in staging, will be activated during finalization). Ask them to review key files including bootstrap_decisions.md. Confirm they approve. IMPORTANT: After user approves, finalization is MANDATORY and automatic - do NOT ask for additional confirmation before proceeding to Phase 5.",
       "5.1": "Verify all bootstrap artifacts exist before finalization: 1) .fluxframe-pending/ directory has AGENTS.md and any tool-specific rules, 2) mcp-server.js exists at project root, 3) docs directory exists with generated files. If anything is missing, report it. Otherwise, immediately proceed to step 5.2.",
-      "5.2": "Call the finalize_bootstrap tool to atomically activate rules, remove templates, and update README. Then: 1) Call sync_decisions_to_file one final time, 2) Show the user what was done (from the tool response), 3) CRITICAL: Guide user to replace the bootstrap MCP server with their project's mcp-server.js in their AI tool's MCP config, 4) Tell user to restart their AI tool. Bootstrap is now complete."
+      "5.2": "Call the finalize_bootstrap tool to atomically activate rules, remove templates, and update README. Then: 1) Call sync_decisions_to_file one final time, 2) Show the user what was done (from the tool response), 3) CRITICAL: Read the mcpSwapGuide from the tool response and follow its agentInstructions to walk the user step-by-step through swapping their MCP config. Show them the exact config file path and JSON content. Offer to write the config file for them if it's in the project directory. Give tool-specific restart instructions. Do NOT just print a generic message. 4) Stay with the user until they confirm the swap is complete or say they'll do it later. Bootstrap is now complete."
     };
 
     return instructions[stepId] || "Follow the step description and validation criteria.";
@@ -1396,6 +1396,110 @@ This project uses the FluxFrame methodology for AI-assisted development.
 
     const success = errors.length === 0;
 
+    // --- Build tool-specific MCP swap guide ---
+    const mcpServerPath = path.join(projectRoot, 'mcp-server.js');
+    const aiTools = state.collectedInfo?.ai_tools || [];
+    const activatedRuleFiles = actions
+      .filter(a => a.startsWith('Activated:'))
+      .map(a => a.replace('Activated: ', '').split(' → ')[1]);
+
+    // Map of AI tool identifiers to their MCP config details
+    const toolConfigMap = {
+      'claude_code': {
+        name: 'Claude Code',
+        configFile: '.mcp.json',
+        configLocation: 'project root',
+        restartInstructions: 'Close and reopen your terminal / Claude Code session completely.',
+      },
+      'cline': {
+        name: 'Cline',
+        configFile: '.vscode/cline_mcp_settings.json',
+        configLocation: '.vscode/ directory',
+        restartInstructions: 'Restart VS Code completely (close all windows and reopen).',
+      },
+      'roo_code': {
+        name: 'Roo Code',
+        configFile: '.roo/mcp.json',
+        configLocation: '.roo/ directory',
+        restartInstructions: 'Restart VS Code completely (close all windows and reopen).',
+      },
+      'cursor': {
+        name: 'Cursor',
+        configFile: '.cursor/mcp.json',
+        configLocation: '.cursor/ directory',
+        restartInstructions: 'Restart Cursor completely (close all windows and reopen).',
+      },
+      'kilo_code': {
+        name: 'Kilo Code',
+        configFile: '.kilocode/mcp.json',
+        configLocation: '.kilocode/ directory',
+        restartInstructions: 'Restart VS Code completely (close all windows and reopen).',
+      },
+      'antigravity': {
+        name: 'Antigravity (Gemini)',
+        configFile: 'mcp.json',
+        configLocation: 'project root',
+        restartInstructions: 'Restart Antigravity completely.',
+      },
+      'codex': {
+        name: 'Codex',
+        configFile: '.codex/mcp.json',
+        configLocation: '.codex/ directory',
+        restartInstructions: 'Restart Codex completely.',
+      },
+    };
+
+    // Detect which tools were used based on activated rules or collected info
+    const detectedTools = [];
+    if (activatedRuleFiles.includes('CLAUDE.md') || activatedRuleFiles.includes('.claude')) detectedTools.push('claude_code');
+    if (activatedRuleFiles.includes('.clinerules')) detectedTools.push('cline');
+    if (activatedRuleFiles.includes('.roomodes') || activatedRuleFiles.includes('.roo')) detectedTools.push('roo_code');
+    if (activatedRuleFiles.includes('.cursorrules')) detectedTools.push('cursor');
+    if (activatedRuleFiles.includes('GEMINI.md')) detectedTools.push('antigravity');
+    if (activatedRuleFiles.includes('.codex')) detectedTools.push('codex');
+
+    // Fall back to collected info if detection found nothing
+    const toolsToGuide = detectedTools.length > 0 ? detectedTools :
+      (Array.isArray(aiTools) ? aiTools.map(t => t.toLowerCase().replace(/[\s-]+/g, '_')) : []);
+
+    const newMcpConfig = JSON.stringify({
+      mcpServers: {
+        [`${projectName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-project`]: {
+          command: "node",
+          args: [mcpServerPath],
+          cwd: projectRoot
+        }
+      }
+    }, null, 2);
+
+    const mcpSwapGuide = {
+      projectMcpServerPath: mcpServerPath,
+      projectRoot,
+      newMcpConfigJson: newMcpConfig,
+      detectedTools: toolsToGuide.map(toolId => {
+        const config = toolConfigMap[toolId];
+        if (!config) return { toolId, name: toolId, instructions: 'Update your MCP configuration to point to the project mcp-server.js.' };
+        return {
+          toolId,
+          name: config.name,
+          configFile: config.configFile,
+          configFilePath: path.join(projectRoot, config.configFile),
+          configLocation: config.configLocation,
+          restartInstructions: config.restartInstructions,
+        };
+      }),
+      agentInstructions: [
+        "IMPORTANT: You MUST walk the user through the MCP config swap step by step. Do NOT just print a summary and move on.",
+        "1. Tell the user: 'I now need to help you switch from the bootstrap MCP server to your project's own MCP server. This is the last step.'",
+        "2. For EACH detected AI tool, show them: (a) the exact config file path to edit, (b) the exact JSON content to paste (provided in newMcpConfigJson), (c) that they should REPLACE the 'fluxframe-bootstrap' entry with this new config (not add alongside it).",
+        "3. If the config file is inside the project directory (e.g., .mcp.json, .vscode/, .roo/, .cursor/), OFFER to write the file for them. Say: 'I can update this file for you, or you can do it manually. Which do you prefer?'",
+        "4. After the config is updated, give them the specific restart instruction for their tool.",
+        "5. Tell them what to expect after restart: 'After restarting, your project MCP tools will be available (cycle planning, status updates, etc.) and your AI rules will guide development.'",
+        `6. Remind them: 'Your first step after restart is to define Cycle 1.1 in ${docsDir}/ROADMAP.md.'`,
+        "7. If they have questions or something goes wrong, help them troubleshoot. Do NOT end the conversation until they confirm the swap is done or explicitly say they'll do it later."
+      ]
+    };
+
     return {
       content: [
         {
@@ -1407,10 +1511,10 @@ This project uses the FluxFrame methodology for AI-assisted development.
               : "Bootstrap finalized with some errors. Review the errors below.",
             actions,
             errors: errors.length > 0 ? errors : undefined,
+            mcpSwapGuide,
             nextSteps: [
-              "IMPORTANT: Update your AI tool's MCP configuration to use the project's mcp-server.js instead of the bootstrap MCP server.",
-              "Restart your AI tool to pick up the new MCP configuration and project rules.",
-              `Define Cycle 1.1 in ${docsDir}/ROADMAP.md to begin development.`
+              "CRITICAL: Use the mcpSwapGuide above to walk the user through swapping their MCP config. Do NOT just print a generic message — follow the agentInstructions step by step.",
+              `After MCP swap and restart, define Cycle 1.1 in ${docsDir}/ROADMAP.md to begin development.`
             ]
           }, null, 2),
         },
