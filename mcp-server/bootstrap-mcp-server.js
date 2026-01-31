@@ -1356,13 +1356,19 @@ This document captures the reasoning behind key decisions made during the FluxFr
       }
     }
 
-    // --- Step 6: Remove RESTRUCTURE_PLAN.md if exists ---
+    // --- Step 6: Move RESTRUCTURE_PLAN.md if exists ---
     const restructurePlan = path.join(projectRoot, 'RESTRUCTURE_PLAN.md');
+    const fluxframeRefDir = path.join(projectRoot, docsDir, 'reference_library', 'fluxframe_reference');
+
     try {
-      await fs.unlink(restructurePlan);
-      actions.push('Removed: RESTRUCTURE_PLAN.md');
+      await fs.access(restructurePlan);
+      await fs.mkdir(fluxframeRefDir, { recursive: true });
+      await fs.rename(restructurePlan, path.join(fluxframeRefDir, 'RESTRUCTURE_PLAN.md'));
+      actions.push(`Moved: RESTRUCTURE_PLAN.md → ${path.join(docsDir, 'reference_library/fluxframe_reference/RESTRUCTURE_PLAN.md')}`);
     } catch (err) {
-      // Silently skip if doesn't exist
+      if (err.code !== 'ENOENT') {
+        errors.push(`Failed to move RESTRUCTURE_PLAN.md: ${err.message}`);
+      }
     }
 
     // --- Step 7: Update README.md ---
@@ -1398,12 +1404,19 @@ This project uses the FluxFrame methodology for AI-assisted development.
       errors.push(`Failed to update README.md: ${err.message}`);
     }
 
-    // --- Step 8: Remove PHILOSOPHY.md ---
+    // --- Step 8: Move PHILOSOPHY.md ---
+    const philosophyPath = path.join(projectRoot, 'PHILOSOPHY.md');
     try {
-      await fs.unlink(path.join(projectRoot, 'PHILOSOPHY.md'));
-      actions.push('Removed: PHILOSOPHY.md');
+      await fs.access(philosophyPath);
+      // Ensure dir exists (safe check)
+      const fluxframeRefDir = path.join(projectRoot, docsDir, 'reference_library', 'fluxframe_reference');
+      await fs.mkdir(fluxframeRefDir, { recursive: true });
+      await fs.rename(philosophyPath, path.join(fluxframeRefDir, 'PHILOSOPHY.md'));
+      actions.push(`Moved: PHILOSOPHY.md → ${path.join(docsDir, 'reference_library/fluxframe_reference/PHILOSOPHY.md')}`);
     } catch (err) {
-      // Silently skip
+      if (err.code !== 'ENOENT') {
+        errors.push(`Failed to move PHILOSOPHY.md: ${err.message}`);
+      }
     }
 
     const success = errors.length === 0;
