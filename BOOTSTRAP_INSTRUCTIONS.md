@@ -141,7 +141,7 @@ cat > .mcp.json << 'EOF'
   "mcpServers": {
     "fluxframe-bootstrap": {
       "command": "node",
-      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js", "[PROJECT_PATH]"],
       "cwd": "[PROJECT_PATH]"
     }
   }
@@ -164,7 +164,7 @@ cat > .vscode/cline_mcp_settings.json << 'EOF'
   "mcpServers": {
     "fluxframe-bootstrap": {
       "command": "node",
-      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js", "[PROJECT_PATH]"],
       "cwd": "[PROJECT_PATH]"
     }
   }
@@ -187,7 +187,7 @@ cat > .roo/mcp.json << 'EOF'
   "mcpServers": {
     "fluxframe-bootstrap": {
       "command": "node",
-      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js", "[PROJECT_PATH]"],
       "cwd": "[PROJECT_PATH]"
     }
   }
@@ -210,7 +210,7 @@ cat > .cursor/mcp.json << 'EOF'
   "mcpServers": {
     "fluxframe-bootstrap": {
       "command": "node",
-      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js", "[PROJECT_PATH]"],
       "cwd": "[PROJECT_PATH]"
     }
   }
@@ -233,7 +233,7 @@ cat > .kilocode/mcp.json << 'EOF'
   "mcpServers": {
     "fluxframe-bootstrap": {
       "command": "node",
-      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js", "[PROJECT_PATH]"],
       "cwd": "[PROJECT_PATH]"
     }
   }
@@ -271,7 +271,7 @@ Add this to $MCP_CONFIG under "mcpServers":
 
 "fluxframe-bootstrap-$PROJECT_NAME": {
   "command": "node",
-  "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+  "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js", "[PROJECT_PATH]"],
   "cwd": "[PROJECT_PATH]"
 }
 EOF
@@ -653,7 +653,7 @@ Call `get_bootstrap_state`.
    {
      "fluxframe-bootstrap": {
        "command": "node",
-       "args": ["[EXACT_FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+       "args": ["[EXACT_FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js", "[EXACT_PROJECT_PATH]"],
        "cwd": "[EXACT_PROJECT_PATH]"
      }
    }

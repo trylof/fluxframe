@@ -75,7 +75,7 @@ Choose your AI assistant below:
      "mcpServers": {
        "fluxframe-bootstrap": {
          "command": "node",
-         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"],
+         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js", "/ABSOLUTE/PATH/TO/YOUR/PROJECT"],
          "cwd": "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
        }
      }
@@ -117,7 +117,7 @@ Choose your AI assistant below:
      "mcpServers": {
        "fluxframe-bootstrap": {
          "command": "node",
-         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"],
+         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js", "/ABSOLUTE/PATH/TO/YOUR/PROJECT"],
          "cwd": "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
        }
      }
@@ -146,7 +146,7 @@ Choose your AI assistant below:
      "mcpServers": {
        "fluxframe-bootstrap": {
          "command": "node",
-         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"],
+         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js", "/ABSOLUTE/PATH/TO/YOUR/PROJECT"],
          "cwd": "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
        }
      }
@@ -163,7 +163,7 @@ Choose your AI assistant below:
    ```toml
    [mcp_servers.fluxframe-bootstrap]
    command = "node"
-   args = ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"]
+   args = ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js", "/ABSOLUTE/PATH/TO/YOUR/PROJECT"]
    cwd = "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
    ```
 
@@ -191,7 +191,7 @@ FluxFrame uses `fluxframe-bootstrap-[projectname]` naming to distinguish between
     "mcpServers": {
       "fluxframe-bootstrap-myproject": {
         "command": "node",
-        "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"],
+        "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js", "/ABSOLUTE/PATH/TO/YOUR/PROJECT"],
         "cwd": "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
       }
     }
@@ -215,7 +215,7 @@ If your AI assistant supports MCP:
      "mcpServers": {
        "fluxframe-bootstrap": {
          "command": "node",
-         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"],
+         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js", "/ABSOLUTE/PATH/TO/YOUR/PROJECT"],
          "cwd": "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
        }
      }

@@ -23,8 +23,20 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Get project root from command line args
+// MCP servers are invoked with: node bootstrap-mcp-server.js <project-path>
+// Falls back to CWD if no arg provided (for backward compatibility)
+function getProjectRoot() {
+  const projectPathArg = process.argv[2];
+  if (projectPathArg) {
+    return path.resolve(projectPathArg);
+  }
+  // Fallback: try CWD, but warn in debug
+  return process.cwd();
+}
+
 // Bootstrap state file location
-const STATE_FILE = path.join(process.cwd(), '.fluxframe-bootstrap-state.json');
+const STATE_FILE = path.join(getProjectRoot(), '.fluxframe-bootstrap-state.json');
 
 // Decisions log file location (written during bootstrap, persists after)
 const DECISIONS_FILE_NAME = 'bootstrap_decisions.md';
@@ -976,7 +988,7 @@ class BootstrapServer {
 
     // Determine docs directory
     const targetDocsDir = docsDir || state.collectedInfo?.docs_location || 'project_docs';
-    const decisionsFilePath = path.join(process.cwd(), targetDocsDir, DECISIONS_FILE_NAME);
+    const decisionsFilePath = path.join(getProjectRoot(), targetDocsDir, DECISIONS_FILE_NAME);
 
     // Initialize decisions array if needed
     const decisions = state.decisions || [];
@@ -1256,7 +1268,7 @@ This document captures the reasoning behind key decisions made during the FluxFr
 
   async finalizeBootstrap(args) {
     const state = await this.loadState();
-    const projectRoot = process.cwd();
+    const projectRoot = getProjectRoot();
     const projectName = args?.projectName || state.collectedInfo?.project_name || 'Project';
     const docsDir = args?.docsDir || state.collectedInfo?.docs_location || 'project_docs';
     const projectPurpose = args?.projectPurpose || state.collectedInfo?.project_purpose || '';
