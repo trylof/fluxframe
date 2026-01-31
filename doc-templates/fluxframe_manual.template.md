@@ -2,6 +2,10 @@
 
 **Your project was bootstrapped with FluxFrame.** This manual explains how to work effectively with the framework and keep your AI-assisted development running smoothly.
 
+> [!TIP]
+> **Just Bootstrapped?** Follow the [Getting Started Guide](FLUXFRAME_GETTING_STARTED.md) to set up your project context ("The Mind") before you start coding.
+
+
 ---
 
 ## Quick Reference
@@ -20,25 +24,70 @@
 
 ---
 
+## User Journeys
+
+### "I want to add a new Feature"
+1.  **Update Roadmap:** Add your feature to `{{DOCS_DIR}}/ROADMAP.md` (Cycle Planning).
+2.  **Create Plan:** Create an implementation plan. `cp doc-templates/implementation_plan.template.md feature_plan.md`.
+3.  **Execute:** Coding Agent picks up the plan and works through `task.md`.
+4.  **Verify:** Test, then update `technical_status.md`.
+
+### "I want to fix a Bug"
+1.  **Log it:** Describe the bug in `{{DOCS_DIR}}/BUGS.md`.
+2.  **Isolate:** Create a reproduction case (if possible).
+3.  **Fix:** Instruct Agent to "Fix bug #X from BUGS.md".
+4.  **Close:** Mark as [x] in `BUGS.md`.
+
+### "I want to dump info for the AI"
+*   **Don't:** Paste 50 pages into chat.
+*   **Do:** Save it as a markdown file in `{{DOCS_DIR}}/reference_library/specifications/` or `.../domain_knowledge/`.
+*   **Then:** Tell the Agent "Read reference_library/specifications/my_spec.md".
+
+---
+
 ## The FluxFrame Way
 
-### Core Principles
+FluxFrame is "opinionated" because it solves the specific problems of **AI-Assisted Coding**.
 
-1. **Documentation is the source of truth** - If it's not documented, it doesn't exist. Keep docs current after every development cycle.
+### 1. Two-Tier Planning
+AI struggles with long horizons. We break it down:
+*   **Tier 1: Strategic (User Driven):** defined in `ROADMAP.md`. You set the feature goals.
+*   **Tier 2: Tactical (AI Driven):** defined in `task.md` or Implementation Plans. The AI breaks the feature into steps.
 
-2. **Patterns scale intelligence** - Before implementing anything, check for existing patterns. If none exists, create one after implementing.
+### 2. Documentation is the "Mind"
+The AI doesn't remember your project. **The Docs remember.**
+*   **Prescriptive (Rules):** `patterns/`, `workflows/`. "How we do things." Follow these largely.
+*   **Descriptive (Context):** `reference_library/`. "What the world is like." Upload emails, specs, and research here. The AI uses this to *understand*, not to *obey*.
 
-3. **Systematic beats ad-hoc** - Follow the development cycle workflow. Skipping steps creates technical debt.
+### 3. Pattern-Driven Development
+Never invent from scratch if a pattern exists.
+1.  **Check:** Does `patterns/ui_patterns.md` have a button component?
+2.  **Use:** Follow the pattern.
+3.  **Update:** If you build something new and reusable, add it to the patterns.
 
-4. **AI needs context** - MCP tools give your AI assistant the same context your team has. Use them.
+### 4. Context discipline
+**Garbage In, Garbage Out.** If you feed the AI old, irrelevant chat history, you get bugs.
+*   **Keep it clean:** Short, focused chat sessions.
+*   **Update the docs:** Before clearing context, ensure the "Brain" (docs) is updated.
 
-### The Session Protocol
+### Context Management (CRITICAL)
 
-**Every work session should start with:**
-1. Gather context via MCP (`get_context_for_task()`)
-2. Check existing patterns (`check_pattern_exists()`)
-3. Read current status (`get_current_implementation_status()`)
-4. Plan approach before coding
+**Why Context Clearing Matters:**
+AI models have a finite "context window." As a chat session grows long:
+1.  **Hallucinations Increase:** The AI loses track of the latest file state vs. old edits.
+2.  **Performance Degrades:** Instructions get diluted by pages of conversation history.
+3.  **Cost Increases:** Re-sending massive context is expensive.
+
+**When to Start a New Chat:**
+- [ ] **Start of Task:** ALWAYS start fresh when picking up a new item from `task.md`.
+- [ ] **Major Pivot:** If you drilled into a rabbit hole and are coming back up to the main plan.
+- [ ] **After 15-20 turns:** If the conversation feels "stuck" or the AI starts making simple syntax errors.
+
+**Session Protocol:**
+1.  **Check Status:** `cat doc-templates/technical_status.md` (Know where you are).
+2.  **Update Task:** Mark progress in `task.md`.
+3.  **Clear Context:** `/clear` or start new chat.
+4.  **Resume:** Paste the "Current Task" summary or point to `task.md`.
 
 ---
 

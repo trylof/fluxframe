@@ -1418,6 +1418,26 @@ Create or update `{{DOCS_DIR}}/log_access_setup.md`:
 
 ---
 
+### Step 4.8: Generate FluxFrame Manual (REQUIRED)
+
+**Purpose:** Create a persistent manual that explains how to work with FluxFrame.
+
+**Source:** `doc-templates/fluxframe_manual.template.md`
+
+**Output:** `FLUXFRAME_MANUAL.md` (in project root)
+
+**Handling Existing Manual:**
+Check if `FLUXFRAME_MANUAL.md` already exists.
+- **If exists:** Ask user: "Replace, Append, or Skip?"
+- **If new:** Generate from template.
+
+**Validation:**
+- [ ] Manual created at project root
+- [ ] Tool sections match selected tools
+- [ ] Documentation links point to correct locations
+
+---
+
 ## Phase 5: Establish AI Workflow
 
 ### Step 5.1: Create Workflow Documentation
@@ -1872,7 +1892,8 @@ Migration is fully complete when:
 3. ✅ FluxFrame core documents created
 4. ✅ AI rules generated with correct paths
 5. ✅ MCP server configured and tested
-6. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md in docs directory)
+6. ✅ User can read generated docs (Read `FLUXFRAME_GETTING_STARTED.md` first)
+7. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md in docs directory)
 7. ✅ Template files cleaned up (via `finalize_bootstrap`)
 8. ✅ README.md updated for project
 9. ✅ Backup preserved for rollback

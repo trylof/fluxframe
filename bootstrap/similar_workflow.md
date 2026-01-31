@@ -1298,6 +1298,26 @@ See `{{DOCS_DIR}}/log_access_setup.md` for detailed configuration.
 
 ---
 
+### Step 5.6: Generate FluxFrame Manual (REQUIRED)
+
+**Purpose:** Create a persistent manual that explains how to work with FluxFrame.
+
+**Source:** `doc-templates/fluxframe_manual.template.md`
+
+**Output:** `FLUXFRAME_MANUAL.md` (in project root)
+
+**Handling Existing Manual:**
+Check if `FLUXFRAME_MANUAL.md` already exists (e.g., from a previous run).
+- **If exists:** Ask user: "Replace, Append, or Skip?"
+- **If new:** Generate from template.
+
+**Validation:**
+- [ ] Manual created at project root
+- [ ] Tool sections match selected tools
+- [ ] Documentation links point to correct locations
+
+---
+
 ## Phase 6: Validation and Handoff
 
 ### Step 6.1: Validate Configuration
@@ -1570,7 +1590,7 @@ Bootstrap upgrade is fully complete when:
 3. ✅ MCP server starts successfully
 4. ✅ Dependencies installed
 5. ✅ No errors in any file
-6. ✅ User can read generated docs
+6. ✅ User can read generated docs (Read `FLUXFRAME_GETTING_STARTED.md` first)
 7. ✅ **All decisions logged with reasoning** (bootstrap_decisions.md in docs directory)
 8. ✅ Template files cleaned up (via `finalize_bootstrap`)
 9. ✅ README.md updated for project
