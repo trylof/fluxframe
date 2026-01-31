@@ -179,11 +179,17 @@ Choose your AI assistant below:
 - After saving, press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux), type "Reload Window", and select it.
 
 **For Antigravity (Gemini):**
-- Edit `mcp.json` in your workspace root:
+
+**⚠️ Antigravity Limitation:** Unlike other AI tools, Antigravity does NOT support project-level MCP configs. It only reads from the global config file at `~/.gemini/antigravity/mcp_config.json`.
+
+FluxFrame uses `fluxframe-bootstrap-[projectname]` naming to distinguish between projects in the global config.
+
+- Open the config: Agent panel → "..." → MCP Servers → "View raw config"
+- Add your server under `mcpServers`:
   ```json
   {
     "mcpServers": {
-      "fluxframe-bootstrap": {
+      "fluxframe-bootstrap-myproject": {
         "command": "node",
         "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"],
         "cwd": "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
@@ -191,14 +197,11 @@ Choose your AI assistant below:
     }
   }
   ```
+  Replace `myproject` with your actual project folder name.
 
 - **⚠️ CRITICAL: Antigravity requires manual MCP refresh:**
-  1. Open Agent panel: Press `Control+L` or go to View → Open View → Agent
-  2. Click "..." (Additional options) in the upper right of the Agent panel
-  3. Select "MCP Servers"
-  4. Click "Manage MCP Servers"
-  5. Click **"Refresh"** to load the new configuration
-  6. Start a **new conversation** (MCP tools won't appear in the current conversation)
+  1. In the "Manage MCP Servers" panel, click **"Refresh"**
+  2. Start a **new conversation** (MCP tools won't appear in the current conversation)
 
 ### Option D: Other AI Assistants
 

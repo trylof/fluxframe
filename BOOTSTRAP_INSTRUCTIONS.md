@@ -90,8 +90,10 @@ Check for the MCP configuration file based on the AI tool being used:
 | Roo Code | `.roo/mcp.json` |
 | Cursor | `.cursor/mcp.json` |
 | Kilo Code | `.kilocode/mcp.json` |
-| Antigravity | `mcp.json` in project root |
+| Antigravity | `~/.gemini/antigravity/mcp_config.json` (global - see note below) |
 | Codex / Gemini CLI | Limited MCP support - use `AGENTS.md` |
+
+**⚠️ Antigravity Note:** Unlike other tools, Antigravity only reads from a global config file, not project-level. FluxFrame uses `fluxframe-[project]` naming to distinguish project MCPs in the global config.
 
 **If config file exists and contains "fluxframe-bootstrap":** Proceed to Step 2.3 (verify it works).
 
@@ -245,21 +247,37 @@ EOF
 
 ##### Antigravity (Gemini)
 
-**Config:** `mcp.json` in project root
+**Config:** `~/.gemini/antigravity/mcp_config.json` (global config)
+
+**⚠️ Antigravity Limitation:** Unlike other AI tools, Antigravity does NOT support project-level MCP configs. It only reads from the global config file. FluxFrame uses `fluxframe-bootstrap-[projectname]` naming to distinguish between projects.
 
 ```bash
-cat > mcp.json << 'EOF'
-{
-  "mcpServers": {
-    "fluxframe-bootstrap": {
-      "command": "node",
-      "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
-      "cwd": "[PROJECT_PATH]"
-    }
-  }
+# Get project name for namespacing
+PROJECT_NAME=$(basename "[PROJECT_PATH]")
+
+# Create or update the global Antigravity MCP config
+MCP_CONFIG="$HOME/.gemini/antigravity/mcp_config.json"
+mkdir -p "$(dirname "$MCP_CONFIG")"
+
+# If file doesn't exist or is empty, create base structure
+if [ ! -s "$MCP_CONFIG" ]; then
+  echo '{"mcpServers": {}}' > "$MCP_CONFIG"
+fi
+
+# Add the FluxFrame bootstrap server (requires jq, or do manually)
+# The server name includes project name to avoid conflicts
+cat << EOF
+Add this to $MCP_CONFIG under "mcpServers":
+
+"fluxframe-bootstrap-$PROJECT_NAME": {
+  "command": "node",
+  "args": ["[FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js"],
+  "cwd": "[PROJECT_PATH]"
 }
 EOF
 ```
+
+**Manual alternative:** Open the config via Agent panel → "..." → MCP Servers → "View raw config" and add the server entry.
 
 **⚠️ CRITICAL Activation (Antigravity requires manual refresh):**
 
@@ -442,7 +460,7 @@ MCP is **required** for bootstrap. If tools aren't available:
 1. Open Agent panel (Control+L or View → Open View → Agent)
 2. Click "..." → "MCP Servers" → "Manage MCP Servers" → **Refresh**
 3. Start a **new conversation** (MCP tools won't appear in current conversation)
-4. Check `mcp.json` exists in project root with correct absolute paths
+4. Check `~/.gemini/antigravity/mcp_config.json` contains the fluxframe-bootstrap server
 5. Test manually: `node [FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js`
 
 ⛔ **Do NOT proceed without MCP.** Ask the user to help troubleshoot.
