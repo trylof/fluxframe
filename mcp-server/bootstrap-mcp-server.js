@@ -1298,7 +1298,7 @@ This document captures the reasoning behind key decisions made during the FluxFr
         const stat = await fs.stat(srcPath);
         // Remove existing destination if it's a directory
         if (stat.isDirectory()) {
-          try { await fs.rm(destPath, { recursive: true, force: true }); } catch {}
+          try { await fs.rm(destPath, { recursive: true, force: true }); } catch { }
         }
         await fs.rename(srcPath, destPath);
         actions.push(`Activated: ${src} → ${dest}`);
@@ -1427,31 +1427,32 @@ This project uses the FluxFrame methodology for AI-assisted development.
         name: 'Cline',
         configFile: '.vscode/cline_mcp_settings.json',
         configLocation: '.vscode/ directory',
-        restartInstructions: 'Restart VS Code completely (close all windows and reopen).',
+        restartInstructions: 'Press Cmd/Ctrl+Shift+P -> "Reload Window" to restart the creation environment.',
       },
       'roo_code': {
         name: 'Roo Code',
         configFile: '.roo/mcp.json',
         configLocation: '.roo/ directory',
-        restartInstructions: 'Restart VS Code completely (close all windows and reopen).',
+        restartInstructions: 'Press Cmd/Ctrl+Shift+P -> "Reload Window" to restart the creation environment.',
       },
       'cursor': {
         name: 'Cursor',
         configFile: '.cursor/mcp.json',
         configLocation: '.cursor/ directory',
-        restartInstructions: 'Restart Cursor completely (close all windows and reopen).',
+        restartInstructions: 'Press Cmd/Ctrl+Shift+P -> "Reload Window" (or fully quit and reopen application).',
       },
       'kilo_code': {
         name: 'Kilo Code',
         configFile: '.kilocode/mcp.json',
         configLocation: '.kilocode/ directory',
-        restartInstructions: 'Restart VS Code completely (close all windows and reopen).',
+        restartInstructions: 'Press Cmd/Ctrl+Shift+P -> "Reload Window" to restart the creation environment.',
       },
       'antigravity': {
         name: 'Antigravity (Gemini)',
-        configFile: 'mcp.json',
-        configLocation: 'project root',
-        restartInstructions: 'Restart Antigravity completely.',
+        configFile: '.gemini/antigravity/mcp_config.json', // Global config
+        configLocation: 'user home directory (~/.gemini/antigravity/)',
+        isGlobal: true,
+        restartInstructions: 'Open Agent panel -> "..." -> MCP Servers -> Manage MCP Servers -> **Refresh** (Required to load new config).',
       },
       'codex': {
         name: 'Codex',
@@ -1491,12 +1492,19 @@ This project uses the FluxFrame methodology for AI-assisted development.
       detectedTools: toolsToGuide.map(toolId => {
         const config = toolConfigMap[toolId];
         if (!config) return { toolId, name: toolId, instructions: 'Update your MCP configuration to point to the project mcp-server.js.' };
+
+        // Handle global configs vs project configs
+        const configFilePath = config.isGlobal
+          ? path.join(process.env.HOME || process.env.USERPROFILE, config.configFile)
+          : path.join(projectRoot, config.configFile);
+
         return {
           toolId,
           name: config.name,
           configFile: config.configFile,
-          configFilePath: path.join(projectRoot, config.configFile),
+          configFilePath,
           configLocation: config.configLocation,
+          isGlobal: !!config.isGlobal,
           restartInstructions: config.restartInstructions,
         };
       }),
@@ -1505,10 +1513,11 @@ This project uses the FluxFrame methodology for AI-assisted development.
         "1. Tell the user: 'I now need to help you switch from the bootstrap MCP server to your project's own MCP server. This is the last step.'",
         "2. For EACH detected AI tool, show them: (a) the exact config file path to edit, (b) the exact JSON content to paste (provided in newMcpConfigJson), (c) that they should REPLACE the 'fluxframe-bootstrap' entry with this new config (not add alongside it).",
         "3. If the config file is inside the project directory (e.g., .mcp.json, .vscode/, .roo/, .cursor/), OFFER to write the file for them. Say: 'I can update this file for you, or you can do it manually. Which do you prefer?'",
-        "4. After the config is updated, give them the specific restart instruction for their tool.",
-        "5. Tell them what to expect after restart: 'After restarting, your project MCP tools will be available (cycle planning, status updates, etc.) and your AI rules will guide development.'",
-        `6. Remind them: 'Your first step after restart is to define Cycle 1.1 in ${docsDir}/ROADMAP.md.'`,
-        "7. If they have questions or something goes wrong, help them troubleshoot. Do NOT end the conversation until they confirm the swap is done or explicitly say they'll do it later."
+        "4. NOTE: For global tools (like Antigravity), the config file is in their home directory. You generally cannot write this automatically due to permissions/safety, so prompt them to edit it manually unless you are sure.",
+        "5. After the config is updated, give them the specific restart instruction for their tool.",
+        "6. Tell them what to expect after restart: 'After restarting, your project MCP tools will be available (cycle planning, status updates, etc.) and your AI rules will guide development.'",
+        `7. Remind them: 'Your first step after restart is to define Cycle 1.1 in ${docsDir}/ROADMAP.md.'`,
+        "8. If they have questions or something goes wrong, help them troubleshoot. Do NOT end the conversation until they confirm the swap is done or explicitly say they'll do it later."
       ]
     };
 
