@@ -176,10 +176,29 @@ Choose your AI assistant below:
 **For Kilo Code:**
 - Use project config: `.kilocode/mcp.json`
 - Follow JSON format similar to Option A.
+- After saving, press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux), type "Reload Window", and select it.
 
-**For Antigravity:**
-- Use IDE Store to manage MCP servers OR
-- Edit `mcp.json` in your workspace.
+**For Antigravity (Gemini):**
+- Edit `mcp.json` in your workspace root:
+  ```json
+  {
+    "mcpServers": {
+      "fluxframe-bootstrap": {
+        "command": "node",
+        "args": ["/ABSOLUTE/PATH/TO/fluxframe/mcp-server/bootstrap-mcp-server.js"],
+        "cwd": "/ABSOLUTE/PATH/TO/YOUR/PROJECT"
+      }
+    }
+  }
+  ```
+
+- **⚠️ CRITICAL: Antigravity requires manual MCP refresh:**
+  1. Open Agent panel: Press `Control+L` or go to View → Open View → Agent
+  2. Click "..." (Additional options) in the upper right of the Agent panel
+  3. Select "MCP Servers"
+  4. Click "Manage MCP Servers"
+  5. Click **"Refresh"** to load the new configuration
+  6. Start a **new conversation** (MCP tools won't appear in the current conversation)
 
 ### Option D: Other AI Assistants
 

@@ -147,6 +147,8 @@ cat > .mcp.json << 'EOF'
 EOF
 ```
 
+**Activation:** Exit Claude Code (`/exit`) and restart the CLI. Start a new conversation.
+
 ---
 
 ##### Cline (VS Code Extension)
@@ -167,6 +169,8 @@ cat > .vscode/cline_mcp_settings.json << 'EOF'
 }
 EOF
 ```
+
+**Activation:** Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux), type "Reload Window", and select it. Start a new conversation.
 
 ---
 
@@ -189,6 +193,8 @@ cat > .roo/mcp.json << 'EOF'
 EOF
 ```
 
+**Activation:** Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux), type "Reload Window", and select it. Start a new conversation.
+
 ---
 
 ##### Cursor
@@ -209,6 +215,8 @@ cat > .cursor/mcp.json << 'EOF'
 }
 EOF
 ```
+
+**Activation:** Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux), type "Reload Window", and select it. Alternatively, fully quit Cursor and reopen. Start a new conversation.
 
 ---
 
@@ -231,6 +239,8 @@ cat > .kilocode/mcp.json << 'EOF'
 EOF
 ```
 
+**Activation:** Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux), type "Reload Window", and select it. Start a new conversation.
+
 ---
 
 ##### Antigravity (Gemini)
@@ -250,6 +260,15 @@ cat > mcp.json << 'EOF'
 }
 EOF
 ```
+
+**⚠️ CRITICAL Activation (Antigravity requires manual refresh):**
+
+1. Open Agent panel: Press `Control+L` or go to View → Open View → Agent
+2. Click "..." (Additional options) in the upper right of the Agent panel
+3. Select "MCP Servers"
+4. Click "Manage MCP Servers"
+5. Click **"Refresh"** to load the new configuration
+6. Start a **new conversation** (MCP tools won't appear in the current conversation)
 
 ---
 
@@ -315,14 +334,18 @@ cat > CLAUDE.md << 'EOF'
 
 1. Call MCP tool: `get_bootstrap_state`
 2. Read the phase and step from the response
-3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+3. Follow the MCP-guided process
 
-## If MCP Tools Not Available
+## If MCP Tools Not Working
 
-If `get_bootstrap_state` fails or MCP tools are not visible:
-1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
-2. Check Gate 2 - the MCP configuration may need to be verified
-3. Restart your AI tool after MCP is configured
+MCP is **required** for bootstrap. If tools aren't available:
+
+1. Verify you ran `/exit` and restarted the Claude CLI
+2. Started a **new conversation** (not continued this one)
+3. Check `.mcp.json` exists with correct absolute paths
+4. Test manually: `node [FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js`
+
+⛔ **Do NOT proceed without MCP.** Ask the user to help troubleshoot.
 
 ---
 
@@ -344,14 +367,18 @@ cat > .clinerules << 'EOF'
 
 1. Call MCP tool: `get_bootstrap_state`
 2. Read the phase and step from the response
-3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+3. Follow the MCP-guided process
 
-## If MCP Tools Not Available
+## If MCP Tools Not Working
 
-If `get_bootstrap_state` fails or MCP tools are not visible:
-1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
-2. Check Gate 2 - the MCP configuration may need to be verified
-3. Restart your AI tool after MCP is configured
+MCP is **required** for bootstrap. If tools aren't available:
+
+1. Verify you reloaded VS Code (Cmd/Ctrl+Shift+P → "Reload Window")
+2. Started a **new conversation** (not continued this one)
+3. Check `.vscode/cline_mcp_settings.json` exists with correct absolute paths
+4. Test manually: `node [FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js`
+
+⛔ **Do NOT proceed without MCP.** Ask the user to help troubleshoot.
 
 ---
 
@@ -373,14 +400,18 @@ cat > AGENTS.md << 'EOF'
 
 1. Call MCP tool: `get_bootstrap_state`
 2. Read the phase and step from the response
-3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+3. Follow the MCP-guided process
 
-## If MCP Tools Not Available
+## If MCP Tools Not Working
 
-If `get_bootstrap_state` fails or MCP tools are not visible:
-1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
-2. Check Gate 2 - the MCP configuration may need to be verified
-3. Restart your AI tool after MCP is configured
+MCP is **required** for bootstrap. If tools aren't available:
+
+1. Verify you reloaded VS Code (Cmd/Ctrl+Shift+P → "Reload Window")
+2. Started a **new conversation** (not continued this one)
+3. Check `.roo/mcp.json` exists with correct absolute paths
+4. Test manually: `node [FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js`
+
+⛔ **Do NOT proceed without MCP.** Ask the user to help troubleshoot.
 
 ---
 
@@ -402,14 +433,19 @@ cat > GEMINI.md << 'EOF'
 
 1. Call MCP tool: `get_bootstrap_state`
 2. Read the phase and step from the response
-3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+3. Follow the MCP-guided process
 
-## If MCP Tools Not Available
+## If MCP Tools Not Working
 
-If `get_bootstrap_state` fails or MCP tools are not visible:
-1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
-2. Check Gate 2 - the MCP configuration may need to be verified
-3. Restart your AI tool after MCP is configured
+MCP is **required** for bootstrap. If tools aren't available:
+
+1. Open Agent panel (Control+L or View → Open View → Agent)
+2. Click "..." → "MCP Servers" → "Manage MCP Servers" → **Refresh**
+3. Start a **new conversation** (MCP tools won't appear in current conversation)
+4. Check `mcp.json` exists in project root with correct absolute paths
+5. Test manually: `node [FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js`
+
+⛔ **Do NOT proceed without MCP.** Ask the user to help troubleshoot.
 
 ---
 
@@ -431,14 +467,18 @@ cat > .cursorrules << 'EOF'
 
 1. Call MCP tool: `get_bootstrap_state`
 2. Read the phase and step from the response
-3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+3. Follow the MCP-guided process
 
-## If MCP Tools Not Available
+## If MCP Tools Not Working
 
-If `get_bootstrap_state` fails or MCP tools are not visible:
-1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
-2. Check Gate 2 - the MCP configuration may need to be verified
-3. Restart your AI tool after MCP is configured
+MCP is **required** for bootstrap. If tools aren't available:
+
+1. Verify you reloaded Cursor (Cmd/Ctrl+Shift+P → "Reload Window") or fully quit and reopened
+2. Started a **new conversation** (not continued this one)
+3. Check `.cursor/mcp.json` exists with correct absolute paths
+4. Test manually: `node [FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js`
+
+⛔ **Do NOT proceed without MCP.** Ask the user to help troubleshoot.
 
 ---
 
@@ -460,14 +500,18 @@ cat > AGENTS.md << 'EOF'
 
 1. Call MCP tool: `get_bootstrap_state`
 2. Read the phase and step from the response
-3. Follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md` from that point
+3. Follow the MCP-guided process
 
-## If MCP Tools Not Available
+## If MCP Tools Not Working
 
-If `get_bootstrap_state` fails or MCP tools are not visible:
-1. Read `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`
-2. Check Gate 2 - the MCP configuration may need to be verified
-3. Restart your AI tool after MCP is configured
+MCP is **required** for bootstrap. If tools aren't available:
+
+1. Verify you restarted your AI tool completely
+2. Started a **new conversation** (not continued this one)
+3. Check MCP config file exists with correct absolute paths
+4. Test manually: `node [FLUXFRAME_PATH]/mcp-server/bootstrap-mcp-server.js`
+
+⛔ **Do NOT proceed without MCP.** Ask the user to help troubleshoot.
 
 ---
 
@@ -508,20 +552,61 @@ head -1 CLAUDE.md 2>/dev/null || head -1 GEMINI.md 2>/dev/null || head -1 AGENTS
 
 #### ONLY AFTER BOTH TASKS VERIFIED: Tell User to Restart
 
-**ONLY after BOTH checkboxes above are confirmed, tell the user:**
+**ONLY after BOTH checkboxes above are confirmed, tell the user activation instructions based on their AI tool:**
 
+**For Claude Code (CLI):**
 ```
 I've completed both pre-restart tasks:
 1. ✓ Configured the FluxFrame bootstrap MCP server
 2. ✓ Created a temporary bootstrap-resume rules file
 
 To activate MCP:
-1. Completely restart your AI tool (close and reopen, not just refresh)
-2. Start a new conversation
-3. Ask me to continue the FluxFrame bootstrap
+1. Exit Claude Code with `/exit`
+2. Restart the CLI (`claude`)
+3. Start a new conversation
+4. Ask me to continue the FluxFrame bootstrap
+```
 
-The MCP tools will be available after restart, and I'll know to continue
-the bootstrap from where we left off.
+**For VS Code extensions (Cline, Roo Code, Kilo Code):**
+```
+I've completed both pre-restart tasks:
+1. ✓ Configured the FluxFrame bootstrap MCP server
+2. ✓ Created a temporary bootstrap-resume rules file
+
+To activate MCP:
+1. Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows/Linux)
+2. Type "Reload Window" and select it
+3. Start a new conversation
+4. Ask me to continue the FluxFrame bootstrap
+```
+
+**For Cursor:**
+```
+I've completed both pre-restart tasks:
+1. ✓ Configured the FluxFrame bootstrap MCP server
+2. ✓ Created a temporary bootstrap-resume rules file
+
+To activate MCP:
+1. Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows/Linux)
+2. Type "Reload Window" and select it (or fully quit and reopen Cursor)
+3. Start a new conversation
+4. Ask me to continue the FluxFrame bootstrap
+```
+
+**For Antigravity (Gemini):**
+```
+I've completed both pre-restart tasks:
+1. ✓ Configured the FluxFrame bootstrap MCP server
+2. ✓ Created a temporary bootstrap-resume rules file
+
+⚠️ Antigravity requires manual MCP activation:
+1. Open Agent panel (Control+L or View → Open View → Agent)
+2. Click "..." (Additional options) in the upper right
+3. Select "MCP Servers"
+4. Click "Manage MCP Servers"
+5. Click "Refresh" to load the new configuration
+6. Start a NEW conversation (required - MCP won't appear in this one)
+7. Ask me to continue the FluxFrame bootstrap
 ```
 
 **Note:** These bootstrap-resume files are TEMPORARY. They will be replaced with full project rules during Phase 5 (Cleanup) when the real AGENTS.md, CLAUDE.md, etc. are moved from staging to their final locations
