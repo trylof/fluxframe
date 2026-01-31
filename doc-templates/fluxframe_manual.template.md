@@ -1,127 +1,123 @@
 # FluxFrame Instruction Manual
 
-**Your project was bootstrapped with FluxFrame.** This manual explains how to work effectively with the framework and keep your AI-assisted development running smoothly.
+**Your project was bootstrapped with FluxFrame.** This manual explains how to work effectively with the framework.
 
-> [!TIP]
-> **Just Bootstrapped?** Follow the [Getting Started Guide](FLUXFRAME_GETTING_STARTED.md) to set up your project context ("The Mind") before you start coding.
+**CORE PRINCIPLE: The AI is the executor. You are the architect.**
 
+> [!IMPORTANT]
+> **You do NOT manually edit valid documentation files (ROADMAP.md, plans, etc.) unless fixing minor typos.**
+> 
+> Your role is to express **Intent** (via chat or reference files).
+> The AI's role is to translate that intent into **Documentation** (Roadmap, Plans, Logic).
+> You then **Review and Approve**.
 
 ---
 
 ## Quick Reference
 
-| What | Where |
-|------|-------|
-| **This Manual** | `FLUXFRAME_MANUAL.md` (Project Root) |
-| Project context | `{{DOCS_DIR}}/context_master_guide.md` |
-| Current status | `{{DOCS_DIR}}/technical_status.md` |
-| Development roadmap | `{{DOCS_DIR}}/ROADMAP.md` |
-| Bug tracker | `{{DOCS_DIR}}/BUGS.md` |
-| Pattern library | `{{DOCS_DIR}}/patterns/` |
-| **Reference library** | `{{DOCS_DIR}}/reference_library/` |
-| AI rules | `AGENTS.md` {{TOOL_SPECIFIC_FILES}} |
-| MCP server | `mcp-server.js` |
+| What | Where | Who Edits? |
+|------|-------|------------|
+| **This Manual** | `FLUXFRAME_MANUAL.md` | AI (Updates) |
+| Project context | `{{DOCS_DIR}}/context_master_guide.md` | AI (Maintains) |
+| Current status | `{{DOCS_DIR}}/technical_status.md` | AI (Updates) |
+| Development roadmap | `{{DOCS_DIR}}/ROADMAP.md` | AI (Writes) |
+| Bug tracker | `{{DOCS_DIR}}/BUGS.md` | AI (Logs) |
+| Pattern library | `{{DOCS_DIR}}/patterns/` | AI (Extracts) |
+| **Reference library** | `{{DOCS_DIR}}/reference_library/` | **USER** (Uploads) |
+| AI rules | `AGENTS.md` {{TOOL_SPECIFIC_FILES}} | AI (Refines) |
+
+---
+
+## The Workflow: Intent -> Plan -> Execute
+
+### 1. User Expresses Intent
+You initiate work by providing context or instructions.
+*   **Chat:** "I want to add a user login feature."
+*   **Reference:** Upload a spec to `{{DOCS_DIR}}/reference_library/specifications/auth_spec.md` and say "Read this and plan the login feature."
+
+### 2. AI Updates Documentation
+The AI translates your intent into the project's "Mind" (the `{{DOCS_DIR}}/` folder).
+*   **Roadmap:** AI updates `ROADMAP.md` to define the new cycle.
+*   **Plan:** AI creates `roadmap/cycle_X.Y_plan.md` using the template.
+*   **Bugs:** AI logs issues in `BUGS.md`.
+
+### 3. User Reviews & Approves
+You review the AI's plan.
+*   **Approve:** "Looks good, proceed."
+*   **Refine:** "No, use Auth0 instead of local auth. Update the plan."
+
+### 4. AI Executes
+Once approved, the AI executes the plan, writing code and updating `technical_status.md`.
 
 ---
 
 ## User Journeys
 
 ### "I want to add a new Feature"
-1.  **Update Roadmap:** Add your feature to `{{DOCS_DIR}}/ROADMAP.md` (Cycle Planning).
-2.  **Create Plan:** Create an implementation plan. `cp doc-templates/implementation_plan.template.md feature_plan.md`.
-3.  **Execute:** Coding Agent picks up the plan and works through `task.md`.
-4.  **Verify:** Test, then update `technical_status.md`.
+1.  **Context:** (Optional) Upload specs/mocks to `reference_library/`.
+2.  **Intent:** Tell AI: "I want to build [Feature]. Update the Roadmap and create an implementation plan."
+3.  **Review:** AI presents the plan. You review it. Iterate until approved.
+4.  **Execute:** Tell AI: "Execute the plan for [Cycle X.Y] from the roadmap."
+5.  **CLEAR CONTEXT:** The AI just wrote a lot of code. Clear context before you start testing/fixing.
+6.  **Verify:** **USER ACTION:** You test the feature in the app. If bugs, fix them here.
+7.  **Approve:** Tell AI: "Feature verified. Mark cycle as complete."
 
 ### "I want to fix a Bug"
-1.  **Log it:** Describe the bug in `{{DOCS_DIR}}/BUGS.md`.
-2.  **Isolate:** Create a reproduction case (if possible).
-3.  **Fix:** Instruct Agent to "Fix bug #X from BUGS.md".
-4.  **Close:** Mark as [x] in `BUGS.md`.
+1.  **Report:** Tell AI: "I found a [Critical/High/Low] bug: [Description]." OR "Test X failed."
+2.  **Log:** AI logs it in `BUGS.md` and creates a reproduction plan if needed.
+3.  **Fix:** AI analyzes, fixes, and verifies.
+4.  **Verify:** **USER ACTION:** You confirm the bug is gone.
+5.  **Close:** AI updates `BUGS.md`.
 
-### "I want to dump info for the AI"
-*   **Don't:** Paste 50 pages into chat.
-*   **Do:** Save it as a markdown file in `{{DOCS_DIR}}/reference_library/specifications/` or `.../domain_knowledge/`.
-*   **Then:** Tell the Agent "Read reference_library/specifications/my_spec.md".
-
----
-
-## The FluxFrame Way
-
-FluxFrame is "opinionated" because it solves the specific problems of **AI-Assisted Coding**.
-
-### 1. Two-Tier Planning
-AI struggles with long horizons. We break it down:
-*   **Tier 1: Strategic (User Driven):** defined in `ROADMAP.md`. You set the feature goals.
-*   **Tier 2: Tactical (AI Driven):** defined in `task.md` or Implementation Plans. The AI breaks the feature into steps.
-
-### 2. Documentation is the "Mind"
-The AI doesn't remember your project. **The Docs remember.**
-*   **Prescriptive (Rules):** `patterns/`, `workflows/`. "How we do things." Follow these largely.
-*   **Descriptive (Context):** `reference_library/`. "What the world is like." Upload emails, specs, and research here. The AI uses this to *understand*, not to *obey*.
-
-### 3. Pattern-Driven Development
-Never invent from scratch if a pattern exists.
-1.  **Check:** Does `patterns/ui_patterns.md` have a button component?
-2.  **Use:** Follow the pattern.
-3.  **Update:** If you build something new and reusable, add it to the patterns.
-
-### 4. Context discipline
-**Garbage In, Garbage Out.** If you feed the AI old, irrelevant chat history, you get bugs.
-*   **Keep it clean:** Short, focused chat sessions.
-*   **Update the docs:** Before clearing context, ensure the "Brain" (docs) is updated.
-
-### Context Management (CRITICAL)
-
-**Why Context Clearing Matters:**
-AI models have a finite "context window." As a chat session grows long:
-1.  **Hallucinations Increase:** The AI loses track of the latest file state vs. old edits.
-2.  **Performance Degrades:** Instructions get diluted by pages of conversation history.
-3.  **Cost Increases:** Re-sending massive context is expensive.
-
-**When to Start a New Chat:**
-- [ ] **Start of Task:** ALWAYS start fresh when picking up a new item from `task.md`.
-- [ ] **Major Pivot:** If you drilled into a rabbit hole and are coming back up to the main plan.
-- [ ] **After 15-20 turns:** If the conversation feels "stuck" or the AI starts making simple syntax errors.
-
-**Session Protocol:**
-1.  **Check Status:** `cat doc-templates/technical_status.md` (Know where you are).
-2.  **Update Task:** Mark progress in `task.md`.
-3.  **Clear Context:** `/clear` or start new chat.
-4.  **Resume:** Paste the "Current Task" summary or point to `task.md`.
+### "I want to brainstorm / dump info"
+1.  **Upload:** Create a file in `reference_library/domain_knowledge/` or `correspondence/`.
+2.  **Index & Value:** Tell AI: "I uploaded [Filename]. Please create a metadata entry describing its purpose and binding level (e.g. HARD CONSTRAINT vs BRAINSTORMING)."
+3.  **Result:** AI updates relevant docs (Roadmap, Open Questions) based on the new info.
 
 ---
 
-## Your Setup
+## Verification & Testing
 
-### Configured AI Tools
-{{AI_TOOLS_SECTION}}
+While the AI writes automated tests, **YOU are the quality gate.**
 
-### Documentation Structure
-```
-{{DOCS_DIR}}/
-├── context_master_guide.md    # Single source of truth
-├── technical_status.md        # Current project state
-├── ROADMAP.md                 # Roadmap & cycles
-├── api_contract_standards.md  # API enforcement (if applicable)
-├── patterns/                  # Prescriptive: Your pattern library
-│   ├── README.md
-│   ├── api_patterns.md
-│   ├── ui_patterns.md
-│   └── data_patterns.md
-├── reference_library/         # Descriptive: Real-world context
-│   ├── README.md              # Philosophy & guidelines
-│   ├── open_questions/        # Research topics & questions
-│   ├── correspondence/        # Emails, meeting notes
-│   ├── user_research/         # Interviews, feedback
-│   ├── market_research/       # Competitor analysis
-│   ├── domain_knowledge/      # Expert input, terminology
-│   └── specifications/        # External specs, PDFs
-├── roadmap/                   # Detailed cycle plans
-└── bugs/                      # Bug fix plans
-```
+### The Rule of "User Sign-Off"
+No cycle or bug fail is considered "Done" until you have manually verified it.
 
-### API Contract Approach
-{{API_APPROACH_SECTION}}
+1.  **AI Verification:** The AI runs unit tests, lints, and builds.
+2.  **User Verification:**
+    *   Does it look right? (Design)
+    *   Does it feel right? (UX)
+    *   Does it actually solve the problem? (Intent)
+3.  **Approval:** You explicitly tell the AI "This is verified."
+
+---
+
+## The "Mind" of the Project
+
+The `{{DOCS_DIR}}/` directory is the AI's long-term memory. If it's not in the docs, the AI doesn't know it.
+
+### Your Domain (Descriptive)
+*   **`reference_library/`**: This is YOUR space.
+    *   Upload PDFs, images, text files.
+    *   **No strict format.** Just dump info here.
+    *   **Action:** "Read reference_library/specifications/api_v1.pdf."
+
+### The AI's Domain (Prescriptive)
+*   **`ROADMAP.md`, `patterns/`, `technical_status.md`**: These are strict structures.
+    *   **DO NOT EDIT MANUALLY.** You will break the AI's parsing or synchronization.
+    *   **Action:** "Update the roadmap to reflect..."
+
+---
+
+## Common Commands (Natural Language)
+
+| Goal | Command to AI |
+|------|---------------|
+| **Start Work** | "What is the current status? What should we work on next?" |
+| **New Cycle** | "Plan Cycle [X.Y]: [Description]." |
+| **Fix Bug** | "There's a bug in [Feature]. Fix it." |
+| **Save Pattern** | "That solution was good. Save it as a UI pattern." |
+| **Update Docs** | "We changed the API. Update the API design docs." |
 
 ---
 
@@ -129,195 +125,43 @@ AI models have a finite "context window." As a chat session grows long:
 
 ### Starting a New Development Cycle
 
-1. **Define the cycle** in `ROADMAP.md`
-2. **Call** `start_cycle_planning("X.Y")` to initiate
-3. **Analyze scope** with `analyze_cycle_scope()`
-4. **Create detailed plan** with `create_cycle_plan()`
-5. **Fill ALL required sections** (see below)
-6. **Get approval**, then `approve_cycle_plan()`
-7. **Implement** following the plan and patterns
-8. **Complete** with `validate_cycle_completion()`
-9. **Update docs** - technical_status, patterns, context guide
-
-### Cycle Plan Sections (All Required)
-
-Each detailed cycle plan in `roadmap/` contains these sections:
-
-| Section | Purpose |
-|---------|---------|
-| **Progress Tracker** | Track implementation phases |
-| **Executive Summary** | WHY: Business context at a glance |
-| **Target Users** | WHO: Primary/secondary audiences |
-| **User Stories** | WHAT: "As a [user], I want [X], so that [Y]" |
-| **Security Considerations** | Protection requirements |
-| **Research Summary** | Problem statement + existing patterns |
-| **Scope Assessment** | Complexity scoring (triggers decomposition) |
-| **Technical Design** | Architecture + files to create/modify |
-| **Implementation Checklist** | Step-by-step tasks |
-| **Success Criteria** | Definition of done + Tests to Pass |
-| **Risk Assessment** | What could go wrong |
-| **Approval** | User sign-off |
-
-> **For Autonomous AI Execution:** These sections provide complete context (WHY, WHO, WHAT, HOW) so an AI agent can implement the cycle without asking clarifying questions.
-
-### Fixing Bugs / Change Requests
-
-1. **Initialize** with `start_change_request()`
-2. **Analyze** - understand root cause (no code changes yet)
-3. **Iterate** - fix, test, refine
-4. **Confirm** - user validates it works
-5. **Document** - update ALL affected docs
-
-### Tracking and Fixing Bugs
-
-Bugs are tracked separately from the development roadmap:
-
-1. **Log bug** in `BUGS.md` with severity (Critical/High/Low)
-2. **Bug ID format:** `BUG_YYYY_MM_short_name` (e.g., `BUG_2026_01_login_crash`)
-3. **For complex bugs:** Create fix plan in `bugs/BUG_XXX_FIX_PLAN.md`
-4. **Fix and test** with regression tests
-5. **Update BUGS.md** status when verified
-
-> **Key:** Bugs follow a streamlined process—no scope analysis or decomposition like development cycles.
+1. **Define the cycle** in `ROADMAP.md` (AI)
+2. **Call** `start_cycle_planning("X.Y")` to initiate (AI)
+3. **Analyze scope** with `analyze_cycle_scope()` (AI)
+4. **Create detailed plan** with `create_cycle_plan()` (AI)
+5. **Fill ALL required sections** (AI)
+6. **Get approval** (**USER ACTION**) -> **CLEAR CONTEXT**
+7. **Implement** following the plan and patterns (AI) -> **CLEAR CONTEXT**
+8. **Manual Verification** (**USER ACTION**) - Test the feature yourself.
+9. **Complete** with `validate_cycle_completion()` (AI)
+10. **Update docs** - technical_status, patterns, context guide (AI)
 
 ---
 
-## Keeping Your Setup Current
+## Keeping Context Clean
 
-> [!WARNING]
-> **FluxFrame only works if you work with it.**
+1.  **Finish a Task:** Ensure AI updates `technical_status.md`.
+2.  **Clear Context:** Use your editor's "Clear Chat" or "New Session" feature.
+3.  **Resume:** "Read `technical_status.md` and `task.md`. Where did we leave off?"
+
+---
+
+## Missing Features (Current Limitations)
+
+> [!NOTE]
+> **No Pull Request / Merge Request Process**
 > 
-> Hacks, skipped steps, and undocumented changes defeat the purpose. If workflows don't fit your needs, update them—don't bypass them.
-
-### When to Update AI Rules
-
-Update your AI rules (`AGENTS.md` and tool-specific configs) when:
-
-- ✏️ **Tech stack changes** - New frameworks, libraries, or tools
-- 🏗️ **Architecture evolves** - New patterns, different directory structure
-- 🔧 **Infrastructure updates** - New deployment targets, CI/CD changes
-- 📋 **Team conventions change** - Coding standards, review requirements
-- 🐛 **Recurring issues appear** - Add rules to prevent repeated mistakes
-
-### How to Update Rules
-
-1. **Identify the change** - What behavior needs to be different?
-2. **Update `AGENTS.md`** - Core methodology and project-wide rules
-3. **Update tool-specific files** - If using tool-specific features
-4. **Update patterns** - If new patterns are involved
-5. **Document in `technical_status.md`** - Note the rule change
-6. **Test** - Start a new AI session and verify behavior
-
-### For AI Agents: Making Changes to This System
-
-When infrastructure changes require updating rules or workflows:
-
-1. Review current rules in `AGENTS.md` and tool-specific configs
-2. Check `{{DOCS_DIR}}/patterns/infra_patterns.md` for infrastructure patterns
-3. Identify what needs to change and why
-4. Update affected files systematically:
-   - `AGENTS.md` for methodology changes
-   - Tool-specific configs for tool-specific features
-   - Pattern files for new/changed patterns
-5. Document changes in `technical_status.md`
-6. Verify changes don't contradict existing rules
+> FluxFrame currently does not enforce a PR/MR workflow. The AI commits directly to the branch you are working on. A formal review/merge process is planned for a future update. For now, rely on your Manual Verification step as the "Pre-Merge" check.
 
 ---
 
-## Common Anti-Patterns
+## Updating This System
 
-> [!CAUTION]
-> These defeat the purpose of FluxFrame and create technical debt.
+Even the framework itself is managed by the AI.
 
-| Anti-Pattern | Why It's Bad | What to Do Instead |
-|--------------|--------------|---------------------|
-| Skipping pattern check | Reinvents solved problems | Always check patterns first |
-| Not updating docs | Context drifts from reality | Update docs every cycle |
-| Bypassing MCP tools | AI loses context | Use tools consistently |
-| Hardcoding exceptions | Creates invisible rules | Document in rules/patterns |
-| "Quick fix" without protocol | Lost knowledge | Use change request workflow |
-| Ignoring validation | Incomplete work ships | Complete all checklist items |
+*   **Change Rules:** "We need to change how we handle logging. Update `AGENTS.md` and the logging patterns."
+*   **New Workflow:** "We need a security review step. Update the workflow docs."
 
----
-
-## Updating or Re-Bootstrapping
-
-### Fetching FluxFrame for New Projects
-
-To bootstrap a new project with FluxFrame:
-
-```bash
-git clone https://github.com/trylof/fluxframe.git
-```
-
-Then follow `fluxframe/BOOTSTRAP_INSTRUCTIONS.md`.
-
-### Migrating Another Project
-
-If you want to apply FluxFrame to another project:
-
-1. Clone FluxFrame into the target project
-2. Tell your AI: "Read fluxframe/BOOTSTRAP_INSTRUCTIONS.md and bootstrap FluxFrame for this project"
-3. The AI will detect your project state and guide you through setup
-
-### Getting Framework Updates
-
-FluxFrame is designed to be removed after bootstrap. Your project-specific documentation and rules remain. To get framework improvements for future projects, simply clone the latest version.
-
----
-
-## Additional Resources
-
-- **Pattern Library System:** See `{{DOCS_DIR}}/patterns/README.md` for how to create and maintain patterns
-- **Development Cycles:** The two-tier planning system is documented in `ROADMAP.md`
-- **API Contracts:** {{API_APPROACH_SECTION}}
-- **Reference Library:** See `{{DOCS_DIR}}/reference_library/README.md` for philosophy and guidelines
-
----
-
-## The Reference Library
-
-### Descriptive vs Prescriptive Documentation
-
-FluxFrame distinguishes between two types of documentation:
-
-| Type | Examples | Purpose |
-|------|----------|---------|
-| **Prescriptive** | patterns/, workflows/, context_master_guide.md | Tell you WHAT to do and HOW |
-| **Descriptive** | reference_library/ | Tell you WHAT EXISTS in the real world |
-
-### What Goes in the Reference Library
-
-The `reference_library/` stores real-world context that **informs but doesn't dictate** decisions:
-
-- **correspondence/** - Stakeholder emails, Slack threads, meeting notes
-- **user_research/** - User interviews, feedback, usage scenarios
-- **market_research/** - Competitor analysis, industry reports
-- **domain_knowledge/** - Expert input, terminology, business context
-- **specifications/** - External specs, PDFs, partner documentation
-
-### Key Principles
-
-1. **Informs, doesn't dictate** - You may intentionally deviate from user wishes or market trends
-2. **Contradictions are valuable** - Different user needs reveal complexity; don't resolve artificially
-3. **Date and source everything** - Context changes; attribution matters
-
-### When to Consult
-
-- **Before planning features** - Check user_research/ for relevant needs
-- **When designing tests** - Reference real usage scenarios
-- **When making product decisions** - Consider market context
-- **When understanding domain** - Consult domain_knowledge/
-
-See `{{DOCS_DIR}}/reference_library/README.md` for detailed guidelines.
-
----
-
-## Need Help?
-
-- **Framework issues:** [github.com/trylof/fluxframe/issues](https://github.com/trylof/fluxframe/issues)
-- **Project-specific:** Check your `context_master_guide.md` and patterns first
-
----
-
-*This manual was generated during FluxFrame bootstrap. Keep it updated as your project evolves.*
+**Rule of Thumb:** If it’s a strict file (Markdown with headers, tables, etc.), ask the AI to write it. If it’s raw thought/context, you write/upload it.
+nan
+*This manual was generated for [Your Project].*

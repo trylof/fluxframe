@@ -115,8 +115,8 @@ I want to populate my pattern library. Please:
 ```text
 I want to set up my roadmap.
 1. Read `ROADMAP.md`.
-2. Replace the Objectives with: [List Objectives].
-3. Define Cycle 1.1 as: [Name of First Feature].
+2. Update the Objectives to: [List Objectives].
+3. Define Cycle 1.1 as: [Name of First Feature] and update the Roadmap.
 ```
 
 ---
