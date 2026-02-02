@@ -4,9 +4,9 @@
 
 **Build better software faster with AI assistance that scales intelligence, not just productivity.**
 
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue)]()
-[![Framework](https://img.shields.io/badge/AI%20Assistants-Claude%20%7C%20Roo%20%7C%20Cline%20%7C%20Cursor-orange)]()
+[![Status](https://img.shields.io/badge/Status-Beta-yellow)]()
+[![Version](https://img.shields.io/badge/Version-0.5.0-blue)]()
+[![Framework](https://img.shields.io/badge/AI%20Assistants-Claude%20Code%20%7C%20Roo%20%7C%20Cline%20%7C%20Cursor%20%7C%20Antigravity%20%7C%20Codex-orange)]()
 
 ---
 
@@ -58,17 +58,49 @@ MCP ensures the bootstrap process is followed correctly:
 
 ### Quick Start
 
-**Step 1:** Clone FluxFrame:
+Choose your scenario:
+
+#### A) Existing Project
+
+**Step 1:** Ensure your project is under version control:
+```bash
+cd your-project
+git init  # if not already a git repo
+git add -A && git commit -m "Snapshot before FluxFrame"
+```
+
+**Step 2:** Add FluxFrame to your project root:
 ```bash
 git clone https://github.com/trylof/fluxframe.git
 ```
 
-**Step 2:** Tell your AI assistant:
+**Step 3:** Tell your AI assistant:
 ```
 Read fluxframe/BOOTSTRAP_INSTRUCTIONS.md and bootstrap FluxFrame for this project.
 ```
 
-**That's it.** The AI handles everything else:
+#### B) Starting Fresh
+
+**Step 1:** Create a new project directory with a project brief:
+```bash
+mkdir my-new-project && cd my-new-project
+git init
+# Create a file describing your project (e.g., project_brief.md)
+```
+
+**Step 2:** Add FluxFrame:
+```bash
+git clone https://github.com/trylof/fluxframe.git
+```
+
+**Step 3:** Tell your AI assistant:
+```
+Read fluxframe/BOOTSTRAP_INSTRUCTIONS.md and bootstrap FluxFrame for this project.
+```
+
+---
+
+**From there, the AI handles everything:**
 1. Run `npm install` if dependencies are missing
 2. Check if MCP is configured
 3. If not, **guide you through MCP setup step-by-step** (no prior knowledge needed)
@@ -253,11 +285,13 @@ fluxframe/
 ├── BOOTSTRAP_INSTRUCTIONS.md          # AI's unified entry point
 │
 ├── bootstrap/                         # Self-bootstrapping system
+│   ├── MCP_SETUP_GUIDE.md             # MCP configuration reference
+│   ├── api_contract_questionnaire.md  # API contract questions
 │   ├── detection_guide.md             # How to analyze existing projects
 │   ├── greenfield_workflow.md         # New project setup
-│   ├── similar_workflow.md            # Upgrade existing AI workflow
 │   ├── migration_workflow.md          # Adapt existing documentation
 │   ├── project_questionnaire.md       # Question reference by scenario
+│   ├── similar_workflow.md            # Upgrade existing AI workflow
 │   └── validation_checklist.md        # Final validation
 ├── doc-templates/                     # Project documentation templates
 │   ├── context_master_guide.template.md
@@ -269,10 +303,16 @@ fluxframe/
 │   └── api_contract_standards.template.md
 │
 ├── ai-rules/                          # AI assistant configuration
-│   ├── template.clinerules           # For Cline users
-│   ├── template.roorules             # For Roo users
-│   ├── CUSTOMIZATION_GUIDE.md
-│   └── RULE_ENFORCEMENT.md
+│   ├── README.md                      # AI rules overview
+│   ├── FEATURE_MATRIX.md              # Tool comparison
+│   ├── CUSTOMIZATION_GUIDE.md         # How to customize rules
+│   ├── RULE_ENFORCEMENT.md            # Enforcement patterns
+│   ├── core/                          # Universal AGENTS.md template
+│   ├── claude-code/                   # Claude Code templates
+│   ├── roo-code/                      # Roo Code templates
+│   ├── cline/                         # Cline templates
+│   ├── antigravity/                   # Antigravity templates
+│   └── compatibility/                 # Symlink guides
 │
 ├── mcp-server/                        # Context provider
 │   └── template-mcp-server.js
@@ -439,9 +479,12 @@ For existing projects:
 
 ### AI Assistants
 
-- ✅ **Cline** - Full support with `.clinerules`
-- ✅ **Roo** - Full support with `.roorules`
-- 🔄 **Others** - Easy to add (just different rule filename)
+- ✅ **Claude Code** - Full support with `CLAUDE.md` + `.claude/rules/`
+- ✅ **Roo Code** - Full support with `.roomodes` + `.roo/rules/`
+- ✅ **Cline** - Full support with `.clinerules/`
+- ✅ **Cursor** - Support via `AGENTS.md`
+- ✅ **Antigravity** - Full support with `GEMINI.md`
+- ✅ **Codex** - Support via `AGENTS.md`
 
 ### Tech Stacks
 
@@ -548,7 +591,6 @@ Recommended: Keep framework directory separate from your project code. Bootstrap
 
 ---
 
-**Framework Version:** 1.0.0  
-**Last Updated:** November 2025  
-**Status:** ✅ Ready for more!
-**Status:** ✅ Ready for more!
+**Framework Version:** 0.5.0
+**Last Updated:** February 2026
+**Status:** Beta - Active Development
