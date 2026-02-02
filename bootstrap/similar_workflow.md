@@ -261,6 +261,68 @@ Based on detected files and configs:
 **Note:** This is preliminary detection. Will confirm with user in Phase 2.5.
 ```
 
+### Step 1.4: Identify Documents for Potential Archival
+
+**Purpose:** Find all non-code documents that may need to be archived to reference_library during bootstrap.
+
+**CRITICAL:** Documents cannot be expected to follow naming conventions. Scan broadly and let the user decide what to archive.
+
+**Scan for:**
+```markdown
+## Documents Found for Archival Review
+
+### Root Level Documents (non-code)
+Scan project root for markdown, text, and documentation files:
+
+| File | Type (Inferred) | Recommendation |
+|------|-----------------|----------------|
+| [filename] | [roadmap/architecture/brief/status/unknown] | [Archive/Keep/Ask User] |
+
+### Documentation Directories
+Scan docs/, documentation/, project_docs/, etc.:
+
+| File | Location | Type (Inferred) | Recommendation |
+|------|----------|-----------------|----------------|
+| [filename] | [path] | [type] | [recommendation] |
+
+### Existing AI Rules (for backup)
+| File | Location | Will Archive To |
+|------|----------|-----------------|
+| AGENTS.md | root | reference_library/archived_documents/rules/ |
+| CLAUDE.md | root | reference_library/archived_documents/rules/ |
+| .clinerules/ | root | reference_library/archived_documents/rules/ |
+| [etc.] | | |
+```
+
+**Type Inference Guidelines:**
+- Files containing "roadmap", "backlog", "plan" → `roadmaps/`
+- Files containing "architecture", "design", "adr", "decision" → `architecture/`
+- Files containing "brief", "prd", "requirements", "spec" → `briefings/`
+- Files containing "status", "changelog", "state" → `status/`
+- AI rule files (AGENTS.md, .clinerules, etc.) → `rules/`
+- Unknown or ambiguous → Ask user to categorize
+
+**DO NOT auto-archive:**
+- README.md (belongs to the project)
+- LICENSE, CONTRIBUTING.md (standard project files)
+- Source code files
+- Configuration files (.env, package.json, etc.)
+- Test files
+
+**Record in bootstrap state:**
+```javascript
+{
+  "documentsForArchival": [
+    {
+      "file": "PROJECT_BRIEF.md",
+      "originalPath": "PROJECT_BRIEF.md",
+      "inferredType": "briefings",
+      "userDecision": null  // Will be set after user chooses
+    }
+  ]
+}
+```
+
 ---
 
 ## Phase 2: Diff Against FluxFrame
@@ -482,6 +544,13 @@ Before we proceed, here's what a complete FluxFrame setup provides. I'll then sh
 > The Reference Library stores DESCRIPTIVE information (real-world context) as opposed to PRESCRIPTIVE documentation (patterns, workflows). It INFORMS decisions but doesn't DICTATE them.
 
 - [ ] `reference_library/README.md` - Index and philosophy (descriptive vs prescriptive) **(REQUIRED)**
+- [ ] `reference_library/archived_documents/` - Documents preserved during bootstrap **(REQUIRED)**
+  - [ ] `archived_documents/archive_manifest.md` - Metadata for all archived files
+  - [ ] `archived_documents/roadmaps/` - Previous roadmap files
+  - [ ] `archived_documents/status/` - Previous status documents
+  - [ ] `archived_documents/architecture/` - Previous architecture docs
+  - [ ] `archived_documents/briefings/` - Project briefs and requirements
+  - [ ] `archived_documents/rules/` - Previous AI rule files
 - [ ] `reference_library/open_questions/` - Research topics and unanswered questions
 - [ ] `reference_library/correspondence/` - Emails, meeting notes, stakeholder input
 - [ ] `reference_library/user_research/` - Interviews, feedback, usage scenarios
@@ -664,7 +733,138 @@ log_decision({
 
 ---
 
+## Phase 2.8: Document Archival Decisions (REQUIRED)
+
+**Purpose:** Get explicit user decisions on which existing documents should be archived to reference_library.
+
+**CRITICAL:** This phase is REQUIRED for SIMILAR and MIGRATION workflows. Documents are NEVER deleted or overwritten without explicit user consent and archival.
+
+### Step 2.8.1: Present Documents Found
+
+Present the documents identified in Step 1.4:
+
+```markdown
+## Document Archival Review
+
+During setup, I found the following documents that may contain valuable context.
+These will be **archived** (not deleted) to `reference_library/archived_documents/`
+so they're preserved while establishing the FluxFrame structure.
+
+**Documents Found:**
+
+| # | File | Location | Inferred Type | My Recommendation |
+|---|------|----------|---------------|-------------------|
+| 1 | [filename] | [path] | [roadmap/architecture/brief/etc.] | Archive / Keep in place |
+| 2 | [filename] | [path] | [type] | Archive / Keep in place |
+| ... | | | | |
+
+**Existing AI Rules (will be backed up automatically):**
+
+| File | Current Location | Will Archive To |
+|------|------------------|-----------------|
+| [rule file] | [path] | reference_library/archived_documents/rules/ |
+
+---
+
+**For each document, I need your decision:**
+
+1. **Archive** - Move to reference_library/archived_documents/ with timestamp
+   - Preserves the document for future reference
+   - Clears space for FluxFrame structure
+   - Listed in FLUXFRAME_MANUAL.md for easy access
+
+2. **Keep in place** - Don't move this file
+   - Stays exactly where it is
+   - FluxFrame works around it
+   - You're responsible for maintaining it
+
+Please tell me your choice for each numbered item, or say:
+- "Archive all" - Archive everything I found
+- "Keep all" - Don't archive anything
+```
+
+### Step 2.8.2: Confirm Categorization
+
+For each document the user chooses to archive, confirm the category:
+
+```markdown
+You chose to archive: **[filename]**
+
+I'll place it in: `reference_library/archived_documents/[inferred_type]/`
+
+Archived name: `[original_name]_archived_[YYYY-MM-DD].md`
+
+Is this categorization correct?
+- Yes (proceed)
+- No, this is actually a [different category]
+```
+
+### Step 2.8.3: Record Archival Decisions
+
+For each archival decision:
+
+```
+log_decision({
+  category: "archival",
+  decision: "Archive [filename] to reference_library/archived_documents/[type]/",
+  reasoning: "[User's stated reason or 'User approved recommended archival']",
+  alternatives: ["Keep in place", "Delete (not recommended)"],
+  implications: "Document preserved in archive, available via archive_manifest.md"
+})
+```
+
+Update bootstrap state:
+```javascript
+{
+  "archivalDecisions": [
+    {
+      "file": "PROJECT_BRIEF.md",
+      "originalPath": "PROJECT_BRIEF.md",
+      "archiveTo": "reference_library/archived_documents/briefings/",
+      "archivedName": "PROJECT_BRIEF_archived_2026-02-01.md",
+      "decision": "archive",
+      "reason": "User approved"
+    }
+  ]
+}
+```
+
+### Step 2.8.4: Summarize Archival Plan
+
+Before proceeding, confirm the archival plan:
+
+```markdown
+## Archival Summary
+
+**Documents to Archive:**
+| Original | Archived As | Category |
+|----------|-------------|----------|
+| [file] | [archived_name] | [category] |
+
+**Documents Kept in Place:**
+| File | Location | Reason |
+|------|----------|--------|
+| [file] | [path] | [user's reason] |
+
+**AI Rules to Back Up:**
+All existing AI rules will be backed up to `reference_library/archived_documents/rules/` before new rules are activated.
+
+Proceed with this archival plan? (yes/modify)
+```
+
+**Note:** Archival is executed during Phase 7 (Finalization), not immediately. This ensures atomicity.
+
+---
+
 ## Phase 3: User Decisions
+
+> [!IMPORTANT]
+> **CONTENT EXTRACTION TIMING**
+>
+> Documents marked for archival are NOT moved until Phase 7 (Finalization).
+> You MUST read and extract relevant content from existing documents DURING Phases 3-5
+> BEFORE finalization occurs. The archival decisions record WHAT will be archived,
+> but the actual move happens only after you've used the content.
 
 ### Step 3.1: Present Differences
 
@@ -739,6 +939,20 @@ Create decision record:
 ---
 
 ## Phase 4: Generate Merged Configuration (to Staging)
+
+> [!CRITICAL]
+> **READ BEFORE GENERATING**
+>
+> Before generating any new documentation, you MUST read and extract content from:
+> - Existing ROADMAP.md, planning docs → Extract cycles, milestones, priorities
+> - Existing technical_status.md, STATUS.md → Extract current state, known issues
+> - Existing architecture docs → Extract architectural decisions, patterns
+> - Existing project briefs → Extract requirements, constraints, goals
+> - Any documents marked for archival → Extract relevant content NOW
+>
+> **Why:** These documents will be archived during Phase 7 (Finalization).
+> If you don't read them NOW, the content will be lost from the new FluxFrame documents.
+> The archive preserves the files, but the AI won't automatically know to check there.
 
 ### Step 4.1: Verify Backup Exists
 

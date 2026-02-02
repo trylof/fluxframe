@@ -72,6 +72,23 @@ Before starting this workflow:
 
 ---
 
+## Safeguard: Check for Existing Content
+
+> [!NOTE]
+> Even though this is a GREENFIELD project (no structured AI workflow/documentation),
+> there may still be files containing useful context. Before generating new documents:
+>
+> 1. **Check for README.md** - If it exists, it will be PRESERVED (not overwritten)
+> 2. **Check for any planning/brief documents** - Ask user if they want content extracted
+> 3. **Check for existing project notes** - May inform ROADMAP.md or technical_status.md
+>
+> If you find documents that should be archived or contain context to extract,
+> treat this as a SIMILAR or MIGRATION workflow instead, or at minimum:
+> - Read the documents before generating new ones
+> - Offer to archive them to `reference_library/archived_documents/`
+
+---
+
 ## CRITICAL: Never Make Assumptions
 
 **This section overrides all other guidance. Follow these rules absolutely.**
@@ -154,6 +171,12 @@ mkdir -p {{DOCS_DIR}}/workflows
 mkdir -p {{DOCS_DIR}}/roadmap
 mkdir -p {{DOCS_DIR}}/bugs
 mkdir -p {{DOCS_DIR}}/reference_library
+mkdir -p {{DOCS_DIR}}/reference_library/archived_documents
+mkdir -p {{DOCS_DIR}}/reference_library/archived_documents/roadmaps
+mkdir -p {{DOCS_DIR}}/reference_library/archived_documents/status
+mkdir -p {{DOCS_DIR}}/reference_library/archived_documents/architecture
+mkdir -p {{DOCS_DIR}}/reference_library/archived_documents/briefings
+mkdir -p {{DOCS_DIR}}/reference_library/archived_documents/rules
 mkdir -p {{DOCS_DIR}}/reference_library/open_questions
 mkdir -p {{DOCS_DIR}}/reference_library/correspondence
 mkdir -p {{DOCS_DIR}}/reference_library/user_research
@@ -1097,9 +1120,38 @@ Check if `FLUXFRAME_MANUAL.md` already exists.
 | Placeholder | Replacement |
 |-------------|-------------|
 | `{{DOCS_DIR}}` | Documentation directory path |
+| `{{PROJECT_NAME}}` | Project name |
 | `{{AI_TOOLS_SECTION}}` | List of configured AI tools (see below) |
 | `{{TOOL_SPECIFIC_FILES}}` | Tool-specific file list |
 | `{{API_APPROACH_SECTION}}` | Chosen API contract approach |
+| `{{ARCHIVED_DOCUMENTS_SECTION}}` | Table of archived documents (see below) |
+
+**ARCHIVED_DOCUMENTS_SECTION Content:**
+
+For greenfield projects with no existing documents:
+```markdown
+No documents were archived during bootstrap (greenfield project).
+
+If you archive documents later during framework updates, they will be listed here.
+See `{{DOCS_DIR}}/reference_library/archived_documents/archive_manifest.md` for details.
+```
+
+For similar/migration projects with archived documents:
+```markdown
+During FluxFrame setup, the following documents were archived to preserve historical context:
+
+| Original Location | Archived As | Contains |
+|-------------------|-------------|----------|
+| `PROJECT_BRIEF.md` | `archived_documents/briefings/PROJECT_BRIEF_archived_2026-02-01.md` | Original project requirements |
+| `docs/ARCHITECTURE.md` | `archived_documents/architecture/ARCHITECTURE_archived_2026-02-01.md` | Legacy architecture documentation |
+| ... | ... | ... |
+
+**To access archived content:**
+- Browse: `{{DOCS_DIR}}/reference_library/archived_documents/`
+- Full metadata: `archive_manifest.md`
+
+**Important:** These files are for reference only. If you need information from them, extract the relevant parts into the appropriate FluxFrame document rather than working from the archive.
+```
 
 **AI_TOOLS_SECTION Content:**
 
@@ -1145,6 +1197,49 @@ Based on user's API choice:
 - [ ] All placeholders replaced
 - [ ] Tool-specific sections match configured tools
 - [ ] API approach section accurate
+- [ ] Archived documents section populated (if applicable)
+
+---
+
+### Step 7.6: Generate FluxFrame Getting Started Guide (REQUIRED)
+
+**Purpose:** Create an onboarding guide for users new to the FluxFrame-enabled project.
+
+**Source:** `doc-templates/fluxframe_getting_started.template.md`
+
+**Output:** `FLUXFRAME_GETTING_STARTED.md` (in project root)
+
+**Placeholder Replacements:**
+
+| Placeholder | Replacement |
+|-------------|-------------|
+| `{{DOCS_DIR}}` | Documentation directory path |
+| `{{ARCHIVED_DOCUMENTS_REFERENCE}}` | Reference to archived documents (see below) |
+
+**ARCHIVED_DOCUMENTS_REFERENCE Content:**
+
+For greenfield projects:
+```markdown
+This is a new project - no documents were archived during bootstrap.
+```
+
+For similar/migration projects with archived documents:
+```markdown
+During FluxFrame setup, some existing project documents were archived to preserve historical context while establishing the new structure.
+
+**What was archived:** See the "Archived Documents" section in `FLUXFRAME_MANUAL.md` for the complete list.
+
+**Where to find them:** `{{DOCS_DIR}}/reference_library/archived_documents/`
+
+**Full details:** `{{DOCS_DIR}}/reference_library/archived_documents/archive_manifest.md`
+
+These documents contain valuable historical context. If you need information from them, the AI can help extract and integrate relevant content into the current FluxFrame documents.
+```
+
+**Validation:**
+- [ ] File created at `FLUXFRAME_GETTING_STARTED.md`
+- [ ] All placeholders replaced
+- [ ] Archived documents reference appropriate for project type
 
 ---
 
@@ -1649,6 +1744,7 @@ Before presenting to user, verify:
 
 **Reference Library (always created):**
 - [ ] `{{DOCS_DIR}}/reference_library/README.md`
+- [ ] `{{DOCS_DIR}}/reference_library/archived_documents/` (with subdirectories)
 - [ ] `{{DOCS_DIR}}/reference_library/correspondence/.gitkeep`
 - [ ] `{{DOCS_DIR}}/reference_library/user_research/.gitkeep`
 - [ ] `{{DOCS_DIR}}/reference_library/market_research/.gitkeep`

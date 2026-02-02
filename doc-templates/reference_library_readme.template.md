@@ -31,6 +31,13 @@ You may intentionally deviate from user wishes or market trends when there's goo
 ```
 reference_library/
 ├── README.md              # This file - index and philosophy
+├── archived_documents/    # Documents archived during bootstrap/updates
+│   ├── archive_manifest.md   # Metadata: what was archived, when, why
+│   ├── roadmaps/             # Previous roadmap files
+│   ├── status/               # Previous status documents
+│   ├── architecture/         # Previous architecture docs
+│   ├── briefings/            # Project briefs and requirements docs
+│   └── rules/                # Previous AI rule files
 ├── open_questions/        # Research topics and unanswered questions
 ├── correspondence/        # Emails, Slack threads, meeting notes
 ├── user_research/         # Interviews, feedback, usage scenarios
@@ -127,6 +134,38 @@ External technical documents and specifications.
 
 **Naming convention:** `[source]_[document_name].[ext]`
 **Example:** `stripe_webhook_specs.pdf`, `oauth2_rfc6749_summary.md`
+
+### `archived_documents/`
+Documents preserved during FluxFrame bootstrap or major updates.
+
+**Purpose:** When FluxFrame is bootstrapped onto an existing project, valuable documents (roadmaps, architecture docs, project briefs) are archived here rather than deleted. This preserves critical historical context while establishing the new structure.
+
+**What gets archived:**
+- Previous roadmap/planning documents
+- Architecture and design documents
+- Project briefs and requirements docs
+- Status tracking documents
+- Previous AI rule configurations
+- Any other documents user chose to archive during bootstrap
+
+**Subdirectories:**
+- `roadmaps/` - Previous roadmap, planning, and backlog files
+- `status/` - Previous status tracking documents
+- `architecture/` - Architecture, design, and technical decision docs
+- `briefings/` - Project briefs, PRDs, requirements documents
+- `rules/` - Previous AI configuration files
+
+**Naming convention:** `[original_name]_archived_[YYYY-MM-DD].[ext]`
+**Example:** `ROADMAP_archived_2026-02-01.md`, `architecture_overview_archived_2026-02-01.md`
+
+**Archive Manifest:**
+The `archive_manifest.md` file contains metadata for all archived documents:
+- Original location
+- Archive date and reason
+- Summary of contents
+- Recovery instructions if needed
+
+**Important:** Archived documents are for reference, not active use. When you need information from them, extract the relevant parts into the appropriate FluxFrame document rather than working from the archive.
 
 ---
 

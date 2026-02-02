@@ -162,6 +162,14 @@ Even the framework itself is managed by the AI.
 *   **Change Rules:** "We need to change how we handle logging. Update `AGENTS.md` and the logging patterns."
 *   **New Workflow:** "We need a security review step. Update the workflow docs."
 
-**Rule of Thumb:** If it’s a strict file (Markdown with headers, tables, etc.), ask the AI to write it. If it’s raw thought/context, you write/upload it.
-nan
-*This manual was generated for [Your Project].*
+**Rule of Thumb:** If it's a strict file (Markdown with headers, tables, etc.), ask the AI to write it. If it's raw thought/context, you write/upload it.
+
+---
+
+## Archived Documents
+
+{{ARCHIVED_DOCUMENTS_SECTION}}
+
+---
+
+*This manual was generated for {{PROJECT_NAME}}.*

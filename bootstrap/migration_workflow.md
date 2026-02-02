@@ -539,6 +539,13 @@ Before we proceed with migration, here's what a complete FluxFrame setup provide
 
 ### Reference Library (Descriptive Context)
 - [ ] `reference_library/README.md` - Index and philosophy **(REQUIRED)**
+- [ ] `reference_library/archived_documents/` - Documents preserved during bootstrap **(REQUIRED)**
+  - [ ] `archived_documents/archive_manifest.md` - Metadata for all archived files
+  - [ ] `archived_documents/roadmaps/` - Previous roadmap files
+  - [ ] `archived_documents/status/` - Previous status documents
+  - [ ] `archived_documents/architecture/` - Previous architecture docs
+  - [ ] `archived_documents/briefings/` - Project briefs and requirements
+  - [ ] `archived_documents/rules/` - Previous AI rule files
 - [ ] `reference_library/open_questions/` - Research topics and unanswered questions
 - [ ] `reference_library/correspondence/` - Emails, meeting notes, stakeholder input
 - [ ] `reference_library/user_research/` - Interviews, feedback, usage scenarios
@@ -722,7 +729,139 @@ log_decision({
 
 ---
 
+## Phase 2.8: Document Archival Decisions (REQUIRED)
+
+**Purpose:** Get explicit user decisions on which existing documents should be archived to reference_library.
+
+**CRITICAL:** This phase is REQUIRED for MIGRATION workflows. Documents are NEVER deleted or overwritten without explicit user consent and archival.
+
+### Step 2.8.1: Present Documents for Archival Review
+
+Based on the documentation inventory from Phase 1, present documents that may need archival:
+
+```markdown
+## Document Archival Review
+
+During the documentation analysis, I found files that may contain valuable context.
+When you choose **MIGRATE** for a document category, the original files will be
+**archived** (not deleted) to `reference_library/archived_documents/`.
+
+**Documents Identified:**
+
+| # | File | Location | Type | Your Decision (COPY/MIGRATE/REFERENCE) | Archive If Migrate? |
+|---|------|----------|------|---------------------------------------|---------------------|
+| 1 | [filename] | [path] | [type] | [from Phase 2] | Yes (automatic) |
+| 2 | [filename] | [path] | [type] | [from Phase 2] | Yes (automatic) |
+
+**Additional Documents Not Yet Categorized:**
+
+These documents were found but don't fit standard categories:
+
+| # | File | Location | Recommendation | Your Decision |
+|---|------|----------|----------------|---------------|
+| 1 | [filename] | [path] | Archive / Keep | [user choice] |
+
+**Existing AI Rules (will be backed up automatically):**
+
+| File | Current Location | Will Archive To |
+|------|------------------|-----------------|
+| [rule file] | [path] | reference_library/archived_documents/rules/ |
+
+---
+
+**For uncategorized documents, tell me:**
+- "Archive [#]" - Move to appropriate archive subfolder
+- "Keep [#]" - Leave in current location
+- "Archive all uncategorized" - Archive everything not yet categorized
+```
+
+### Step 2.8.2: Confirm Archive Categories
+
+For each document being archived, confirm the category:
+
+```markdown
+You chose to archive: **[filename]**
+
+Based on its content, I'll place it in: `reference_library/archived_documents/[type]/`
+
+Archived name: `[original_name]_archived_[YYYY-MM-DD].md`
+
+Categories available:
+- `roadmaps/` - Roadmaps, backlogs, planning docs
+- `status/` - Status tracking, changelogs
+- `architecture/` - Architecture, design, technical decisions
+- `briefings/` - Project briefs, PRDs, requirements
+- `rules/` - AI rule configurations
+
+Is `[type]/` correct? (yes / use [different category])
+```
+
+### Step 2.8.3: Record Archival Decisions
+
+Log each archival decision:
+
+```
+log_decision({
+  category: "archival",
+  decision: "Archive [filename] to reference_library/archived_documents/[type]/",
+  reasoning: "[User's reason or 'Part of MIGRATE decision for [category]']",
+  alternatives: ["Keep in place", "Reference only"],
+  implications: "Document preserved in archive with metadata"
+})
+```
+
+### Step 2.8.4: Summarize Archival Plan
+
+```markdown
+## Complete Archival Plan
+
+**From MIGRATE Decisions (automatic archival):**
+| Original | Category | Archived As |
+|----------|----------|-------------|
+| [file] | [type] | [archived_name] |
+
+**Additional Documents to Archive:**
+| Original | Category | Archived As |
+|----------|----------|-------------|
+| [file] | [type] | [archived_name] |
+
+**Documents Kept in Place:**
+| File | Location | Reason |
+|------|----------|--------|
+| [file] | [path] | [reason] |
+
+**AI Rules Backup:**
+All existing AI rules will be backed up before activation.
+
+Proceed with this archival plan? (yes/modify)
+```
+
+**Note:** Archival is executed during Phase 7 (Finalization) to ensure atomicity.
+
+---
+
 ## Phase 3: Execute Migration
+
+> [!CRITICAL]
+> **READ AND EXTRACT BEFORE ARCHIVAL**
+>
+> Before generating FluxFrame documents, you MUST read and extract content from existing docs:
+>
+> | Document Type | Extract For |
+> |---------------|-------------|
+> | Existing ROADMAP, backlog, planning docs | New `ROADMAP.md` - cycles, milestones, priorities |
+> | Existing STATUS.md, changelog | New `technical_status.md` - current state, history |
+> | Existing architecture docs | New `context_master_guide.md` - architecture section |
+> | Existing project briefs | New docs - requirements, constraints, goals |
+> | Existing patterns/conventions | New `patterns/` files |
+>
+> **Timing:** Documents marked for MIGRATE are archived during Phase 7.
+> If you don't read and extract content NOW, it will only exist in the archive,
+> and the new FluxFrame documents will be incomplete.
+>
+> **For COPY decisions:** Content is duplicated, original stays - still read it.
+> **For MIGRATE decisions:** Content moves to FluxFrame format - read it first, archive happens later.
+> **For REFERENCE decisions:** Content stays in place - link to it, but read for context.
 
 ### Step 3.1: Create Backup
 
@@ -743,11 +882,13 @@ Based on location decision:
 ```bash
 # If using FluxFrame standard
 mkdir -p project_docs/{patterns,workflows,roadmap,bugs}
-mkdir -p project_docs/reference_library/{open_questions,correspondence,user_research,market_research,domain_knowledge,specifications}
+mkdir -p project_docs/reference_library/{archived_documents,open_questions,correspondence,user_research,market_research,domain_knowledge,specifications}
+mkdir -p project_docs/reference_library/archived_documents/{roadmaps,status,architecture,briefings,rules}
 
 # If using existing location
 mkdir -p [detected_path]/{patterns,workflows,roadmap,bugs}
-mkdir -p [detected_path]/reference_library/{open_questions,correspondence,user_research,market_research,domain_knowledge,specifications}
+mkdir -p [detected_path]/reference_library/{archived_documents,open_questions,correspondence,user_research,market_research,domain_knowledge,specifications}
+mkdir -p [detected_path]/reference_library/archived_documents/{roadmaps,status,architecture,briefings,rules}
 ```
 
 ### Step 3.3: Process Each Category
@@ -776,24 +917,24 @@ For each category, based on user's decision:
 ```markdown
 **Migration Process for [Category]:**
 
-1. Read all source files
+1. **Read all source files** (CRITICAL - do this NOW, before finalization)
 2. Transform content to FluxFrame format
 3. Write to FluxFrame location
-4. Create redirect/note in original location:
-   ```markdown
-   # Moved to FluxFrame Structure
-   
-   This documentation has been migrated to: `[new_path]`
-   
-   See: [link to new location]
-   ```
-5. Delete original files (after user confirms migration worked)
+4. Record archival decision in bootstrap state (file will be archived during finalization)
+5. Original files are ARCHIVED (not deleted) during Phase 7 finalization
 
 **Source:** `[original_path]`
 **Target:** `[fluxframe_path]`
-**Files migrated:**
-- [List migrated files]
+**Archive destination:** `reference_library/archived_documents/[type]/`
+**Content extracted:**
+- [List key content migrated to FluxFrame docs]
 ```
+
+> [!NOTE]
+> **Archival vs Deletion:** MIGRATE no longer deletes files. Files are moved to
+> `reference_library/archived_documents/` with timestamps and metadata during
+> Phase 7 (Finalization). This preserves historical context while cleaning up
+> the project structure.
 
 #### If REFERENCE:
 

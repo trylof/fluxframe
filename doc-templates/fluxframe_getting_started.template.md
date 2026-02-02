@@ -121,4 +121,12 @@ I want to set up my roadmap.
 
 ---
 
+---
+
+## Archived Documents (If Applicable)
+
+{{ARCHIVED_DOCUMENTS_REFERENCE}}
+
+---
+
 **Next Step:** Once you have done these 4 phases, you are ready to code! Refer to `FLUXFRAME_MANUAL.md` for your daily workflow.

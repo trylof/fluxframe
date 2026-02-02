@@ -1154,6 +1154,94 @@ This document captures the reasoning behind key decisions made during the FluxFr
     return md;
   }
 
+  generateArchiveManifest(archivedFiles, projectName, timestamp, scenario) {
+    let md = `# Archive Manifest
+
+**Project:** ${projectName}
+**Archive Date:** ${timestamp}
+**Bootstrap Scenario:** ${scenario || 'Not specified'}
+
+---
+
+## Purpose
+
+This manifest tracks documents archived during FluxFrame bootstrap or updates.
+Archived documents preserve critical historical context while allowing the new
+FluxFrame structure to be established cleanly.
+
+**Archives are for reference, not active use.** If you need information from an
+archived document, extract the relevant parts into the appropriate FluxFrame document.
+
+---
+
+## Archived Documents
+
+| Original Location | Archived As | Type | Reason |
+|-------------------|-------------|------|--------|
+`;
+
+    for (const file of archivedFiles) {
+      md += `| \`${file.original}\` | \`${file.archived}\` | ${file.type} | ${file.reason} |\n`;
+    }
+
+    md += `
+---
+
+## Archive Categories
+
+`;
+
+    // Group by type
+    const byType = {};
+    for (const file of archivedFiles) {
+      if (!byType[file.type]) {
+        byType[file.type] = [];
+      }
+      byType[file.type].push(file);
+    }
+
+    for (const [type, files] of Object.entries(byType)) {
+      md += `### \`${type}/\`\n\n`;
+      md += `| File | Original Location | Contains |\n`;
+      md += `|------|-------------------|----------|\n`;
+      for (const file of files) {
+        md += `| \`${path.basename(file.archived)}\` | \`${file.original}\` | ${file.reason} |\n`;
+      }
+      md += '\n';
+    }
+
+    md += `---
+
+## Recovery Instructions
+
+If you need to restore an archived document:
+
+1. **Copy** (don't move) the file from the archive
+2. **Rename** to remove the \`_archived_YYYY-MM-DD\` suffix
+3. **Place** in the original location
+4. **Update** this manifest to note the recovery
+
+**Note:** Before recovering, consider whether the information should instead
+be integrated into the current FluxFrame documents.
+
+---
+
+## Archive History
+
+### ${timestamp} - FluxFrame Bootstrap
+
+**Reason:** Initial FluxFrame bootstrap on existing project
+**Documents Archived:** ${archivedFiles.length}
+**Scenario:** ${scenario || 'Not specified'}
+
+---
+
+*This manifest is automatically generated. Do not delete archived documents without updating this manifest.*
+`;
+
+    return md;
+  }
+
   async logFutureItem(args) {
     const state = await this.loadState();
     const { tier, category, intention, timeframe, fluxframeImpact, placeholder } = args;
@@ -1276,6 +1364,106 @@ This document captures the reasoning behind key decisions made during the FluxFr
 
     const actions = [];
     const errors = [];
+    const archivedFiles = [];
+    const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+    // --- Step 0: Archive existing AI rules before activation (SAFETY FIRST) ---
+    // This ensures we NEVER lose existing project configuration
+    const archiveDir = path.join(projectRoot, docsDir, 'reference_library', 'archived_documents', 'rules');
+    const existingRuleFiles = [
+      'AGENTS.md', 'CLAUDE.md', '.clinerules', '.roomodes', '.roo',
+      '.claude', 'GEMINI.md', '.cursorrules', '.codex'
+    ];
+
+    // Create archive directory structure
+    try {
+      await fs.mkdir(archiveDir, { recursive: true });
+      // Also create other archive subdirectories
+      const archiveSubdirs = ['roadmaps', 'status', 'architecture', 'briefings'];
+      for (const subdir of archiveSubdirs) {
+        await fs.mkdir(path.join(projectRoot, docsDir, 'reference_library', 'archived_documents', subdir), { recursive: true });
+      }
+    } catch (err) {
+      errors.push(`Failed to create archive directory structure: ${err.message}`);
+    }
+
+    // Archive existing rule files before they get overwritten
+    for (const ruleFile of existingRuleFiles) {
+      const existingPath = path.join(projectRoot, ruleFile);
+      try {
+        const stat = await fs.stat(existingPath);
+        // Check if file exists and is not a bootstrap-resume placeholder
+        const content = stat.isDirectory() ? null : await fs.readFile(existingPath, 'utf-8');
+        const isBootstrapResume = content && content.includes('FluxFrame Bootstrap In Progress');
+
+        if (!isBootstrapResume) {
+          // Archive the existing file
+          const archiveName = `${ruleFile.replace(/^\./, 'dot_')}_archived_${timestamp}${stat.isDirectory() ? '' : '.md'}`;
+          const archivePath = path.join(archiveDir, archiveName);
+
+          if (stat.isDirectory()) {
+            // For directories, copy recursively
+            await fs.cp(existingPath, archivePath, { recursive: true });
+          } else {
+            await fs.copyFile(existingPath, archivePath);
+          }
+
+          archivedFiles.push({
+            original: ruleFile,
+            archived: `reference_library/archived_documents/rules/${archiveName}`,
+            type: 'rules',
+            reason: 'Pre-activation backup'
+          });
+          actions.push(`Archived: ${ruleFile} → archived_documents/rules/${archiveName}`);
+        }
+      } catch (err) {
+        if (err.code !== 'ENOENT') {
+          // File exists but we couldn't process it
+          errors.push(`Warning: Could not archive ${ruleFile}: ${err.message}`);
+        }
+        // ENOENT = file doesn't exist, skip silently
+      }
+    }
+
+    // --- Step 0.5: Process archival decisions from bootstrap state ---
+    // Archive any documents the user chose to archive during the workflow
+    const archivalDecisions = state.archivalDecisions || [];
+    for (const decision of archivalDecisions) {
+      if (decision.decision === 'archive' && decision.originalPath) {
+        const srcPath = path.join(projectRoot, decision.originalPath);
+        const destDir = path.join(projectRoot, docsDir, 'reference_library', 'archived_documents', decision.archiveTo || 'other');
+        const destName = decision.archivedName || `${path.basename(decision.file)}_archived_${timestamp}.md`;
+        const destPath = path.join(destDir, destName);
+
+        try {
+          await fs.mkdir(destDir, { recursive: true });
+          await fs.rename(srcPath, destPath);
+          archivedFiles.push({
+            original: decision.originalPath,
+            archived: `reference_library/archived_documents/${decision.archiveTo || 'other'}/${destName}`,
+            type: decision.archiveTo || 'other',
+            reason: decision.reason || 'User requested archival'
+          });
+          actions.push(`Archived: ${decision.originalPath} → archived_documents/${decision.archiveTo || 'other'}/${destName}`);
+        } catch (err) {
+          if (err.code !== 'ENOENT') {
+            errors.push(`Failed to archive ${decision.file}: ${err.message}`);
+          }
+        }
+      }
+    }
+
+    // --- Step 0.6: Write archive manifest ---
+    if (archivedFiles.length > 0) {
+      const manifestPath = path.join(projectRoot, docsDir, 'reference_library', 'archived_documents', 'archive_manifest.md');
+      const manifestContent = this.generateArchiveManifest(archivedFiles, projectName, timestamp, state.scenario);
+      try {
+        await fs.writeFile(manifestPath, manifestContent, 'utf-8');
+        actions.push('Created: archive_manifest.md');
+      } catch (err) {
+        errors.push(`Failed to create archive manifest: ${err.message}`);
+      }
+    }
 
     // --- Step 1: Activate project rules from staging ---
     const stagingDir = path.join(projectRoot, '.fluxframe-pending');
@@ -1371,37 +1559,45 @@ This document captures the reasoning behind key decisions made during the FluxFr
       }
     }
 
-    // --- Step 7: Update README.md ---
+    // --- Step 7: Handle README.md (preserve existing, don't replace) ---
     const readmePath = path.join(projectRoot, 'README.md');
-    const readmeContent = `# ${projectName}
+    let readmeExists = false;
+    try {
+      await fs.access(readmePath);
+      readmeExists = true;
+    } catch {
+      readmeExists = false;
+    }
+
+    if (readmeExists) {
+      // README exists - preserve it, don't overwrite
+      // The project's README is about the project, not FluxFrame
+      actions.push('Preserved: README.md (existing project README kept intact)');
+      // Note: User can manually add FluxFrame reference if desired
+    } else {
+      // No README exists - create a minimal project-focused one
+      const readmeContent = `# ${projectName}
 
 ${projectPurpose}
 
 ## Quick Start
 
-[Basic setup instructions]
+[Add setup instructions for your project]
 
 ## Development
 
-This project uses the FluxFrame methodology for AI-assisted development.
-
-### Documentation
-- See \`${docsDir}/context_master_guide.md\` for development guidelines
-- See \`${docsDir}/technical_status.md\` for current project state
-
-### AI Assistance
-- MCP Server: \`npm run mcp\`
-- AI Rules: See \`AGENTS.md\` and tool-specific configurations
+See \`FLUXFRAME_GETTING_STARTED.md\` for AI-assisted development workflow.
 
 ## License
 
-[License information]
+[Add license information]
 `;
-    try {
-      await fs.writeFile(readmePath, readmeContent, 'utf-8');
-      actions.push('Updated: README.md with project-specific content');
-    } catch (err) {
-      errors.push(`Failed to update README.md: ${err.message}`);
+      try {
+        await fs.writeFile(readmePath, readmeContent, 'utf-8');
+        actions.push('Created: README.md (minimal project template - customize as needed)');
+      } catch (err) {
+        errors.push(`Failed to create README.md: ${err.message}`);
+      }
     }
 
     // --- Step 8: Move PHILOSOPHY.md ---
@@ -1545,11 +1741,20 @@ This project uses the FluxFrame methodology for AI-assisted development.
               : "Bootstrap finalized with some errors. Review the errors below.",
             actions,
             errors: errors.length > 0 ? errors : undefined,
+            archivedDocuments: archivedFiles.length > 0 ? {
+              count: archivedFiles.length,
+              manifestPath: `${docsDir}/reference_library/archived_documents/archive_manifest.md`,
+              files: archivedFiles,
+              manualInstructions: "Update FLUXFRAME_MANUAL.md with the archived documents table. The archivedFiles array contains all information needed."
+            } : null,
             mcpSwapGuide,
             nextSteps: [
               "CRITICAL: Use the mcpSwapGuide above to walk the user through swapping their MCP config. Do NOT just print a generic message — follow the agentInstructions step by step.",
+              archivedFiles.length > 0
+                ? `NOTE: ${archivedFiles.length} document(s) were archived. See ${docsDir}/reference_library/archived_documents/archive_manifest.md for details.`
+                : null,
               `After MCP swap and restart, define Cycle 1.1 in ${docsDir}/ROADMAP.md to begin development.`
-            ]
+            ].filter(Boolean)
           }, null, 2),
         },
       ],
