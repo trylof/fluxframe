@@ -335,9 +335,18 @@ fluxframe/
     └── taskflow-pro/                 # Fictitious SaaS project
         ├── README.md
         ├── project_brief.md
-        ├── .clinerules
-        ├── project_docs/
-        └── patterns/
+        ├── bootstrap_decisions.md    # Gate 1.5 content mapping
+        ├── AGENTS.md                 # Universal AI baseline
+        ├── CLAUDE.md                 # Claude Code extension
+        └── project_docs/
+            ├── context_master_guide.md
+            ├── technical_status.md
+            ├── ROADMAP.md
+            ├── api_contract_standards.md
+            ├── patterns/             # Prescriptive patterns
+            ├── reference_library/    # Descriptive context
+            ├── workflows/
+            └── tech-status/          # Archived cycles
 ```
 
 ---
@@ -383,17 +392,21 @@ fluxframe/
 
 See complete working example in [`examples/taskflow-pro/`](examples/taskflow-pro/)
 
-**Demonstrates:**
-- Filled documentation from templates
+**Demonstrates FluxFrame 0.5.0 features:**
+- Two-Tier Planning System (Agent Protocol with plan/review/build phases)
+- Reference Library (prescriptive vs. descriptive documentation)
+- Archive strategy (completed cycles move to `tech-status/`)
+- Gate 1.5 content source mapping (`bootstrap_decisions.md`)
+- Comprehensive MCP tool references
 - API patterns (FastAPI + Pydantic)
 - UI patterns (React + TypeScript)
 - Data patterns (React Query)
-- Configuration (`.clinerules`, MCP server)
+- Full AGENTS.md configuration
 
 **Use it to:**
 - Learn what good patterns look like
-- See filled templates
-- Understand bootstrap output
+- See filled templates matching current framework
+- Understand bootstrap output structure
 - Validate your own setup
 
 ---
