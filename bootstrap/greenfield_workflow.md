@@ -89,6 +89,276 @@ Before starting this workflow:
 
 ---
 
+## Phase 0.5: Content Source Mapping (REQUIRED)
+
+**Purpose:** Before generating FluxFrame documents, identify which existing files (if any) contain project information that should be extracted and synthesized into the new documents.
+
+**Why This Matters:** Even greenfield projects often have:
+- A README.md with project description
+- Package.json/pyproject.toml with project metadata
+- Meeting notes or briefs that informed the project
+- Scattered documentation the detection phase found
+
+Without explicit source mapping, document generation relies on luck and AI memory rather than systematic content extraction.
+
+### Step 0.5.1: Scan for Potential Source Files
+
+Even though this is a greenfield project, scan for any existing content:
+
+```bash
+# Find all markdown and text files (excluding dependencies)
+find . -type f \( -name "*.md" -o -name "*.txt" \) \
+  -not -path "./node_modules/*" \
+  -not -path "./.git/*" \
+  -not -path "./fluxframe/*" 2>/dev/null
+
+# Check for project metadata files
+ls -la package.json pyproject.toml Cargo.toml composer.json 2>/dev/null
+```
+
+**Files to examine:**
+- README.md (often has project purpose, even in new projects)
+- Any project briefs or requirements documents
+- Meeting notes or planning documents
+- Package manifests (contain project description)
+
+### Step 0.5.2: Deep Content Analysis
+
+For each file found, **read the entire content** and classify:
+
+| Content Type | Look For | Maps To |
+|--------------|----------|---------|
+| Project purpose | "what is this", "why", goals, vision | context_master_guide.md |
+| Tech decisions | "we chose X because", stack descriptions | context_master_guide.md |
+| Current state | "works", "broken", limitations, issues | technical_status.md |
+| Future plans | "todo", "planned", "next", milestones | ROADMAP.md |
+| Conventions | "how we do", patterns, style notes | patterns/ |
+
+**For each file, record:**
+- Which FluxFrame documents it informs
+- Specific content areas (with line numbers if helpful)
+- Confidence level (High/Medium/Low)
+- Whether content spans multiple target documents
+
+### Step 0.5.3: Generate Content Source Mapping
+
+Create `.fluxframe/detected_content_sources.md` with:
+
+```markdown
+# Detected Content Sources
+
+**Generated:** [timestamp]
+**Project:** {{PROJECT_NAME}}
+**Scenario:** GREENFIELD
+**Status:** Awaiting user review
+
+---
+
+## Overview
+
+This is a greenfield project, but I found the following files that may contain
+useful information for generating your FluxFrame documentation.
+
+---
+
+## For context_master_guide.md
+
+**What this document needs:**
+- Project purpose and vision
+- Target users and their needs
+- Tech stack rationale
+- High-level architecture
+
+**Sources found:**
+
+| File | Relevant Content | Confidence |
+|------|------------------|------------|
+| [file] | [content description] | [H/M/L] |
+
+**Missing?** Do you have any project briefs, requirements docs, or planning notes I should use?
+
+---
+
+## For technical_status.md
+
+**Sources found:** [list or "None - will create with Bootstrap status"]
+
+---
+
+## For ROADMAP.md
+
+**Sources found:** [list or "None - will create with Cycle 1.1 placeholder"]
+
+---
+
+## For patterns/
+
+**Sources found:** [list or "None - patterns will emerge during development"]
+
+---
+
+## Summary
+
+| Target Document | Sources | Status |
+|-----------------|---------|--------|
+| context_master_guide.md | [N] files | [status] |
+| technical_status.md | [N] files | [status] |
+| ROADMAP.md | [N] files | [status] |
+| patterns/ | [N] files | [status] |
+```
+
+### Step 0.5.4: User Review Checkpoint
+
+Present the mapping to the user:
+
+```markdown
+## Content Source Review
+
+Before generating your FluxFrame documentation, I want to confirm where to get information.
+
+**Project type:** Greenfield (new project)
+
+**What I found:**
+[Summary table from mapping file]
+
+**Questions:**
+1. Are there any project briefs, requirements, or planning docs I should use?
+2. Any external documents (not in the repo) you want to provide content from?
+3. Ready to proceed with document generation?
+```
+
+**Wait for user response before proceeding.**
+
+### Step 0.5.4.1: Handle Missing Project Brief (BLOCKING)
+
+If no sources were found for project purpose/vision/goals, this is a **blocking** issue. FluxFrame cannot generate meaningful documentation without understanding what the project is.
+
+```markdown
+## Project Brief Required
+
+I couldn't find any documentation describing your project's purpose, vision, or goals.
+
+FluxFrame needs this information to generate meaningful documentation. Without it,
+`context_master_guide.md` would just be a template with placeholder text.
+
+**Please create a project brief:**
+
+1. Create a file called `project_brief.md` in your project root
+2. Include the following:
+
+```markdown
+# Project Brief
+
+## What is this project?
+[1-3 sentences describing what this project is]
+
+## Why does it exist?
+[What problem does it solve? What need does it address?]
+
+## Who is it for?
+[Target users, audience, or stakeholders]
+
+## What are the main goals?
+[Key objectives or outcomes]
+
+## Tech stack (optional but helpful)
+[Languages, frameworks, infrastructure]
+
+## Current status (optional)
+[Where is the project now? Early development? Production? Maintenance?]
+```
+
+3. Save the file and let me know when it's ready
+
+**Location:** Place `project_brief.md` in your project root (next to README.md)
+
+**Why this matters:**
+- This becomes the foundation for your `context_master_guide.md`
+- It ensures AI assistants understand your project's purpose
+- It's faster than answering many individual questions
+- The file remains in your project as ongoing reference
+```
+
+**After user creates project_brief.md:**
+1. Re-scan and analyze the new file
+2. Update `.fluxframe/detected_content_sources.md`
+3. Present updated mapping for confirmation
+4. Then proceed to Step 0.5.5
+
+### Step 0.5.5: Update Mapping and Proceed
+
+After user confirmation:
+1. Update `.fluxframe/detected_content_sources.md` status to "Confirmed"
+2. Add any additional sources the user identified
+3. Log the decision:
+
+```
+log_decision({
+  category: "content_sources",
+  decision: "Content source mapping confirmed for greenfield project",
+  reasoning: "[User's response - e.g., 'No additional sources' or 'Added PROJECT_BRIEF.md']",
+  implications: "Document generation will use confirmed sources"
+})
+```
+
+**Proceed to Gate 1.5 check, then Step 1 (Create Directory Structure).**
+
+---
+
+## Gate 1.5: Content Source Mapping Checkpoint
+
+**BLOCKING:** This gate must pass before document generation can proceed.
+
+### Gate Check
+
+```markdown
+## Gate 1.5 Check: Content Source Mapping
+
+### Condition 1: Mapping File Exists
+[ ] `.fluxframe/detected_content_sources.md` exists
+
+### Condition 2: Status is Confirmed
+[ ] File status shows "✅ Confirmed" (not "Awaiting user review")
+
+### Condition 3: Project Brief Handled
+[ ] If `projectBriefRequired: true` in state → `project_brief.md` exists
+[ ] Or: Project purpose sources were found in existing files
+
+### Condition 4: State Updated
+[ ] `.fluxframe-bootstrap-state.json` has `contentSourceMapping.status = "confirmed"`
+
+---
+
+**GATE RESULT:** [✅ PASS / ❌ FAIL]
+```
+
+### If Gate Fails
+
+**DO NOT PROCEED TO STEP 1.** Return to the failed step:
+
+- **Condition 1 failed:** Return to Step 0.5.3 (Generate mapping file)
+- **Condition 2 failed:** Return to Step 0.5.4 (User review checkpoint)
+- **Condition 3 failed:** Return to Step 0.5.4.1 (Create project_brief.md)
+- **Condition 4 failed:** Update bootstrap state, then re-check
+
+### On Gate Pass
+
+Update bootstrap state:
+```json
+{
+  "gates": {
+    "gate1_5_content_sources": {
+      "passed": true,
+      "passedAt": "[timestamp]"
+    }
+  }
+}
+```
+
+Then proceed to Step 1.
+
+---
+
 ## CRITICAL: Never Make Assumptions
 
 **This section overrides all other guidance. Follow these rules absolutely.**
@@ -203,7 +473,34 @@ mkdir -p seed_data/schemas
 
 ### Step 2: Generate context_master_guide.md
 
-**Source:** `doc-templates/context_master_guide.template.md`
+**FIRST: Read Confirmed Content Sources**
+
+Before generating, check `.fluxframe/detected_content_sources.md` for confirmed sources:
+
+1. Read the mapping file
+2. For `context_master_guide.md`, identify source files
+3. Read each source file
+4. Extract relevant content as mapped
+5. Use extracted content to fill template sections
+
+**If sources exist:**
+```markdown
+Reading confirmed sources for context_master_guide.md:
+- [source 1]: Extracting project purpose...
+- [source 2]: Extracting tech stack details...
+
+Synthesizing into context_master_guide.md...
+```
+
+**If no sources (pure greenfield with project_brief.md):**
+Use the `project_brief.md` created in Step 0.5.4.1 as the primary source.
+
+**If no sources at all:**
+Use template defaults and user questionnaire answers. Note in the document that content can be expanded as project evolves.
+
+---
+
+**Source Template:** `doc-templates/context_master_guide.template.md`
 
 **Process:**
 1. Read template file
@@ -281,7 +578,18 @@ Results in:
 
 ### Step 3: Generate technical_status.md
 
-**Source:** `doc-templates/technical_status.template.md`
+**FIRST: Read Confirmed Content Sources**
+
+Check `.fluxframe/detected_content_sources.md` for confirmed sources.
+
+For greenfield projects, this section typically has no sources - the document will reflect "Bootstrap" status. However, if sources were identified:
+- Extract any existing status information
+- Extract any known issues or limitations mentioned
+- Incorporate into the appropriate sections
+
+---
+
+**Source Template:** `doc-templates/technical_status.template.md`
 
 **Initial Content:**
 
@@ -440,7 +748,22 @@ See context_master_guide.md for complete framework documentation.
 
 ### Step 4: Generate ROADMAP.md
 
-**Source:** `doc-templates/roadmap.template.md`
+**FIRST: Read Confirmed Content Sources**
+
+Check `.fluxframe/detected_content_sources.md` for confirmed sources.
+
+**If planning documents exist:**
+- Extract planned features, milestones, priorities
+- Map to FluxFrame cycle structure
+- Preserve user's planning context while adapting to FluxFrame format
+
+**If no sources:**
+- Create ROADMAP.md with Cycle 1.1 placeholder
+- User will define first cycle after bootstrap
+
+---
+
+**Source Template:** `doc-templates/roadmap.template.md`
 
 **Initial Content:**
 

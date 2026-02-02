@@ -274,6 +274,375 @@ The Reference Library stores DESCRIPTIVE information (real-world context, user r
 - External specifications (from: ___ or create new)
 - Correspondence archives (from: ___ or create new)
 
+### Step 1.4.5: Content Source Mapping (REQUIRED)
+
+**Purpose:** Migration projects have the most documentation to process. Create an explicit mapping of what content should be extracted from existing docs. This is separate from organizational decisions (archive/migrate/reference) - those come in Phase 2.
+
+**Critical Distinction:**
+- **Step 1.3 (FluxFrame Mapping):** Identifies structural equivalents (your docs → FluxFrame docs)
+- **Step 1.4.5 (Content Source Mapping):** Identifies specific content to extract from each file
+- **Phase 2.2-2.8 (User Preferences):** Determines organizational fate of files
+
+**Why This Order:**
+Content source mapping happens BEFORE user preferences because:
+1. We need to know what's IN the files to present good migration options
+2. User can make better archive/migrate/reference decisions knowing what content will be extracted
+3. During generation, we need confirmed sources regardless of organizational decision
+
+#### Step 1.4.5.1: Deep Content Analysis
+
+For **every documentation file** discovered in Phase 1.1-1.4, perform comprehensive content analysis.
+
+**CRITICAL:** Do NOT rely on filenames. Real projects have non-obvious naming:
+- A `NOTES.md` might contain architecture decisions
+- A `meeting-2024-03-15.md` might have the only record of project goals
+- A `README.md` might cover purpose, roadmap, AND known issues in one file
+
+**Read each file and classify content by target FluxFrame document:**
+
+| Content Type | Signals to Look For | Target Document |
+|--------------|---------------------|-----------------|
+| Project purpose/vision | "what is this", "why", "goals", "mission" | context_master_guide.md |
+| Architecture decisions | "we chose", "architecture", "design" | context_master_guide.md |
+| Tech stack details | "stack", "technologies", "built with" | context_master_guide.md |
+| Current state | "status", "works", "implemented" | technical_status.md |
+| Known issues | "issues", "bugs", "limitations", "debt" | technical_status.md |
+| Recent changes | "changed", "updated", "fixed" | technical_status.md |
+| Future plans | "roadmap", "planned", "todo", "backlog" | ROADMAP.md |
+| Conventions | "conventions", "patterns", "how we", "always" | patterns/ |
+| API docs | "endpoint", "request", "response", "schema" | api_contract_standards.md |
+
+**For each file, record:**
+
+```markdown
+### [filename]
+**Path:** [full path]
+**Last Modified:** [date]
+**Structure:** [single topic / mixed content / comprehensive]
+
+**Content Found:**
+
+| Content Type | Location in File | Target FluxFrame Doc | Confidence |
+|--------------|------------------|---------------------|------------|
+| Project purpose | Lines 1-30 | context_master_guide.md | High |
+| Architecture | Lines 50-120 | context_master_guide.md | High |
+| Known issues | Lines 200-250 | technical_status.md | Medium |
+| Future plans | "Roadmap" section | ROADMAP.md | High |
+
+**File spans multiple target docs:** Yes/No
+**Quality Assessment:** Current / Outdated / Partial
+```
+
+#### Step 1.4.5.2: Handle Migration-Specific Cases
+
+**Case: Wiki-Style Documentation**
+
+```markdown
+## Wiki Content Analysis
+
+**Wiki location:** [path]
+**Total pages:** [N]
+
+**Content Distribution:**
+
+| Topic | Pages Covering It | Primary Source | Secondary Sources |
+|-------|-------------------|----------------|-------------------|
+| Project purpose | index.md, about.md | about.md | index.md (summary) |
+| Architecture | architecture.md, decisions/*.md | architecture.md | decisions/ (details) |
+
+**Recommendation:** Use primary sources for extraction; archive entire wiki for reference.
+```
+
+**Case: ADR-Based Documentation**
+
+```markdown
+## ADR Content Analysis
+
+ADRs document WHY decisions were made (descriptive).
+FluxFrame patterns document WHAT to do (prescriptive).
+
+| ADR | Decision Topic | Extract For | Notes |
+|-----|----------------|-------------|-------|
+| ADR-001 | Database choice | context_master_guide.md (rationale) | Context only |
+| ADR-003 | API style | api_patterns.md (pattern basis) | Informs pattern |
+
+**Recommendation:** Extract decision context; reference ADR directory for history.
+```
+
+**Case: Fragmented/Scattered Documentation**
+
+```markdown
+## Fragmented Content Analysis
+
+| Content Type | Found In | Quality | Completeness |
+|--------------|----------|---------|--------------|
+| Project purpose | README.md (partial), kickoff.md, slack-export.txt | Mixed | 60% |
+| Architecture | design-sketch.md, PR comments | Low | 40% |
+| Current status | (not documented) | N/A | 0% |
+
+**Recommendation:** Present to user; may need project_brief.md creation.
+```
+
+#### Step 1.4.5.3: Generate Content Source Mapping File
+
+Create `.fluxframe/detected_content_sources.md`:
+
+```markdown
+# Detected Content Sources
+
+**Generated:** [timestamp]
+**Project:** {{PROJECT_NAME}}
+**Scenario:** MIGRATION
+**Status:** Awaiting user review
+
+---
+
+## Overview
+
+This is a MIGRATION project with existing documentation. I've analyzed all files
+to map what content should be extracted for each FluxFrame document.
+
+**This mapping is separate from organizational decisions:**
+- A file marked "MIGRATE" organizationally will have its content extracted here first
+- A file marked "ARCHIVE" may still be used as a content source
+- A file marked "REFERENCE" means we link rather than extract
+
+---
+
+## For context_master_guide.md
+
+**What this document needs:**
+- Project purpose, vision, goals
+- Target users and value proposition
+- High-level architecture overview
+- Tech stack and rationale
+- Core workflows (adapted to FluxFrame)
+
+**Sources identified:**
+
+| File | Content | Lines/Section | Confidence | Org Fate (TBD) |
+|------|---------|---------------|------------|----------------|
+| [file] | [content type] | [location] | [H/M/L] | [Phase 2] |
+
+**Gaps:** [any missing content types]
+
+---
+
+## For technical_status.md
+
+**What this document needs:**
+- Current capabilities and limitations
+- Architecture implementation status
+- Recent changes
+- Known issues and technical debt
+
+**Sources identified:**
+
+| File | Content | Lines/Section | Confidence | Org Fate (TBD) |
+|------|---------|---------------|------------|----------------|
+| [file] | [content type] | [location] | [H/M/L] | [Phase 2] |
+
+**Gaps:** [gaps]
+
+---
+
+## For ROADMAP.md
+
+**What this document needs:**
+- Planned features
+- Prioritized backlog
+- Milestones and timeline
+- Future vision
+
+**Sources identified:**
+
+| File | Content | Lines/Section | Confidence | Org Fate (TBD) |
+|------|---------|---------------|------------|----------------|
+| [file] | [content type] | [location] | [H/M/L] | [Phase 2] |
+
+**Note:** Will adapt to FluxFrame two-tier planning system.
+
+---
+
+## For patterns/
+
+**Sources identified:**
+
+| File | Content | Target Pattern Doc | Confidence |
+|------|---------|-------------------|------------|
+| [file] | [content] | [ui/api/data/infra]_patterns.md | [H/M/L] |
+
+---
+
+## Summary
+
+| Target Document | Sources | Confidence | Gaps |
+|-----------------|---------|------------|------|
+| context_master_guide.md | [N] files | [avg] | [gaps] |
+| technical_status.md | [N] files | [avg] | [gaps] |
+| ROADMAP.md | [N] files | [avg] | [gaps] |
+| patterns/ | [N] files | [avg] | [gaps] |
+
+---
+
+## Your Review (BEFORE Phase 2)
+
+Please confirm this content mapping BEFORE we discuss organizational decisions:
+
+1. **Sources correct?** For each target document, are the sources right?
+2. **Missing sources?** Files I should include?
+3. **Wrong sources?** Files I should NOT extract from?
+
+**Why review now?** Understanding what content will be extracted helps you make
+better organizational decisions in Phase 2 (archive/migrate/reference).
+```
+
+#### Step 1.4.5.4: Present and Confirm Before Phase 2
+
+```markdown
+## Content Source Review (Pre-Phase 2)
+
+Before we discuss how to handle your existing documentation, please confirm
+where I should get content for each FluxFrame document.
+
+📄 **Full mapping:** `.fluxframe/detected_content_sources.md`
+
+**Quick Summary:**
+
+| FluxFrame Document | Main Sources | Gaps |
+|--------------------|--------------|------|
+| context_master_guide.md | [list] | [gaps] |
+| technical_status.md | [list] | [gaps] |
+| ROADMAP.md | [list] | [gaps] |
+| patterns/ | [list] | [gaps] |
+
+**Why this matters for Phase 2:**
+- Files fully used as content sources → good candidates for ARCHIVE
+- Files with unique value beyond extraction → consider REFERENCE
+- Files I can't easily extract from → may need MIGRATE with manual review
+
+**Questions:**
+1. Sources look correct?
+2. Any files to add/remove?
+3. Ready to proceed to Phase 2 (organizational preferences)?
+```
+
+**Wait for user confirmation before proceeding to Phase 2.**
+
+#### Step 1.4.5.5: Handle Missing Project Brief (BLOCKING)
+
+If no sources were found for project purpose/vision/goals, this is a **blocking** issue even for migration projects.
+
+```markdown
+## Project Brief Required
+
+Despite having existing documentation, I couldn't find clear sources describing
+your project's core purpose, vision, or goals.
+
+I found documentation about [what was found], but nothing that clearly states
+what this project IS and WHY it exists.
+
+**Please create a project brief:**
+
+1. Create `project_brief.md` in your project root
+2. Include:
+   - What is this project? (1-3 sentences)
+   - Why does it exist? (problem it solves)
+   - Who is it for? (target users)
+   - What are the main goals?
+   - Tech stack
+   - Current status
+
+3. Let me know when ready
+
+**Location:** Project root (next to README.md)
+
+**Note:** Your existing documentation may INFORM this brief - feel free to
+consolidate scattered purpose statements into this single source of truth.
+```
+
+**After user creates project_brief.md:**
+1. Re-scan and analyze the new file
+2. Update `.fluxframe/detected_content_sources.md`
+3. Present updated mapping for confirmation
+4. Then proceed to Phase 2
+
+#### Step 1.4.5.6: Update and Confirm
+
+After user review:
+1. Update `.fluxframe/detected_content_sources.md` with any changes
+2. Set status to "Confirmed"
+3. Log decision:
+
+```
+log_decision({
+  category: "content_sources",
+  decision: "Content source mapping confirmed for migration",
+  reasoning: "[User's confirmation notes]",
+  sources_confirmed: [list],
+  sources_added: [any additions],
+  gaps_acknowledged: [any gaps]
+})
+```
+
+**Proceed to Gate 1.5 check, then Step 1.5 (Infrastructure Detection) and Phase 2.**
+
+---
+
+## Gate 1.5: Content Source Mapping Checkpoint
+
+**BLOCKING:** This gate must pass before proceeding to infrastructure detection and Phase 2.
+
+### Gate Check
+
+```markdown
+## Gate 1.5 Check: Content Source Mapping
+
+### Condition 1: Mapping File Exists
+[ ] `.fluxframe/detected_content_sources.md` exists
+
+### Condition 2: Status is Confirmed
+[ ] File status shows "✅ Confirmed" (not "Awaiting user review")
+
+### Condition 3: Project Brief Handled
+[ ] If `projectBriefRequired: true` in state → `project_brief.md` exists
+[ ] Or: Project purpose sources were found in existing files
+
+### Condition 4: State Updated
+[ ] `.fluxframe-bootstrap-state.json` has `contentSourceMapping.status = "confirmed"`
+
+---
+
+**GATE RESULT:** [✅ PASS / ❌ FAIL]
+```
+
+### If Gate Fails
+
+**DO NOT PROCEED TO STEP 1.5.** Return to the failed step:
+
+- **Condition 1 failed:** Return to Step 1.4.5.3 (Generate mapping file)
+- **Condition 2 failed:** Return to Step 1.4.5.4 (User review checkpoint)
+- **Condition 3 failed:** Return to Step 1.4.5.5 (Create project_brief.md)
+- **Condition 4 failed:** Update bootstrap state, then re-check
+
+### On Gate Pass
+
+Update bootstrap state:
+```json
+{
+  "gates": {
+    "gate1_5_content_sources": {
+      "passed": true,
+      "passedAt": "[timestamp]"
+    }
+  }
+}
+```
+
+Then proceed to Step 1.5.
+
+---
+
 ### Step 1.5: Detect Existing Infrastructure
 
 Analyze the codebase for infrastructure configuration:
@@ -843,25 +1212,32 @@ Proceed with this archival plan? (yes/modify)
 ## Phase 3: Execute Migration
 
 > [!CRITICAL]
-> **READ AND EXTRACT BEFORE ARCHIVAL**
+> **USE CONFIRMED CONTENT SOURCE MAPPING**
 >
-> Before generating FluxFrame documents, you MUST read and extract content from existing docs:
+> Before generating any FluxFrame document, you MUST:
+> 1. Read `.fluxframe/detected_content_sources.md` (confirmed in Step 1.4.5)
+> 2. For the document you're generating, identify confirmed sources
+> 3. Read each source file
+> 4. Extract the specific content mapped to that document
+> 5. Then generate the FluxFrame document with extracted content
 >
-> | Document Type | Extract For |
-> |---------------|-------------|
-> | Existing ROADMAP, backlog, planning docs | New `ROADMAP.md` - cycles, milestones, priorities |
-> | Existing STATUS.md, changelog | New `technical_status.md` - current state, history |
-> | Existing architecture docs | New `context_master_guide.md` - architecture section |
-> | Existing project briefs | New docs - requirements, constraints, goals |
-> | Existing patterns/conventions | New `patterns/` files |
+> | FluxFrame Document | Use Sources From Mapping |
+> |-------------------|--------------------------|
+> | context_master_guide.md | [confirmed sources for this doc] |
+> | technical_status.md | [confirmed sources for this doc] |
+> | ROADMAP.md | [confirmed sources for this doc] |
+> | patterns/* | [confirmed sources for each pattern file] |
+> | api_contract_standards.md | [confirmed sources for this doc] |
 >
-> **Timing:** Documents marked for MIGRATE are archived during Phase 7.
-> If you don't read and extract content NOW, it will only exist in the archive,
-> and the new FluxFrame documents will be incomplete.
+> **Why:** The content source mapping was confirmed by the user in Step 1.4.5.
+> It tells you exactly which files contain which content. Use it.
 >
-> **For COPY decisions:** Content is duplicated, original stays - still read it.
-> **For MIGRATE decisions:** Content moves to FluxFrame format - read it first, archive happens later.
-> **For REFERENCE decisions:** Content stays in place - link to it, but read for context.
+> **Timing:** Documents marked for MIGRATE/ARCHIVE are moved during Phase 7.
+> If you don't extract content using the mapping NOW, it will only exist in the archive.
+>
+> **For COPY decisions:** Content is duplicated, original stays - still read using mapping.
+> **For MIGRATE decisions:** Content moves to FluxFrame format - extract first, archive later.
+> **For REFERENCE decisions:** Content stays in place - link to it, but extract context.
 
 ### Step 3.1: Create Backup
 
@@ -958,15 +1334,33 @@ For each category, based on user's decision:
 
 ### Step 3.4: Create FluxFrame Core Documents
 
-For each FluxFrame document, based on migration decisions:
+**FIRST: Read Content Source Mapping**
+
+For each document, consult `.fluxframe/detected_content_sources.md` to get confirmed sources:
+
+```markdown
+## Generating [document_name]
+
+**From content source mapping:**
+Confirmed sources for [document_name]:
+- [source 1]: [content to extract - lines/sections]
+- [source 2]: [content to extract]
+
+**Reading and extracting...**
+```
+
+For each FluxFrame document, based on migration decisions AND content source mapping:
 
 #### context_master_guide.md
 
 ```markdown
 # Creating context_master_guide.md
 
-**Sources being used:**
-- [List source documents]
+**Sources from mapping (.fluxframe/detected_content_sources.md):**
+- [Confirmed source 1]: [specific content mapped]
+- [Confirmed source 2]: [specific content mapped]
+
+**Reading confirmed sources...**
 
 **Sections to populate:**
 

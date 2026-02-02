@@ -291,6 +291,28 @@ Based on classification, proceed to appropriate workflow:
 
 **Important:** Always present detection results to user and confirm classification before proceeding.
 
+### Gate Sequence After Detection
+
+After detection completes, the workflow includes these gates:
+
+```
+Detection Complete (Gate 1)
+    ↓
+Content Source Mapping
+    ↓
+Gate 1.5: Content Sources Confirmed ← BLOCKING
+    ↓
+[Workflow-specific phases]
+    ↓
+Document Generation
+    ↓
+Gate 2: Pre-Bootstrap Backup
+    ↓
+Finalization
+```
+
+**Gate 1.5** ensures content source mapping is complete before any document generation begins. See `bootstrap/content_source_gate.md` for details.
+
 ---
 
 ## Examples

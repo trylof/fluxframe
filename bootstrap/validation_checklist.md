@@ -1,8 +1,65 @@
 # Bootstrap Validation Checklist
 
-**Purpose:** Final verification steps before declaring bootstrap complete.
+**Purpose:** Verification steps at key points during bootstrap - gates that must pass before proceeding.
 
-**When to use:** After all files have been generated, before presenting summary to user.
+**When to use:**
+- Gate 1.5: Before document generation (after content source mapping)
+- Pre-Presentation: After all files generated, before showing to user
+- Pre-Finalization: Before calling `finalize_bootstrap`
+
+---
+
+## Gate 1.5: Content Source Mapping Validation
+
+**When:** After content source mapping step, BEFORE document generation begins.
+
+**BLOCKING:** Document generation CANNOT proceed until all checks pass.
+
+### Required Checks
+
+```markdown
+### 1. Mapping File Exists
+- [ ] `.fluxframe/detected_content_sources.md` exists
+
+### 2. Mapping Status Confirmed
+- [ ] File contains "**Status:** ✅ Confirmed" (not "Awaiting user review")
+
+### 3. Bootstrap State Updated
+- [ ] `.fluxframe-bootstrap-state.json` exists
+- [ ] `contentSourceMapping.status` is "confirmed"
+
+### 4. Project Brief Handled (if required)
+- [ ] If no project purpose sources found: `projectBriefRequired` is true in state
+- [ ] If `projectBriefRequired`: `project_brief.md` exists in project root
+- [ ] If `projectBriefCreated`: mapping updated to include it as source
+
+### 5. Source Coverage
+- [ ] `context_master_guide.md` has at least one source OR `projectBriefCreated` is true
+- [ ] Each target document has status: ready / no_sources / create_empty / not_applicable
+```
+
+### Gate 1.5 Result
+
+```markdown
+## Gate 1.5 Check Results
+
+| Check | Status | Notes |
+|-------|--------|-------|
+| Mapping file exists | ✅/❌ | |
+| Status is "Confirmed" | ✅/❌ | |
+| Bootstrap state updated | ✅/❌ | |
+| Project brief handled | ✅/❌/N/A | |
+| Source coverage adequate | ✅/❌ | |
+
+**GATE RESULT:** [✅ PASS - proceed to generation / ❌ FAIL - return to mapping step]
+```
+
+### If Gate 1.5 Fails
+
+**DO NOT PROCEED.** Return to content source mapping step and:
+1. Address the specific failure condition
+2. Re-run the gate check
+3. Only proceed when all checks pass
 
 ---
 
