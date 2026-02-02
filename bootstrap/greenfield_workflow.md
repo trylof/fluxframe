@@ -1448,6 +1448,76 @@ Check if `FLUXFRAME_MANUAL.md` already exists.
 | `{{TOOL_SPECIFIC_FILES}}` | Tool-specific file list |
 | `{{API_APPROACH_SECTION}}` | Chosen API contract approach |
 | `{{ARCHIVED_DOCUMENTS_SECTION}}` | Table of archived documents (see below) |
+| `{{MCP_SETUP_FOR_AGENTS}}` | MCP setup instructions for selected AI tools (see below) |
+
+**MCP_SETUP_FOR_AGENTS Content:**
+
+Generate MCP setup instructions for each AI tool the user selected. Only include tools they're using.
+
+**Source Reference:** `doc-templates/mcp_setup_instructions_by_agent.template.md`
+
+For each selected tool, include:
+- H3 heading with tool name
+- Configuration file location
+- JSON/TOML snippet with project-specific values
+- Tool-specific activation steps
+
+**Example for a project using Claude Code and Cline:**
+
+```markdown
+### Claude Code
+
+1. **Edit MCP configuration:**
+   - **Project-local (Recommended):** `.mcp.json` in the project root
+   - **Global:** `~/.claude.json` in your home directory
+
+2. **Add the project MCP server:**
+
+   ```json
+   {
+     "mcpServers": {
+       "my-project": {
+         "command": "node",
+         "args": ["/path/to/my-project/mcp-server.js"]
+       }
+     }
+   }
+   ```
+
+3. **Activate:**
+   - Run `/exit` to close Claude Code
+   - Start `claude` again
+   - The MCP tools will be available in new conversations
+
+### Cline
+
+1. **Open VS Code** with this project
+
+2. **Click Cline icon** in the sidebar (or Cmd/Ctrl+Shift+P → "Cline")
+
+3. **Click Settings (gear icon)** in the Cline sidebar
+
+4. **Scroll to "MCP Servers"** and click **"Edit Config"**
+
+5. **Add the project MCP server:**
+
+   ```json
+   {
+     "mcpServers": {
+       "my-project": {
+         "command": "node",
+         "args": ["/path/to/my-project/mcp-server.js"]
+       }
+     }
+   }
+   ```
+
+6. **Restart VS Code** (Cmd/Ctrl+Shift+P → "Developer: Reload Window")
+```
+
+**Placeholder values to replace:**
+- `{{PROJECT_NAME}}` → Actual project name (sanitized for JSON keys)
+- `{{PROJECT_PATH}}` → Absolute path to project root
 
 **ARCHIVED_DOCUMENTS_SECTION Content:**
 

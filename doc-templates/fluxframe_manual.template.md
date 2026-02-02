@@ -166,6 +166,62 @@ Even the framework itself is managed by the AI.
 
 ---
 
+## New Team Members: Activating Project MCP Tools
+
+When you join this project, you need to configure your AI coding assistant to use the project's MCP server. This gives your AI access to FluxFrame workflow tools like cycle planning, pattern checking, and documentation validation.
+
+### Prerequisites
+
+1. **Node.js v18+** - Check with `node --version`
+2. **Install MCP dependencies** (if not already done):
+   ```bash
+   npm install
+   ```
+
+### Configure Your AI Coding Assistant
+
+{{MCP_SETUP_FOR_AGENTS}}
+
+### Verify Setup
+
+After configuration, start a new conversation and ask your AI:
+
+> "Do you have access to FluxFrame MCP tools? List them."
+
+Your AI should confirm access to tools like `get_context_for_task`, `check_pattern_exists`, `start_cycle_planning`, etc.
+
+### Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| "No MCP tools available" | Check paths are absolute, restart your AI assistant |
+| Tools not appearing | Ensure `mcp-server.js` exists at the project root |
+| Connection errors | Run `node mcp-server.js` manually to check for errors |
+
+---
+
+## Extending AI Coding Agent Support
+
+FluxFrame supports multiple AI coding assistants. If your team wants to add support for a new agentic coder not currently configured for this project, any existing AI assistant can help.
+
+### How to Add a New AI Coding Agent
+
+Ask your current AI coding assistant:
+
+> I want to add FluxFrame support for **[NEW_TOOL_NAME]** to this project. Please:
+> 1. Review how FluxFrame is configured for the currently supported AI tools (check `AGENTS.md` and any tool-specific files like `CLAUDE.md`, `.roomodes`, `.clinerules/`, or `GEMINI.md`)
+> 2. Research how **[NEW_TOOL_NAME]** handles:
+>    - Agent instructions (equivalent to `AGENTS.md`)
+>    - MCP server configuration
+>    - Path-specific rules (if supported)
+>    - Any unique features
+> 3. Create the necessary configuration files
+> 4. Update this manual with setup instructions for the new tool
+
+The AI will research the new tool's documentation and create compatible configuration files following FluxFrame's patterns.
+
+---
+
 ## Archived Documents
 
 {{ARCHIVED_DOCUMENTS_SECTION}}
