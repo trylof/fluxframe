@@ -82,6 +82,20 @@ The Reference Library stores DESCRIPTIVE information (what the real world looks 
 
 ---
 
+## Activation Protocol
+
+### Activation Sequence
+
+**Transition Rule:** Before ANY code changes, planning, debugging, or answering questions about the project, you must:
+1. Read `{{DOCS_DIR}}/context_master_guide.md`
+2. Check `{{DOCS_DIR}}/technical_status.md`
+
+### Skip Activation For
+- Reading specific files ONLY when no general domain context is needed
+- Quick syntax questions unrelated to project domain
+
+---
+
 ## Development Workflow
 
 ### Before Implementation (Preparation Gate)

@@ -15,6 +15,16 @@ Full guidelines are in `AGENTS.md` at the project root.
 
 ## Quick Reference
 
+### Activation Sequence (MANDATORY)
+
+**Transition Rule:** Before ANY code changes, planning, debugging, or answering questions about the project, you must:
+1. Read `{{DOCS_DIR}}/context_master_guide.md`
+2. Check `{{DOCS_DIR}}/technical_status.md`
+
+**Skip Activation ONLY For:**
+- Reading specific files without domain context needs
+- Quick syntax questions
+
 ### Session Start
 1. Read `{{DOCS_DIR}}/context_master_guide.md` for full context
 2. Check `{{DOCS_DIR}}/technical_status.md` for current state
