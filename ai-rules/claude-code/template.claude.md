@@ -102,6 +102,10 @@ Rules in `.claude/rules/` are automatically loaded when working on matching file
 | `frontend-rules.md` | `{{FRONTEND_PATH_PATTERN}}` | Frontend development standards |
 | `test-rules.md` | `{{TEST_PATH_PATTERN}}` | Testing standards |
 
+## MCP Tool Failure Protocol
+
+**If ANY MCP tool call fails during a session, STOP and investigate.** Do not circumvent the failure by reading files directly or skipping the tool. MCP tools enforce the FluxFrame methodology - bypassing them means bypassing the methodology. Investigate the root cause, fix it, retry the tool, then resume work. A prior instruction to "execute" or "build" does NOT override this - tool failures are blockers, not inconveniences.
+
 ## Key Reminders
 
 - Always check patterns before implementing new features
@@ -109,3 +113,4 @@ Rules in `.claude/rules/` are automatically loaded when working on matching file
 - Update ALL affected documentation when marking work complete
 - Call `get_completion_checklist` BEFORE marking work complete
 - Use MCP tools for context gathering when available
+- **NEVER circumvent a failed MCP tool call** - investigate and fix the failure instead

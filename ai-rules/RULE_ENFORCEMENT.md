@@ -176,7 +176,26 @@ MCP: check_pattern_exists(feature_description)
 - Pattern checking (before any code change)
 - Documentation sequence (after validation)
 
-### 3. Human Oversight
+### 3. Tool Call Failure Protocol
+
+**When an MCP tool call fails, the agent MUST stop and investigate - never circumvent.**
+
+```
+WRONG:
+  Tool call fails → "I'll just read the files directly instead"
+  Tool call fails → "The user told me to execute, so I'll continue without the tool"
+
+RIGHT:
+  Tool call fails → STOP → Investigate error → Fix root cause → Retry tool → Resume
+```
+
+**Why this is critical:**
+- MCP tools ARE the enforcement mechanism
+- Circumventing a failed tool = circumventing the rules
+- A prior "execute" or "build" instruction does NOT override tool failure investigation
+- Tool failures are **blockers to be resolved**, not inconveniences to work around
+
+### 4. Human Oversight
 
 **User can catch violations:**
 - "Did you check patterns?"

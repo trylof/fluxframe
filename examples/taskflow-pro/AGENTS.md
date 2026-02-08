@@ -141,6 +141,27 @@ When implementing an approved cycle plan:
 3. **Still follow other rules** - Check patterns, read technical_status, etc.
 4. **Call `validate_cycle_completion()`** when done
 
+### MCP Tool Call Failure Protocol
+
+**Process Rule:** When ANY MCP tool call fails, you MUST stop and investigate. Never circumvent a failed tool call.
+
+**When a tool call fails:**
+1. **STOP execution immediately** - Do not continue with the current task
+2. **Investigate the failure** - Read the error message, check MCP server logs, identify root cause
+3. **Fix the underlying issue** - Resolve what caused the tool call to fail (configuration, server state, arguments, etc.)
+4. **Retry the original tool call** - Confirm the tool now works correctly
+5. **Resume execution** - Only continue with the task after the tool call succeeds
+
+**What you must NEVER do when a tool call fails:**
+- Do NOT read files directly to bypass a failed MCP context-gathering tool
+- Do NOT skip a validation gate because the validation tool is unavailable
+- Do NOT substitute your own judgment for what a tool would have returned
+- Do NOT reason that a prior user instruction ("execute", "build", "proceed") overrides this protocol
+
+**Why this matters:** MCP tools enforce the FluxFrame methodology - context gathering, pattern checking, validation gates. Circumventing a failed tool call means circumventing the methodology itself. A tool failure is a **blocker to be resolved**, not an inconvenience to work around.
+
+**Priority hierarchy:** Tool call failure investigation > Prior user execution instructions. If the user said "build this feature" and a tool call fails mid-execution, the correct response is to pause, report the failure, investigate, and fix it - not to continue building while skipping the tool.
+
 ### Before Any Implementation
 
 1. **Read Context** - Review `project_docs/context_master_guide.md` for full project context
