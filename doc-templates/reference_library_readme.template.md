@@ -14,7 +14,7 @@ This library contains **descriptive** information - data that describes the real
 | Type | Location | Nature |
 |------|----------|--------|
 | **Descriptive** | `reference_library/` | Real-world inputs, research, correspondence |
-| **Prescriptive** | `context_master_guide.md`, `patterns/`, `workflows/` | Rules, standards, how-to guides |
+| **Prescriptive** | `AGENTS.md`, `patterns/`, `workflows/` | Rules, standards, how-to guides |
 
 **Key Distinction:**
 - **Prescriptive docs** (patterns, workflows) tell you WHAT to do and HOW to do it
@@ -300,7 +300,7 @@ Old or superseded documents should be:
 
 ## Related Documentation
 
-- **Implementation guidance:** `context_master_guide.md`
+- **Implementation guidance:** `AGENTS.md`
 - **Current project state:** `technical_status.md`
 - **Development patterns:** `patterns/`
 - **Development roadmap:** `ROADMAP.md`

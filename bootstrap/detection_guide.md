@@ -74,7 +74,7 @@ Check for documentation directories:
 | `.github/docs/` | GitHub-style docs |
 
 **Within docs, look for:**
-- `context_master_guide.md` or similar "single source of truth"
+- `AGENTS.md` or similar "single source of truth"
 - `technical_status.md` or `STATUS.md` or `ARCHITECTURE.md`
 - `ROADMAP.md` or `ROADMAP.md`
 - `api_contract*.md` or `API.md`

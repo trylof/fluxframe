@@ -20,7 +20,9 @@ This document records the content source mapping performed during bootstrap, as 
 
 | Document | Source(s) | Template Used |
 |----------|-----------|---------------|
-| `project_docs/context_master_guide.md` | project_brief.md | context_master_guide.template.md |
+| `project_docs/document_catalog.md` | project_brief.md | document_catalog.template.md |
+| `project_docs/completion_protocol.md` | project_brief.md | completion_protocol.template.md |
+| `project_docs/templates/change_request.md` | N/A | change_request_template.template.md |
 | `project_docs/technical_status.md` | project_brief.md | technical_status.template.md |
 | `project_docs/ROADMAP.md` | project_brief.md | roadmap.template.md |
 | `project_docs/api_contract_standards.md` | project_brief.md | api_contract_standards.template.md |

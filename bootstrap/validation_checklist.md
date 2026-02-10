@@ -34,7 +34,7 @@
 - [ ] If `projectBriefCreated`: mapping updated to include it as source
 
 ### 5. Source Coverage
-- [ ] `context_master_guide.md` has at least one source OR `projectBriefCreated` is true
+- [ ] `document_catalog.md` has at least one source OR `projectBriefCreated` is true
 - [ ] Each target document has status: ready / no_sources / create_empty / not_applicable
 ```
 
@@ -71,8 +71,10 @@ Run through this checklist systematically. Fix any issues before showing results
 
 **Required Files:**
 ```
-✓ {{DOCS_DIR}}/context_master_guide.md
-✓ {{DOCS_DIR}}/technical_status.md  
+✓ {{DOCS_DIR}}/document_catalog.md
+✓ {{DOCS_DIR}}/completion_protocol.md
+✓ {{DOCS_DIR}}/templates/change_request.md
+✓ {{DOCS_DIR}}/technical_status.md
 ✓ {{DOCS_DIR}}/ROADMAP.md
 ✓ FLUXFRAME_MANUAL.md (in project root)
 ✓ {{DOCS_DIR}}/patterns/README.md
@@ -136,7 +138,9 @@ grep -r "<!-- TEMPLATE:" {{DOCS_DIR}}/
 ### 3. Project Name Consistency Check
 
 **Search for project name in:**
-- context_master_guide.md (title and references)
+- document_catalog.md (title and references)
+- completion_protocol.md (title and references)
+- templates/change_request.md (title and references)
 - technical_status.md (title and content)
 - ROADMAP.md (title and references)
 - .clinerules (project name field)
@@ -162,7 +166,7 @@ grep -i "project name\|{{PROJECT_NAME}}" {{DOCS_DIR}}/* .clinerules mcp-server.j
 **Check these locations:**
 - .clinerules → Single source of truth path
 - mcp-server.js → PROJECT_DOCS_DIR constant
-- All internal doc links in context_master_guide.md
+- All internal doc links in document_catalog.md
 
 **Command:**
 ```bash
@@ -190,8 +194,8 @@ grep -r "project_docs\|{{DOCS_DIR}}" .clinerules mcp-server.js {{DOCS_DIR}}/
 - [ ] Examples use project's stack
 - [ ] No contradictions with .clinerules
 
-**In context_master_guide.md:**
-- [ ] API approach mentioned in Section 2
+**In document_catalog.md:**
+- [ ] API approach mentioned in relevant section
 - [ ] Consistent with other files
 
 ---
@@ -269,7 +273,7 @@ node mcp-server.js
 **Expected output:**
 ```
 Project Docs MCP Server running on stdio
-Single source of truth: [DOCS_DIR]/context_master_guide.md
+Single source of truth: AGENTS.md
 ```
 
 **Validation:**
@@ -279,7 +283,7 @@ Single source of truth: [DOCS_DIR]/context_master_guide.md
 
 **If errors:**
 - Check PROJECT_DOCS_DIR path
-- Verify context_master_guide.md exists
+- Verify AGENTS.md exists
 - Check for syntax errors in JS
 
 ---
@@ -308,13 +312,20 @@ npm install
 
 **Sample key sections for quality:**
 
-**context_master_guide.md:**
-- [ ] Section 1 (Philosophy) is complete
-- [ ] Section 3 (Golden Rule) is complete
-- [ ] Section 4 (Pattern-Driven) is complete
-- [ ] Section 5 (Change Protocol) is complete
+**document_catalog.md:**
+- [ ] All document entries are complete
+- [ ] Links to all project documentation are valid
 - [ ] No "CultureFit" references
 - [ ] No other real project references
+
+**completion_protocol.md:**
+- [ ] Protocol steps are complete
+- [ ] Golden Rule section is complete
+- [ ] Change protocol is complete
+
+**templates/change_request.md:**
+- [ ] Template structure is complete
+- [ ] Placeholder fields are appropriate
 
 **technical_status.md:**
 - [ ] Current State section filled
@@ -362,18 +373,20 @@ Required sections:
 
 **Verify documents reference each other correctly:**
 
-**In context_master_guide.md:**
+**In document_catalog.md:**
 - [ ] References to patterns/ directory are correct
 - [ ] Links to ROADMAP.md work
+- [ ] Links to completion_protocol.md work
+- [ ] Links to templates/change_request.md work
 - [ ] References to .clinerules workflow are accurate
 
 **In .clinerules:**
-- [ ] References context_master_guide.md path correctly
+- [ ] References AGENTS.md as source of truth correctly
 - [ ] References patterns/ directory correctly
 - [ ] References technical_status.md correctly
 
 **In ROADMAP.md:**
-- [ ] References context_master_guide.md methodology
+- [ ] References AGENTS.md methodology
 - [ ] Points to roadmap/ directory
 - [ ] Two-tier planning system explanation included
 - [ ] Planning workflow (MCP tools) documented
@@ -468,7 +481,7 @@ grep -r "CultureFit\|Steel Thread\|TaskFlow Pro" {{DOCS_DIR}}/ .clinerules
 node mcp-server.js
 
 # Verify docs are readable  
-cat {{DOCS_DIR}}/context_master_guide.md | head -20
+cat {{DOCS_DIR}}/document_catalog.md | head -20
 
 # Check file permissions
 ls -la {{DOCS_DIR}}/
@@ -477,7 +490,7 @@ ls -la {{DOCS_DIR}}/
 ### User Acceptance
 
 Ask user to confirm:
-1. "Can you open and read context_master_guide.md?"
+1. "Can you open and read document_catalog.md?"
 2. "Do the file paths look correct for your system?"
 3. "Does the project name and description match your expectations?"
 
@@ -643,7 +656,7 @@ Replace FluxFrame's README with project-specific content:
 This project uses the FluxFrame methodology for AI-assisted development.
 
 ### Documentation
-- See `{{DOCS_DIR}}/context_master_guide.md` for development guidelines
+- See `AGENTS.md` for development guidelines
 - See `{{DOCS_DIR}}/technical_status.md` for current project state
 
 ### AI Assistance

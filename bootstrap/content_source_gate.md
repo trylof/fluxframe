@@ -47,7 +47,7 @@ Result: [PASS/FAIL/N/A]
 
 ### 4. Sources Logged in State
 - Bootstrap state has `contentSourceMapping.sourcesPerDocument`: [Yes/No]
-- At least `context_master_guide.md` has sources OR `projectBriefCreated: true`: [Yes/No]
+- At least `document_catalog.md` has sources OR `projectBriefCreated: true`: [Yes/No]
 Result: [PASS/FAIL]
 
 ---
@@ -135,7 +135,12 @@ Add to `.fluxframe-bootstrap-state.json`:
     ],
 
     "sourcesPerDocument": {
-      "context_master_guide.md": {
+      "document_catalog.md": {
+        "sources": [],
+        "gaps": [],
+        "status": "ready"
+      },
+      "completion_protocol.md": {
         "sources": [
           {
             "file": "README.md",
@@ -152,6 +157,11 @@ Add to `.fluxframe-bootstrap-state.json`:
         ],
         "gaps": [],
         "status": "ready"
+      },
+      "templates/change_request.md": {
+        "sources": [],
+        "gaps": [],
+        "status": "create_empty"
       },
       "technical_status.md": {
         "sources": [],
@@ -273,7 +283,7 @@ state.contentSourceMapping.filesAnalyzed.push({
 
 // Update sources for a document
 state.contentSourceMapping.sourcesPerDocument = state.contentSourceMapping.sourcesPerDocument || {};
-state.contentSourceMapping.sourcesPerDocument['context_master_guide.md'] = {
+state.contentSourceMapping.sourcesPerDocument['completion_protocol.md'] = {
   sources: [
     { file: 'README.md', content: 'project_purpose', location: 'lines 1-30', confidence: 'high' }
   ],
@@ -362,7 +372,7 @@ Before proceeding to document generation, verify:
 - [ ] Content source mapping updated to include project_brief.md
 
 ### Source Coverage
-- [ ] `context_master_guide.md` has sources OR project_brief.md created
+- [ ] `document_catalog.md` has sources OR project_brief.md created
 - [ ] Each document in mapping has status (ready/no_sources/create_empty/not_applicable)
 - [ ] User has acknowledged any gaps
 

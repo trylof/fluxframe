@@ -11,7 +11,7 @@ This project follows the FluxFrame development methodology with systematic {{CYC
 
 ### BEFORE Phase (Context Gathering)
 
-1. **Read Context** - Review `{{DOCS_DIR}}/context_master_guide.md` for full project context
+1. **Read Context** - Review `AGENTS.md` for project philosophy and workflow
 2. **Check Patterns** - Search `{{DOCS_DIR}}/patterns/` for existing solutions
 3. **Read Status** - Check `{{DOCS_DIR}}/technical_status.md` for current state
 4. **Understand Scope** - Know what you're building and why
@@ -40,7 +40,7 @@ This project follows the FluxFrame development methodology with systematic {{CYC
 
 ## Key Principles
 
-- **Documentation as Source of Truth** - `{{DOCS_DIR}}/context_master_guide.md` contains all project rules
+- **Documentation as Source of Truth** - `AGENTS.md` plus `{{DOCS_DIR}}/` docs contain all project rules
 - **Pattern-Driven Development** - Check existing patterns before implementing
 - **Test-Implementation Alignment** - Tests validate actual behavior
 - **Systematic Cycles** - Work in defined {{CYCLE_TYPE_PLURAL}} with clear phases

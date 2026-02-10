@@ -654,7 +654,7 @@ Do you plan to use Infrastructure as Code to manage these environments?
 
 **Impact of Infrastructure Questions:**
 - **Status "Needs Setup":** Automatically adds Environment Setup cycles to your initial `ROADMAP.md`.
-- **Infrastructure Section:** Populates the dedicated Infrastructure docs in your master guide.
+- **Infrastructure Section:** Populates the dedicated Infrastructure docs in your AGENTS.md and document_catalog.md.
 - **Patterns:** Triggers the creation of infrastructure/deployment patterns.
 
 ---
@@ -1092,7 +1092,7 @@ I still need:
 **Response:**
 ```
 Minimal setup - got it. I'll create:
-- Core docs only (context_master_guide, technical_status)
+- Core docs only (document_catalog, completion_protocol, technical_status)
 - Basic pattern library structure
 - Simple .clinerules
 - Basic MCP server
@@ -1153,7 +1153,9 @@ Based on your answers:
 - **Docs Location:** [PATH]
 
 I'll create:
-- Context master guide
+- Document catalog
+- Completion protocol
+- Change request template
 - Technical status doc
 - Pattern library structure
 - MCP server configuration

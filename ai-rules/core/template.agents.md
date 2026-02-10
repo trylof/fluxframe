@@ -37,35 +37,72 @@ Replace {{PLACEHOLDERS}} with project-specific values during bootstrap.
 
 ---
 
+## Project Purpose & Design Philosophy
+
+This project treats its documentation not as an afterthought, but as a core component of the product itself. The documents in the `{{DOCS_DIR}}` directory represent the "mind" of the project — the single source of truth for its vision, architecture, and implementation strategy.
+
+**Our core principle is simple: If it's not in the docs, it doesn't exist.**
+
+This ensures that all team members, technical and non-technical, are always aligned on a shared reality. It is the responsibility of every team member to ensure these documents are kept **current, clear, and accurate** after every development cycle.
+
+### Agent Protocol: Explicit Boundaries
+
+**CRITICAL INSTRUCTION FOR AI AGENTS:**
+
+To prevent "hallucinated progress" and ensure user control, you must strictly adhere to the **Two-Tier Planning System**.
+
+**1. STRICT SEPARATION OF PLANNING AND EXECUTION**
+- **NEVER** offer to "plan and build" in a single response.
+- **NEVER** ask "Should I start building?" before the plan is approved.
+- **ALWAYS** act in discrete turns:
+  1. **Phase 1: Plan** → `create_cycle_plan()` → **STOP & WAIT**
+  2. **Phase 2: Review** → User reviews → `approve_cycle_plan()` → **STOP & WAIT**
+  3. **Phase 3: Build** → Only AFTER approval → Start implementation
+
+**2. THE "STOP" RULE**
+- When you complete a planning step (research, scoping, or plan creation), you must **STOP** and ask the user for confirmation.
+- Do not chain tools that cross the boundary from Planning to Execution.
+
+**3. VERIFICATION FIRST**
+- Before implementing features, you must verify the existence of patterns (`check_pattern_exists`).
+- Before marking complete, you must verify against the plan (`validate_cycle_completion`).
+
+{{PROJECT_SPECIFIC_PHILOSOPHY}}
+
+---
+
 ## FluxFrame Development Methodology
 
 This project follows the FluxFrame development methodology - a documentation-first, pattern-driven approach to software development.
 
 ### Core Principles
 
-1. **Documentation as Source of Truth** - `{{DOCS_DIR}}/context_master_guide.md` contains all project rules, philosophy, workflows, and standards
+1. **Documentation as Source of Truth** - This file (AGENTS.md) plus the project documentation in `{{DOCS_DIR}}/` define all rules, philosophy, workflows, and standards
 2. **Pattern-Driven Development** - Check existing patterns before implementing; document new patterns after implementation
 3. **Systematic Development Cycles** - Work in defined cycles ({{CYCLE_TYPE_PLURAL}}) with clear before/during/after phases
 4. **Test-Implementation Alignment** - Tests validate actual behavior, not mocked assumptions
 
-### Key Documentation Files
+### Project Documentation Map
 
-| File | Purpose |
-|------|---------|
-| `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth for all project context |
-| `{{DOCS_DIR}}/technical_status.md` | Current implementation state and recent changes |
-| `{{DOCS_DIR}}/ROADMAP.md` | High-level roadmap (Tier 1 - strategic) |
-| `{{DOCS_DIR}}/roadmap/` | Detailed cycle plans (Tier 2 - tactical) |
-| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns (PRESCRIPTIVE) |
-| `{{DOCS_DIR}}/reference_library/` | Real-world context, user research, market data (DESCRIPTIVE) |
+| File | Purpose | When to Read |
+|------|---------|-------------|
+| `AGENTS.md` | Philosophy, workflow, activation protocol (this file) | Always loaded |
+| `{{DOCS_DIR}}/technical_status.md` | Current implementation state and recent changes | Every session start |
+| `{{DOCS_DIR}}/ROADMAP.md` | High-level roadmap (Tier 1 - strategic) | When planning |
+| `{{DOCS_DIR}}/roadmap/` | Detailed cycle plans (Tier 2 - tactical) | When implementing |
+| `{{DOCS_DIR}}/patterns/` | Reusable solution patterns (PRESCRIPTIVE) | Before implementing |
+| `{{DOCS_DIR}}/reference_library/` | Real-world context, user research, market data (DESCRIPTIVE) | When planning features |
+| `{{DOCS_DIR}}/document_catalog.md` | Detailed descriptions of ALL project documents | On-demand (session start, deep context) |
+| `{{DOCS_DIR}}/completion_protocol.md` | Full validation sequence and completion checklists | On-demand (cycle completion) |
+| `{{DOCS_DIR}}/templates/change_request.md` | Boilerplate for change documentation | On-demand (after change confirmed) |
+
+**Prescriptive vs Descriptive:**
+- **Prescriptive docs** (AGENTS.md, patterns/, workflows/) → Tell you WHAT to do and HOW
+- **Descriptive docs** (reference_library/) → Tell you WHAT EXISTS in the real world
 
 ### Reference Library (Descriptive Context)
 
 The Reference Library stores DESCRIPTIVE information (what the real world looks like) as opposed to PRESCRIPTIVE documentation (patterns, workflows, rules).
-
-**Key Distinction:**
-- **Prescriptive docs** (patterns/, workflows/, context_master_guide.md) → Tell you WHAT to do and HOW
-- **Descriptive docs** (reference_library/) → Tell you WHAT EXISTS in the real world
 
 **The Reference Library INFORMS decisions but does NOT DICTATE them.**
 
@@ -87,8 +124,9 @@ The Reference Library stores DESCRIPTIVE information (what the real world looks 
 ### Activation Sequence
 
 **Transition Rule:** Before ANY code changes, planning, debugging, or answering questions about the project, you must:
-1. Read `{{DOCS_DIR}}/context_master_guide.md`
+1. Read `AGENTS.md` (this file — already loaded if auto-imported)
 2. Check `{{DOCS_DIR}}/technical_status.md`
+3. Optionally read `{{DOCS_DIR}}/document_catalog.md` for deeper context on available documents
 
 ### Skip Activation For
 - Reading specific files ONLY when no general domain context is needed
@@ -168,7 +206,7 @@ When implementing an approved cycle plan:
 
 ### Before Any Implementation
 
-1. **Read Context** - Review `{{DOCS_DIR}}/context_master_guide.md` for full project context
+1. **Read Context** - Review `AGENTS.md` for project philosophy and workflow; read `{{DOCS_DIR}}/document_catalog.md` if you need detailed document descriptions
 2. **Check Patterns** - Search `{{DOCS_DIR}}/patterns/` for existing solutions (PRESCRIPTIVE)
 3. **Check Reference Library** - Search `{{DOCS_DIR}}/reference_library/` for relevant user research, domain knowledge (DESCRIPTIVE)
 4. **Read Status** - Check `{{DOCS_DIR}}/technical_status.md` for current state
@@ -225,6 +263,15 @@ After implementing a reusable solution:
 2. Use the standard pattern template
 3. Mark status as "experimental" initially
 4. Promote to "established" after successful reuse
+
+### Pattern Status Levels
+
+- **Canonical:** Reference implementation, use exactly as documented
+- **Established:** Proven pattern, use consistently
+- **Mandatory:** Must be used in all applicable cases
+- **Needs Harmonization:** Inconsistencies exist, standardization required
+- **Experimental:** New pattern being evaluated
+- **Deprecated:** No longer recommended, migration path provided
 
 ---
 
@@ -347,7 +394,7 @@ Always use the current date from environment details, not training data dates.
 ## Quick Reference
 
 ### Session Start Checklist
-- [ ] Read context_master_guide.md
+- [ ] Read AGENTS.md (this file — auto-loaded)
 - [ ] Check technical_status.md
 - [ ] Call `get_implementation_roadmap()` to see cycle status
 - [ ] Identify task type (new cycle, continue cycle, bug fix)
@@ -355,7 +402,7 @@ Always use the current date from environment details, not training data dates.
 - [ ] Check reference_library for relevant context (DESCRIPTIVE)
 
 ### Before Starting a New Cycle
-- [ ] Call `start_cycle_planning(cycle_id)` 
+- [ ] Call `start_cycle_planning(cycle_id)`
 - [ ] Research the feature
 - [ ] Call `analyze_cycle_scope()` - complexity must be ≤10 or decomposed
 - [ ] Call `create_cycle_plan()` if plan doesn't exist
@@ -378,4 +425,4 @@ Always use the current date from environment details, not training data dates.
 
 ---
 
-*For complete methodology details, see `{{DOCS_DIR}}/context_master_guide.md`*
+*For detailed document descriptions, see `{{DOCS_DIR}}/document_catalog.md`. For completion checklists, see `{{DOCS_DIR}}/completion_protocol.md`.*

@@ -87,7 +87,7 @@ graph TD
 
 FluxFrame addresses four fundamental problems in AI-assisted coding:
 
-1.  **Limited Context Window (Amnesia):** An AI can't hold your entire codebase and history in its head. FluxFrame solves this with **Context Distillation** (`context_master_guide.md`), creating a high-density map of your project that fits in context.
+1.  **Limited Context Window (Amnesia):** An AI can't hold your entire codebase and history in its head. FluxFrame solves this with **Context Distillation** (`AGENTS.md` as the always-loaded vehicle, with on-demand reference files), creating a high-density map of your project that fits in context.
 2.  **Hallucinations:** Without grounding, AI guesses. FluxFrame forces **Grounding** by examining `technical_status.md` (Current Reality) and `patterns/` (Historical Truth) before every task.
 3.  **Randomness / Creativity:** In code, creativity is often a bug. FluxFrame enforces **Pattern Compliance**, turning "creative writing" into reliably following your team's established best practices.
 4.  **The "Weight of Words":** In a chat, a random idea has the same weight as a security protocol. FluxFrame solves this with **Binding Levels**:
@@ -254,10 +254,13 @@ FluxFrame's **detection-first** bootstrap works whether you have:
 ```
 your-project/
 ├── project_docs/
-│   ├── context_master_guide.md      # Single source of truth
+│   ├── document_catalog.md          # Detailed document descriptions (on-demand)
+│   ├── completion_protocol.md       # Validation & completion checklists (on-demand)
 │   ├── technical_status.md          # Real-time project state
-│   ├── ROADMAP.md       # Roadmap & cycles
+│   ├── ROADMAP.md                   # Roadmap & cycles
 │   ├── api_contract_standards.md    # API enforcement rules
+│   ├── templates/                   # Boilerplate templates
+│   │   └── change_request.md
 │   └── patterns/                    # Pattern library
 │       └── README.md
 ```
@@ -403,7 +406,9 @@ fluxframe/
 │   ├── similar_workflow.md            # Upgrade existing AI workflow
 │   └── validation_checklist.md        # Final validation
 ├── doc-templates/                     # Project documentation templates
-│   ├── context_master_guide.template.md
+│   ├── document_catalog.template.md
+│   ├── completion_protocol.template.md
+│   ├── change_request_template.template.md
 │   ├── technical_status.template.md
 │   ├── roadmap.template.md
 │   ├── cycle_implementation_plan.template.md
@@ -448,10 +453,12 @@ fluxframe/
         ├── AGENTS.md                 # Universal AI baseline
         ├── CLAUDE.md                 # Claude Code extension
         └── project_docs/
-            ├── context_master_guide.md
+            ├── document_catalog.md
+            ├── completion_protocol.md
             ├── technical_status.md
             ├── ROADMAP.md
             ├── api_contract_standards.md
+            ├── templates/            # Boilerplate templates
             ├── patterns/             # Prescriptive patterns
             ├── reference_library/    # Descriptive context
             ├── workflows/
@@ -649,7 +656,7 @@ Created patterns for your domain? Help others!
 ## FAQ
 
 **Q: Do I need to use ALL the framework features?**  
-A: No. Take what's useful. Minimum viable: context guide + patterns + .clinerules
+A: No. Take what's useful. Minimum viable: AGENTS.md + patterns + tool-specific rules
 
 **Q: Is MCP setup required?**
 A: Yes, for bootstrap. The MCP server ensures reliable step-by-step setup. After bootstrap completes, you'll use your project's own MCP server for ongoing development.

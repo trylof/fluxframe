@@ -19,7 +19,7 @@ This project follows the FluxFrame methodology:
 
 | File | Purpose | When to Update |
 |------|---------|----------------|
-| `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth | Rarely (foundational) |
+| `AGENTS.md` | Project philosophy, workflow, activation protocol | Rarely (foundational) |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state | After EVERY change |
 | `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles | When cycles complete |
 | `{{DOCS_DIR}}/patterns/` | Reusable solutions (PRESCRIPTIVE) | When patterns discovered |
@@ -42,7 +42,7 @@ The `reference_library/` stores DESCRIPTIVE information that INFORMS but doesn't
 ### Activation Sequence
 
 **Transition Rule:** Before ANY code changes, planning, debugging, or answering questions about the project, you must:
-1. Read `{{DOCS_DIR}}/context_master_guide.md`
+1. Read `AGENTS.md` (auto-loaded)
 2. Check `{{DOCS_DIR}}/technical_status.md`
 
 ### Skip Activation For
@@ -50,7 +50,7 @@ The `reference_library/` stores DESCRIPTIVE information that INFORMS but doesn't
 - Quick syntax questions unrelated to project domain
 
 ### Before Any Work
-1. Read `{{DOCS_DIR}}/context_master_guide.md` for full context
+1. Read `AGENTS.md` for project philosophy and workflow
 2. Check `{{DOCS_DIR}}/patterns/` for existing solutions (PRESCRIPTIVE)
 3. Check `{{DOCS_DIR}}/reference_library/` for relevant context (DESCRIPTIVE)
 4. Read `{{DOCS_DIR}}/technical_status.md` for current state

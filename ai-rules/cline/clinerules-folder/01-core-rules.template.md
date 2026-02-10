@@ -18,7 +18,7 @@ Full guidelines are in `AGENTS.md` at the project root.
 ### Activation Sequence (MANDATORY)
 
 **Transition Rule:** Before ANY code changes, planning, debugging, or answering questions about the project, you must:
-1. Read `{{DOCS_DIR}}/context_master_guide.md`
+1. Read `AGENTS.md` (project philosophy and workflow)
 2. Check `{{DOCS_DIR}}/technical_status.md`
 
 **Skip Activation ONLY For:**
@@ -26,7 +26,7 @@ Full guidelines are in `AGENTS.md` at the project root.
 - Quick syntax questions
 
 ### Session Start
-1. Read `{{DOCS_DIR}}/context_master_guide.md` for full context
+1. Read `AGENTS.md` for project philosophy and workflow
 2. Check `{{DOCS_DIR}}/technical_status.md` for current state
 3. Identify task type (new feature, bug fix, etc.)
 4. Search `{{DOCS_DIR}}/patterns/` for existing solutions
@@ -70,7 +70,7 @@ Documentation during iteration leads to:
 
 | File | Purpose |
 |------|---------|
-| `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth |
+| `AGENTS.md` | Project philosophy, workflow, activation protocol |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state |
 | `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles |
 | `{{DOCS_DIR}}/patterns/` | Reusable solution patterns (PRESCRIPTIVE) |

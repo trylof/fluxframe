@@ -66,8 +66,8 @@ Roo Code can restrict what files the AI can edit using regex patterns.
 groups:
   - read
   - - edit
-    - fileRegex: "^(?!project_docs/context_master_guide\\.md$).*$"
-    - description: "All files except context_master_guide.md"
+    - fileRegex: "^(?!AGENTS\\.md$).*$"
+    - description: "All files except AGENTS.md"
 ```
 
 **Architect Mode** - Can only edit documentation files:

@@ -92,7 +92,7 @@ your-project/
 │       ├── frontend-rules.md    # Frontend rules
 │       └── test-rules.md        # Test rules
 ├── project_docs/
-│   ├── context_master_guide.md
+│   ├── document_catalog.md
 │   └── ...
 └── ...
 ```

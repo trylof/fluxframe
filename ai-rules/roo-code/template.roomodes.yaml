@@ -52,8 +52,8 @@ customModes:
     groups:
       - read
       - - edit
-        - fileRegex: "^(?!{{DOCS_DIR}}/context_master_guide\\.md$).*$"
-        - description: "All files except context_master_guide.md"
+        - fileRegex: "^(?!AGENTS\\.md$).*$"
+        - description: "All files except AGENTS.md"
       - command
       - browser
       - mcp
@@ -89,7 +89,7 @@ customModes:
       - Skip documentation updates
       
       ## Key Files to Reference
-      - project_docs/context_master_guide.md - Source of truth
+      - AGENTS.md - Project philosophy and workflow
       - project_docs/technical_status.md - Current state
       - project_docs/ROADMAP.md - Roadmap
       - project_docs/patterns/ - Existing patterns

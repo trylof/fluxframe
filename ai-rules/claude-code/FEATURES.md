@@ -20,8 +20,7 @@ Claude Code can import other files directly into the context using `@path/to/fil
 
 ```markdown
 # In CLAUDE.md
-@AGENTS.md                              # Universal baseline
-@project_docs/context_master_guide.md   # Full project context
+@AGENTS.md                              # Universal baseline (philosophy + workflow)
 @README.md                              # Project overview
 ```
 

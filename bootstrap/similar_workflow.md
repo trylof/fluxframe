@@ -342,9 +342,9 @@ For each file discovered in Steps 1.1-1.4, perform **deep content analysis**:
 
 | Content Type | Signals | Target Document |
 |--------------|---------|-----------------|
-| Project purpose/vision | "what", "why", "goals", "mission" | context_master_guide.md |
-| Architecture decisions | "we chose", "architecture", "design" | context_master_guide.md |
-| Tech stack details | "stack", "technologies", "built with" | context_master_guide.md |
+| Project purpose/vision | "what", "why", "goals", "mission" | AGENTS.md + document_catalog.md |
+| Architecture decisions | "we chose", "architecture", "design" | AGENTS.md + document_catalog.md |
+| Tech stack details | "stack", "technologies", "built with" | AGENTS.md + document_catalog.md |
 | Current state | "status", "works", "implemented" | technical_status.md |
 | Known issues | "issues", "bugs", "limitations", "debt" | technical_status.md |
 | Recent changes | "changed", "updated", "fixed" | technical_status.md |
@@ -364,7 +364,7 @@ For each file, record which FluxFrame documents it informs:
 **Also in archival inventory:** [Yes/No - from Step 1.4]
 
 **Content Analysis:**
-- context_master_guide.md: [Yes/No/Partial] - [specific content: lines, sections]
+- AGENTS.md + document_catalog.md: [Yes/No/Partial] - [specific content: lines, sections]
 - technical_status.md: [Yes/No/Partial] - [specific content]
 - ROADMAP.md: [Yes/No/Partial] - [specific content]
 - patterns/ui_patterns.md: [Yes/No/Partial] - [specific content]
@@ -380,16 +380,16 @@ For each file, record which FluxFrame documents it informs:
 
 **Case: Existing context_guide.md or similar**
 ```markdown
-Found: docs/context_guide.md (similar to FluxFrame context_master_guide.md)
+Found: docs/context_guide.md (similar to FluxFrame AGENTS.md + document_catalog.md)
 
 This file will be:
 - Step 1.4 decision: [Archive/Keep] - organizational decision
-- Step 1.5 decision: Use as PRIMARY source for context_master_guide.md
+- Step 1.5 decision: Use as PRIMARY source for AGENTS.md, document_catalog.md, completion_protocol.md, and templates/change_request.md
 
 Content mapping:
-- Project identity: Lines 1-50 → context_master_guide.md Section 1
-- Architecture: Lines 60-120 → context_master_guide.md Section 2
-- Workflows: Lines 130-200 → context_master_guide.md Section 3 (may need FluxFrame adaptation)
+- Project identity: Lines 1-50 → AGENTS.md Section 1
+- Architecture: Lines 60-120 → AGENTS.md Section 2 + document_catalog.md
+- Workflows: Lines 130-200 → completion_protocol.md + templates/change_request.md (may need FluxFrame adaptation)
 ```
 
 **Case: Existing patterns scattered across files**
@@ -443,14 +443,14 @@ then the original is preserved in the archive.
 
 ---
 
-## For context_master_guide.md
+## For AGENTS.md (source of truth)
 
 **What this document needs:**
 - Project purpose, vision, and goals
 - Target users and their needs
 - High-level architecture overview
 - Tech stack and key decisions
-- Core workflows (will be adapted to FluxFrame methodology)
+- Core principles and development rules
 
 **Sources found:**
 
@@ -459,6 +459,51 @@ then the original is preserved in the archive.
 | [file] | [content description] | [H/M/L] | [notes] |
 
 **User action:** Are these the right sources? Any files I missed?
+
+---
+
+## For document_catalog.md
+
+**What this document needs:**
+- Index of all project documentation
+- Document locations and purposes
+- Cross-references between documents
+
+**Sources found:**
+
+| File | Relevant Content | Confidence | Notes |
+|------|------------------|------------|-------|
+| [file] | [content description] | [H/M/L] | [notes] |
+
+---
+
+## For completion_protocol.md
+
+**What this document needs:**
+- Core workflows (adapted to FluxFrame methodology)
+- Completion criteria and checklists
+- Quality gates
+
+**Sources found:**
+
+| File | Relevant Content | Confidence | Notes |
+|------|------------------|------------|-------|
+| [file] | [content description] | [H/M/L] | [notes] |
+
+---
+
+## For templates/change_request.md
+
+**What this document needs:**
+- Change request workflow and protocol
+- Bug fix tracking templates
+- Iteration rules
+
+**Sources found:**
+
+| File | Relevant Content | Confidence | Notes |
+|------|------------------|------------|-------|
+| [file] | [content description] | [H/M/L] | [notes] |
 
 ---
 
@@ -521,7 +566,10 @@ then the original is preserved in the archive.
 
 | Target Document | Sources | Confidence | Status |
 |-----------------|---------|------------|--------|
-| context_master_guide.md | [N] files | [avg] | ⬜ Pending review |
+| AGENTS.md | [N] files | [avg] | ⬜ Pending review |
+| document_catalog.md | [N] files | [avg] | ⬜ Pending review |
+| completion_protocol.md | [N] files | [avg] | ⬜ Pending review |
+| templates/change_request.md | [N] files | [avg] | ⬜ Pending review |
 | technical_status.md | [N] files | [avg] | ⬜ Pending review |
 | ROADMAP.md | [N] files | [avg] | ⬜ Pending review |
 | patterns/ | [N] files | [avg] | ⬜ Pending review |
@@ -540,7 +588,10 @@ Before proceeding to Phase 2 (user preferences), please review the content sourc
 
 | FluxFrame Document | Primary Sources | Gaps |
 |--------------------|-----------------|------|
-| context_master_guide.md | [list] | [any gaps] |
+| AGENTS.md | [list] | [any gaps] |
+| document_catalog.md | [list] | [any gaps] |
+| completion_protocol.md | [list] | [any gaps] |
+| templates/change_request.md | [list] | [any gaps] |
 | technical_status.md | [list] | [any gaps] |
 | ROADMAP.md | [list] | [any gaps] |
 | patterns/ | [list] | [any gaps] |
@@ -842,7 +893,10 @@ Show the user what a complete FluxFrame bootstrap includes:
 Before we proceed, here's what a complete FluxFrame setup provides. I'll then show what you already have and what's missing.
 
 ### Core Documentation
-- [ ] `context_master_guide.md` - Single source of truth for project context
+- [ ] `AGENTS.md` - Single source of truth for project context
+- [ ] `document_catalog.md` - Index of all project documentation
+- [ ] `completion_protocol.md` - Workflow completion criteria and checklists
+- [ ] `templates/change_request.md` - Change request and bug fix tracking template
 - [ ] `technical_status.md` - Real-time project state tracking
 - [ ] `ROADMAP.md` - Development roadmap with cycles
 - [ ] `api_contract_standards.md` - API type safety enforcement (if applicable)
@@ -1290,7 +1344,7 @@ Create decision record:
 > 5. Synthesize into FluxFrame format
 >
 > **This applies to:**
-> - context_master_guide.md (or equivalent)
+> - AGENTS.md, document_catalog.md, completion_protocol.md, templates/change_request.md
 > - technical_status.md
 > - ROADMAP.md
 > - patterns/ files
@@ -1405,7 +1459,10 @@ Compare existing setup to full FluxFrame setup:
 - [x] .clinerules/ - [exists - upgraded]
 
 ### Documentation
-- [x] context_master_guide.md - [exists as context_guide.md]
+- [x] AGENTS.md - [exists/needs update]
+- [ ] document_catalog.md - [missing - create]
+- [ ] completion_protocol.md - [missing - create]
+- [ ] templates/change_request.md - [missing - create]
 - [x] technical_status.md - [exists as status.md]
 - [ ] ROADMAP.md - [missing - create]
 - [ ] api_contract_standards.md - [missing - create if has API]
@@ -1892,7 +1949,7 @@ Run through checklist:
 - [ ] User customizations preserved as decided
 
 **Documentation Validation:**
-- [ ] Context guide exists and is complete
+- [ ] AGENTS.md and document_catalog.md exist and are complete
 - [ ] Technical status reflects current state
 - [ ] Pattern library structure exists
 - [ ] Workflows documented (or acknowledged as TODO)
@@ -2034,7 +2091,8 @@ When project uses different doc names:
 ```markdown
 ## Context Documents
 
-**Single Source of Truth:** `docs/context_guide.md` (equivalent to context_master_guide)
+**Single Source of Truth:** `AGENTS.md` (project context and AI rules)
+**Document Catalog:** `docs/document_catalog.md` (index of all documentation)
 **Technical Status:** `docs/status.md` (equivalent to technical_status)
 **Patterns:** `docs/patterns/` (FluxFrame standard location)
 ```

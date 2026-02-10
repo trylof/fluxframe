@@ -178,7 +178,7 @@ Be specific and accurate - users rely on this for current state.
 <!-- 
 AI ASSISTANT: CRITICAL - Update this section immediately after every bug fix or change.
 This tracks what was broken and how it was fixed.
-Follows Change Request Protocol from context_master_guide.md Section 5.
+Follows the Change Request Protocol from AGENTS.md.
 
 Format:
 - Group by date (most recent first)
@@ -187,7 +187,7 @@ Format:
 - Archive entries after 1 month (knowledge preserved in git + bug_fixes/)
 -->
 
-**Purpose:** This section tracks recent bug fixes, refinements, and alterations made to existing features. Detailed documentation for each change is stored in the `{{CHANGES_DIR}}` directory following the Change Request Protocol (see `context_master_guide.md` Section 5).
+**Purpose:** This section tracks recent bug fixes, refinements, and alterations made to existing features. Detailed documentation for each change is stored in the `{{CHANGES_DIR}}` directory following the Change Request Protocol (see `AGENTS.md`).
 
 **Archive Policy:** Changes are kept in this section for 1 month, then archived (knowledge remains in git history and the {{CHANGES_DIR}}/ directory).
 

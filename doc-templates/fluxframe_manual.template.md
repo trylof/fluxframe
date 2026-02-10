@@ -18,7 +18,7 @@
 | What | Where | Who Edits? |
 |------|-------|------------|
 | **This Manual** | `FLUXFRAME_MANUAL.md` | AI (Updates) |
-| Project context | `{{DOCS_DIR}}/context_master_guide.md` | AI (Maintains) |
+| Project context | `AGENTS.md` + `{{DOCS_DIR}}/document_catalog.md` | AI (Maintains) |
 | Current status | `{{DOCS_DIR}}/technical_status.md` | AI (Updates) |
 | Development roadmap | `{{DOCS_DIR}}/ROADMAP.md` | AI (Writes) |
 | Bug tracker | `{{DOCS_DIR}}/BUGS.md` | AI (Logs) |
@@ -134,7 +134,7 @@ The `{{DOCS_DIR}}/` directory is the AI's long-term memory. If it's not in the d
 7. **Implement** following the plan and patterns (AI) -> **CLEAR CONTEXT**
 8. **Manual Verification** (**USER ACTION**) - Test the feature yourself.
 9. **Complete** with `validate_cycle_completion()` (AI)
-10. **Update docs** - technical_status, patterns, context guide (AI)
+10. **Update docs** - technical_status, patterns, AGENTS.md (AI)
 
 ---
 

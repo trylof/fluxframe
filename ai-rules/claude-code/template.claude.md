@@ -14,7 +14,6 @@ Features used:
 @AGENTS.md
 
 # Import Project Documentation
-@{{DOCS_DIR}}/context_master_guide.md
 @README.md
 
 ---
@@ -35,7 +34,7 @@ Features used:
 - `{{DOCS_DIR}}/patterns/` - Pattern documentation
 
 ### Requires Confirmation
-- `{{DOCS_DIR}}/context_master_guide.md` - Source of truth
+- `AGENTS.md` - Project philosophy and workflow
 - `{{DOCS_DIR}}/technical_status.md` - Implementation state
 - Configuration files (`.env`, `config.*`, etc.)
 
@@ -50,7 +49,7 @@ Features used:
 When the FluxFrame MCP server is connected, use these tools:
 
 **Context Gathering:**
-- `get_context_for_task` - Extract relevant context from master guide
+- `get_context_for_task` - Extract relevant context from project documentation
 - `get_current_implementation_status` - Read technical_status.md
 - `check_pattern_exists` - Search pattern library (PRESCRIPTIVE)
 

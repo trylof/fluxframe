@@ -74,7 +74,9 @@ For each potential source file, **read the entire content** and identify:
 
 | Target Document | Content Signals to Look For |
 |-----------------|----------------------------|
-| `context_master_guide.md` | Project purpose, vision, goals, "what is this", "why we built", target users, value proposition, high-level architecture overview, tech stack descriptions |
+| `document_catalog.md` | Document inventory, file locations, document descriptions, cross-references between docs |
+| `completion_protocol.md` | Project purpose, vision, goals, "what is this", "why we built", target users, value proposition, workflow rules, change protocols, golden rules |
+| `templates/change_request.md` | Change request formats, approval workflows, modification procedures |
 | `technical_status.md` | Current state, "what works", "what's broken", known issues, bugs, limitations, recent changes, changelog entries, version history, technical debt mentions |
 | `ROADMAP.md` | Future plans, "todo", "planned", milestones, backlog items, feature requests, "next steps", priority lists, timeline mentions, phases |
 | `patterns/` | Coding conventions, "how we do X", style guides, architectural patterns, "always use", "never do", examples of preferred approaches |
@@ -92,7 +94,9 @@ For each potential source file, **read the entire content** and identify:
 [2-3 sentence description of what this file contains]
 
 **Relevant To:**
-- context_master_guide.md: [Yes/No/Partial] - [specific content areas if yes]
+- document_catalog.md: [Yes/No/Partial] - [specific content areas if yes]
+- completion_protocol.md: [Yes/No/Partial] - [specific content areas if yes]
+- templates/change_request.md: [Yes/No/Partial] - [specific content areas if yes]
 - technical_status.md: [Yes/No/Partial] - [specific content areas if yes]
 - ROADMAP.md: [Yes/No/Partial] - [specific content areas if yes]
 - patterns/: [Yes/No/Partial] - [specific content areas if yes]
@@ -112,7 +116,9 @@ For each potential source file, **read the entire content** and identify:
 **Content Summary:** Comprehensive project documentation covering purpose, setup, architecture, known issues, and roadmap.
 
 **Relevant To:**
-- context_master_guide.md: Yes - Project purpose (lines 1-45), tech stack (lines 50-80)
+- document_catalog.md: Partial - Document references can be extracted
+- completion_protocol.md: Yes - Project purpose (lines 1-45), tech stack (lines 50-80)
+- templates/change_request.md: No
 - technical_status.md: Yes - Known issues section (lines 120-150), limitations (lines 155-170)
 - ROADMAP.md: Yes - "Future Plans" section (lines 200-250)
 - patterns/: Partial - Some coding conventions mentioned (lines 90-110)
@@ -139,7 +145,7 @@ For each potential source file, **read the entire content** and identify:
 
 **Case: No Project Brief/Purpose Found (REQUIRES USER ACTION)**
 
-If no sources are found for project purpose, vision, or goals (the core content needed for `context_master_guide.md`), the user MUST provide this information. FluxFrame cannot generate meaningful documentation without understanding what the project is.
+If no sources are found for project purpose, vision, or goals (the core content needed for `completion_protocol.md`), the user MUST provide this information. FluxFrame cannot generate meaningful documentation without understanding what the project is.
 
 ```markdown
 ## Project Brief Required
@@ -147,7 +153,7 @@ If no sources are found for project purpose, vision, or goals (the core content 
 I couldn't find any documentation describing your project's purpose, vision, or goals.
 
 FluxFrame needs this information to generate meaningful documentation. Without it,
-`context_master_guide.md` would just be a template with placeholder text.
+`completion_protocol.md` would just be a template with placeholder text.
 
 **Please create a project brief:**
 
@@ -179,7 +185,7 @@ FluxFrame needs this information to generate meaningful documentation. Without i
 3. Save the file and let me know when it's ready
 
 **Why this matters:**
-- This brief becomes the foundation for your `context_master_guide.md`
+- This brief becomes the foundation for your `completion_protocol.md`
 - It ensures AI assistants understand your project's purpose
 - It's faster than me asking you 10 questions one by one
 - The file remains in your project as a reference
@@ -201,7 +207,7 @@ log_decision({
   category: "content_sources",
   decision: "User created project_brief.md as primary source for project context",
   reasoning: "No existing project documentation found, user provided brief",
-  implications: "project_brief.md will be primary source for context_master_guide.md"
+  implications: "project_brief.md will be primary source for completion_protocol.md"
 })
 ```
 
@@ -250,7 +256,27 @@ document generation.
 
 ---
 
-## For context_master_guide.md
+## For document_catalog.md
+
+**What this document needs:**
+- Inventory of all project documentation files
+- File locations and descriptions
+- Cross-references between documents
+- Document ownership and update frequency
+
+**Sources I found:**
+
+| File | Relevant Content | Confidence |
+|------|------------------|------------|
+| [path] | [description of relevant content] | High/Medium/Low |
+| [path] | [description] | [confidence] |
+
+**Missing?** If you have files describing document structure or inventory that I didn't find, please add them here:
+- [ ] _______________
+
+---
+
+## For completion_protocol.md
 
 **What this document needs:**
 - Project purpose and vision (why does this project exist?)
@@ -258,6 +284,8 @@ document generation.
 - High-level architecture overview
 - Tech stack and key technology choices
 - Core workflows and processes
+- Change protocols and approval workflows
+- Golden rules and methodology
 
 **Sources I found:**
 
@@ -267,6 +295,25 @@ document generation.
 | [path] | [description] | [confidence] |
 
 **Missing?** If you have files describing project purpose, goals, or architecture that I didn't find, please add them here:
+- [ ] _______________
+
+---
+
+## For templates/change_request.md
+
+**What this document needs:**
+- Change request formats and templates
+- Approval workflow steps
+- Required fields for modifications
+
+**Sources I found:**
+
+| File | Relevant Content | Confidence |
+|------|------------------|------------|
+| [path] | [description of relevant content] | High/Medium/Low |
+| [path] | [description] | [confidence] |
+
+**Missing?** If you have existing change request or approval process documentation, please add them here:
 - [ ] _______________
 
 ---
@@ -358,7 +405,9 @@ document generation.
 
 | Target Document | Sources Found | Status |
 |-----------------|---------------|--------|
-| context_master_guide.md | [N] files | ✅ Ready / ⚠️ Needs review / ❌ No sources |
+| document_catalog.md | [N] files | ✅ Ready / ⚠️ Needs review / ❌ No sources |
+| completion_protocol.md | [N] files | [status] |
+| templates/change_request.md | [N] files | [status] |
 | technical_status.md | [N] files | [status] |
 | ROADMAP.md | [N] files | [status] |
 | patterns/ | [N] files | [status] |
@@ -399,7 +448,9 @@ I've analyzed your project and identified potential source files. Please review:
 
 | Document | Sources Found | Your Input Needed |
 |----------|---------------|-------------------|
-| context_master_guide.md | [list] | ✅ Looks good / ➕ Add more / ❌ Wrong files |
+| document_catalog.md | [list] | ✅ Looks good / ➕ Add more / ❌ Wrong files |
+| completion_protocol.md | [list] | ✅ Looks good / ➕ Add more / ❌ Wrong files |
+| templates/change_request.md | [list] | ✅ Looks good / ➕ Add more / ❌ Wrong files |
 | technical_status.md | ⚠️ None found | Please point me to relevant files |
 | ROADMAP.md | [list] | ✅ / ➕ / ❌ |
 | patterns/ | [list] | ✅ / ➕ / ❌ |
@@ -449,7 +500,9 @@ Understood. For documents without existing sources, I'll:
 
 | Document | Approach |
 |----------|----------|
-| context_master_guide.md | Ask you questions during generation |
+| document_catalog.md | Generate from created file inventory |
+| completion_protocol.md | Ask you questions during generation |
+| templates/change_request.md | Generate from FluxFrame template |
 | technical_status.md | Analyze codebase and ask clarifying questions |
 | ROADMAP.md | Create template for you to fill in |
 | patterns/ | Extract patterns from code analysis |
@@ -481,7 +534,7 @@ After user review, update `.fluxframe/detected_content_sources.md`:
 **Read the mapping file** to get confirmed source files:
 
 ```markdown
-## Generating context_master_guide.md
+## Generating completion_protocol.md
 
 **From content source mapping:**
 - Source 1: `docs/overview.md` - Project purpose, vision
@@ -524,11 +577,15 @@ During generation, note what was extracted from where:
 ```markdown
 ## Extraction Log
 
-**context_master_guide.md:**
+**completion_protocol.md:**
 - Project purpose: Extracted from `README.md` (lines 1-30)
 - Tech stack: Extracted from `package.json` + `README.md` (lines 50-70)
 - Architecture: Extracted from `docs/architecture.md` (full file)
 - Workflows: Created from FluxFrame template (no source)
+
+**document_catalog.md:**
+- Document inventory: Generated from created file list
+- Cross-references: Extracted from internal links in source files
 
 **technical_status.md:**
 - Current state: Analyzed from codebase (no documentation source)
@@ -619,7 +676,7 @@ Generated content source mapping at .fluxframe/detected_content_sources.md
 ```
 Agent: Before generating your FluxFrame docs, please review the sources I identified:
 
-For context_master_guide.md:
+For completion_protocol.md:
 - README.md: Project description, tech stack ✓
 - meeting-notes/2024-01-kickoff.md: Project goals, target users ✓
 
@@ -640,7 +697,7 @@ Agent: Got it! Let me analyze NOTES.md...
 [Reads NOTES.md]
 
 Updated mapping:
-- context_master_guide.md: Added NOTES.md (lines 1-50) - project goals
+- completion_protocol.md: Added NOTES.md (lines 1-50) - project goals
 - technical_status.md: Added NOTES.md (lines 100-150) - technical debt items
 
 Updated .fluxframe/detected_content_sources.md. Ready to proceed?
@@ -653,7 +710,7 @@ Agent: Confirmed. Proceeding to document generation...
 ### Generation Phase
 
 ```
-Agent: Generating context_master_guide.md...
+Agent: Generating completion_protocol.md...
 
 Reading confirmed sources:
 - README.md... ✓
@@ -666,7 +723,7 @@ Extracting additional goals from NOTES.md...
 
 [Generates document with synthesized content]
 
-context_master_guide.md created with content from 3 source files.
+completion_protocol.md created with content from 3 source files.
 ```
 
 ---

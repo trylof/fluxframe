@@ -8,7 +8,7 @@
 
 | Documentation Type | Location | Nature |
 |-------------------|----------|--------|
-| **Prescriptive** | `patterns/`, `workflows/`, `context_master_guide.md` | Rules, standards, how-to guides |
+| **Prescriptive** | `AGENTS.md`, `patterns/`, `workflows/` | Rules, standards, how-to guides |
 | **Descriptive** | `reference_library/` (this directory) | Real-world inputs, research, context |
 
 **This library INFORMS decisions but does NOT DICTATE them.**

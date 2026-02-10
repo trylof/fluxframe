@@ -71,7 +71,7 @@ For new {{CYCLE_TYPE_PLURAL}}, plans should include:
 
 | File | Purpose |
 |------|---------|
-| `{{DOCS_DIR}}/context_master_guide.md` | With user approval |
+| `AGENTS.md` | With user approval |
 | `{{DOCS_DIR}}/technical_status.md` | Implementation state |
 | `{{DOCS_DIR}}/ROADMAP.md` | Roadmap |
 | `{{DOCS_DIR}}/patterns/*.md` | Pattern documentation |
@@ -139,7 +139,7 @@ When updating patterns:
 
 ## Key Files Reference
 
-- **Source of Truth:** `{{DOCS_DIR}}/context_master_guide.md`
+- **Source of Truth:** `AGENTS.md`
 - **Current State:** `{{DOCS_DIR}}/technical_status.md`
 - **Roadmap:** `{{DOCS_DIR}}/ROADMAP.md`
 - **Patterns:** `{{DOCS_DIR}}/patterns/`

@@ -297,7 +297,7 @@ When you establish a new infrastructure pattern:
 3. **Reference** the actual implementation location in your project
 4. **Update** `technical_status.md` Infrastructure section
 
-See `context_master_guide.md` Section 4 for general pattern documentation guidelines.
+See `AGENTS.md` for general pattern documentation guidelines, or `document_catalog.md` for detailed document descriptions.
 
 ---
 
@@ -313,5 +313,5 @@ See `context_master_guide.md` Section 4 for general pattern documentation guidel
 ## Related Documentation
 
 - `technical_status.md` → Infrastructure & Environments section
-- `context_master_guide.md` → Section J (Infrastructure & Environment Strategy)
+- `AGENTS.md` → Project Documentation Map (Infrastructure & Environment Strategy)
 - `workflows/cycle_workflow.md` → Environment Verification Checklist

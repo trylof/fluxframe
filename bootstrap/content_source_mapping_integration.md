@@ -52,8 +52,8 @@ For each file found, **read the entire content** and classify:
 
 | Content Type | Look For | Maps To |
 |--------------|----------|---------|
-| Project purpose | "what is this", "why", goals, vision | context_master_guide.md |
-| Tech decisions | "we chose X because", stack descriptions | context_master_guide.md |
+| Project purpose | "what is this", "why", goals, vision | AGENTS.md |
+| Tech decisions | "we chose X because", stack descriptions | AGENTS.md |
 | Current state | "works", "broken", limitations, issues | technical_status.md |
 | Future plans | "todo", "planned", "next", milestones | ROADMAP.md |
 | Conventions | "how we do", patterns, style notes | patterns/ |
@@ -85,7 +85,7 @@ useful information for generating your FluxFrame documentation.
 
 ---
 
-## For context_master_guide.md
+## For AGENTS.md
 
 **What this document needs:**
 - Project purpose and vision
@@ -159,7 +159,7 @@ useful information for generating your FluxFrame documentation.
 
 | Target Document | Sources | Status |
 |-----------------|---------|--------|
-| context_master_guide.md | [N] files | [status] |
+| AGENTS.md | [N] files | [status] |
 | technical_status.md | 0 files | Will create from scratch |
 | ROADMAP.md | [N] files | [status] |
 | patterns/ | 0 files | Will create empty structure |
@@ -206,7 +206,7 @@ If no sources were found for project purpose/vision/goals, this is a **blocking*
 I couldn't find any documentation describing your project's purpose, vision, or goals.
 
 FluxFrame needs this information to generate meaningful documentation. Without it,
-`context_master_guide.md` would just be a template with placeholder text.
+`AGENTS.md` would just be a template with placeholder text.
 
 **Please create a project brief:**
 
@@ -240,7 +240,7 @@ FluxFrame needs this information to generate meaningful documentation. Without i
 **Location:** Place `project_brief.md` in your project root (next to README.md)
 
 **Why this matters:**
-- This becomes the foundation for your `context_master_guide.md`
+- This becomes the foundation for your `AGENTS.md`
 - It ensures AI assistants understand your project's purpose
 - It's faster than answering many individual questions
 - The file remains in your project as ongoing reference
@@ -273,36 +273,36 @@ log_decision({
 ---
 ```
 
-### Modify Step 2 (Generate context_master_guide.md)
+### Modify Step 2 (Generate document_catalog.md, completion_protocol.md, templates/change_request.md)
 
 Add at the beginning of Step 2:
 
 ```markdown
-### Step 2: Generate context_master_guide.md
+### Step 2: Generate document_catalog.md, completion_protocol.md, templates/change_request.md
 
 **FIRST: Read Content Sources**
 
 Before generating, check `.fluxframe/detected_content_sources.md` for confirmed sources:
 
 1. Read the mapping file
-2. For `context_master_guide.md`, identify source files
+2. For `AGENTS.md`, identify source files
 3. Read each source file
 4. Extract relevant content as mapped
 5. Use extracted content to fill template sections
 
 **If sources exist:**
 ```markdown
-Reading confirmed sources for context_master_guide.md:
+Reading confirmed sources for AGENTS.md:
 - [source 1]: Extracting [content type]...
 - [source 2]: Extracting [content type]...
 
-Synthesizing into context_master_guide.md...
+Synthesizing into document_catalog.md, completion_protocol.md, templates/change_request.md...
 ```
 
 **If no sources (pure greenfield):**
 Use template defaults and user questionnaire answers. Note in the document that content can be expanded as project evolves.
 
-**Source:** `doc-templates/context_master_guide.template.md`
+**Source:** `doc-templates/document_catalog.template.md`, `doc-templates/completion_protocol.template.md`, `doc-templates/change_request.template.md`
 
 [... rest of existing Step 2 content ...]
 ```
@@ -377,9 +377,9 @@ For each file discovered in Steps 1.1-1.4, perform **deep content analysis**:
 
 | Content Type | Signals | Target Document |
 |--------------|---------|-----------------|
-| Project purpose/vision | "what", "why", "goals", "mission" | context_master_guide.md |
-| Architecture decisions | "we chose", "architecture", "design" | context_master_guide.md |
-| Tech stack details | "stack", "technologies", "built with" | context_master_guide.md |
+| Project purpose/vision | "what", "why", "goals", "mission" | AGENTS.md |
+| Architecture decisions | "we chose", "architecture", "design" | AGENTS.md |
+| Tech stack details | "stack", "technologies", "built with" | AGENTS.md |
 | Current state | "status", "works", "implemented" | technical_status.md |
 | Known issues | "issues", "bugs", "limitations", "debt" | technical_status.md |
 | Recent changes | "changed", "updated", "fixed" | technical_status.md |
@@ -399,7 +399,7 @@ For each file, record which FluxFrame documents it informs:
 **Also in archival inventory:** [Yes/No - from Step 1.4]
 
 **Content Analysis:**
-- context_master_guide.md: [Yes/No/Partial] - [specific content: lines, sections]
+- AGENTS.md: [Yes/No/Partial] - [specific content: lines, sections]
 - technical_status.md: [Yes/No/Partial] - [specific content]
 - ROADMAP.md: [Yes/No/Partial] - [specific content]
 - patterns/ui_patterns.md: [Yes/No/Partial] - [specific content]
@@ -415,16 +415,16 @@ For each file, record which FluxFrame documents it informs:
 
 **Case: Existing context_guide.md or similar**
 ```markdown
-Found: docs/context_guide.md (similar to FluxFrame context_master_guide.md)
+Found: docs/context_guide.md (similar to FluxFrame AGENTS.md)
 
 This file will be:
 - Step 1.4 decision: [Archive/Keep] - organizational decision
-- Step 1.5 decision: Use as PRIMARY source for context_master_guide.md
+- Step 1.5 decision: Use as PRIMARY source for AGENTS.md
 
 Content mapping:
-- Project identity: Lines 1-50 → context_master_guide.md Section 1
-- Architecture: Lines 60-120 → context_master_guide.md Section 2
-- Workflows: Lines 130-200 → context_master_guide.md Section 3 (may need FluxFrame adaptation)
+- Project identity: Lines 1-50 → AGENTS.md Section 1
+- Architecture: Lines 60-120 → AGENTS.md Section 2
+- Workflows: Lines 130-200 → AGENTS.md Section 3 (may need FluxFrame adaptation)
 ```
 
 **Case: Existing patterns scattered across files**
@@ -478,7 +478,7 @@ then the original is preserved in the archive.
 
 ---
 
-## For context_master_guide.md
+## For AGENTS.md
 
 **What this document needs:**
 - Project purpose, vision, and goals
@@ -582,7 +582,7 @@ then the original is preserved in the archive.
 
 | Target Document | Sources | Confidence | User Review |
 |-----------------|---------|------------|-------------|
-| context_master_guide.md | [N] files | [avg] | ⬜ Pending |
+| AGENTS.md | [N] files | [avg] | ⬜ Pending |
 | technical_status.md | [N] files | [avg] | ⬜ Pending |
 | ROADMAP.md | [N] files | [avg] | ⬜ Pending |
 | patterns/ | [N] files | [avg] | ⬜ Pending |
@@ -615,7 +615,7 @@ Before proceeding to Phase 2 (user preferences), please review the content sourc
 
 | FluxFrame Document | Primary Sources | Gaps |
 |--------------------|-----------------|------|
-| context_master_guide.md | [list] | [any gaps] |
+| AGENTS.md | [list] | [any gaps] |
 | technical_status.md | [list] | [any gaps] |
 | ROADMAP.md | [list] | [any gaps] |
 | patterns/ | [list] | [any gaps] |
@@ -702,7 +702,7 @@ Add to the beginning of Phase 4:
 > 5. Synthesize into FluxFrame format
 >
 > **This applies to:**
-> - context_master_guide.md (or equivalent)
+> - AGENTS.md (or equivalent)
 > - technical_status.md
 > - ROADMAP.md
 > - patterns/ files
@@ -757,8 +757,8 @@ For **every documentation file** discovered in Phase 1.1-1.4, perform comprehens
 
 | Content Type | Location in File | Target FluxFrame Doc | Confidence |
 |--------------|------------------|---------------------|------------|
-| Project purpose | Lines 1-30 | context_master_guide.md | High |
-| Architecture decisions | Lines 50-120 | context_master_guide.md | High |
+| Project purpose | Lines 1-30 | AGENTS.md | High |
+| Architecture decisions | Lines 50-120 | AGENTS.md | High |
 | Known issues | Lines 200-250 | technical_status.md | Medium |
 | Future plans | "Roadmap" section | ROADMAP.md | High |
 | API conventions | Scattered | api_patterns.md | Low |
@@ -812,12 +812,12 @@ FluxFrame patterns document WHAT to do (prescriptive).
 
 | ADR | Decision Topic | Extract For | Notes |
 |-----|----------------|-------------|-------|
-| ADR-001 | Database choice | context_master_guide.md (tech stack rationale) | Context only |
+| ADR-001 | Database choice | AGENTS.md (tech stack rationale) | Context only |
 | ADR-003 | API style | api_patterns.md (pattern basis) | Informs pattern |
 | ADR-007 | Auth approach | api_patterns.md, infra_patterns.md | Security patterns |
 
 **Recommendation:**
-- Extract decision context for context_master_guide.md
+- Extract decision context for AGENTS.md
 - Use decisions as basis for patterns/ content
 - Reference ADR directory for historical decisions (don't migrate ADR structure itself)
 ```
@@ -868,7 +868,7 @@ all documentation files to map what content should be extracted for each FluxFra
 
 ---
 
-## For context_master_guide.md
+## For AGENTS.md
 
 **What this document needs:**
 - Project purpose, vision, goals
@@ -969,7 +969,7 @@ Based on analysis, here's the recommended extraction approach:
 
 | Target Document | Primary Source | Secondary Sources | Gaps to Fill |
 |-----------------|----------------|-------------------|--------------|
-| context_master_guide.md | [file] | [files] | [gaps] |
+| AGENTS.md | [file] | [files] | [gaps] |
 | technical_status.md | [file] | [files] | [gaps] |
 | ROADMAP.md | [file] | [files] | [gaps] |
 | patterns/* | [files] | [files] | [gaps] |
@@ -1007,7 +1007,7 @@ please confirm where I should get content for each FluxFrame document.
 
 | FluxFrame Document | Main Sources | Gaps |
 |--------------------|--------------|------|
-| context_master_guide.md | [list] | [gaps] |
+| AGENTS.md | [list] | [gaps] |
 | technical_status.md | [list] | [gaps] |
 | ROADMAP.md | [list] | [gaps] |
 | patterns/ | [list] | [gaps] |
@@ -1087,7 +1087,7 @@ Add to the CRITICAL box at the start of Phase 3:
 >
 > | FluxFrame Document | Read Sources From Mapping |
 > |-------------------|---------------------------|
-> | context_master_guide.md | [confirmed sources] |
+> | AGENTS.md | [confirmed sources] |
 > | technical_status.md | [confirmed sources] |
 > | ROADMAP.md | [confirmed sources] |
 > | patterns/* | [confirmed sources] |
@@ -1107,11 +1107,11 @@ Update each document generation section:
 ```markdown
 ### Step 3.4: Create FluxFrame Core Documents
 
-#### context_master_guide.md
+#### AGENTS.md
 
 **FIRST: Read Confirmed Sources**
 
-From `.fluxframe/detected_content_sources.md`, for context_master_guide.md:
+From `.fluxframe/detected_content_sources.md`, for AGENTS.md:
 
 ```
 Confirmed sources:
@@ -1130,7 +1130,7 @@ Extracting: [content type] from [section]
 
 **Then generate with extracted content:**
 
-# Creating context_master_guide.md
+# Creating AGENTS.md
 
 **Content extracted from sources:**
 - Project purpose: From [source] - "[extracted content summary]"

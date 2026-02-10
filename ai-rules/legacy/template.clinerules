@@ -17,9 +17,9 @@ Always use the current date from environment_details "Current Time" field, not t
 ---
 
 ## Single Source of Truth
-**{{DOCS_DIR}}/context_master_guide.md**
+**AGENTS.md** (project philosophy and workflow) + **{{DOCS_DIR}}/document_catalog.md** (detailed document descriptions)
 
-All project rules, philosophy, workflows, and standards are defined there. This file only configures HOW and WHEN you access that master document.
+Project rules, philosophy, workflows, and standards are defined in AGENTS.md. This file configures HOW and WHEN you access project documentation.
 
 ---
 
@@ -113,7 +113,7 @@ All changes to files in `{{DOCS_DIR}}/` require:
 ## MCP Tools Available
 
 **For All Work:**
-- `get_context_for_task` - Extract relevant sections from master guide
+- `get_context_for_task` - Extract relevant context from project documentation
 - `get_current_implementation_status` - Read technical_status.md
 - `check_pattern_exists` - Search pattern library
 - `validate_workflow_documentation` - Check if workflow docs need updates
@@ -245,7 +245,7 @@ Before making ANY changes to frontend components that fetch data:
 
 ---
 
-For all rules, workflows, and standards, read context_master_guide.md using the MCP tools.
+For all rules, workflows, and standards, see AGENTS.md. For detailed document descriptions, see document_catalog.md. For completion checklists, see completion_protocol.md.
 
 <!--
 AI ASSISTANT CUSTOMIZATION NOTES:

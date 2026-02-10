@@ -548,6 +548,6 @@ AI ASSISTANT CUSTOMIZATION CHECKLIST:
 - [ ] Fill all {{PLACEHOLDERS}} for chosen approach
 - [ ] Define enforcement rules in AGENTS.md
 - [ ] Add to MCP server tools if needed
-- [ ] Update context_master_guide.md reference
+- [ ] Update AGENTS.md reference
 - [ ] Create pattern documentation in patterns/
 -->

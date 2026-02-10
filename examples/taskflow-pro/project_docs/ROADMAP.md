@@ -312,7 +312,7 @@ From Iteration 1.1 onward, **EVERY new feature must:**
 ## 13) Alignment with Project Documents
 
 This implementation plan MUST align with:
-- **`context_master_guide.md`** - Overall system philosophy and workflows
+- **`AGENTS.md`** - Overall system philosophy and workflows
 - **`technical_status.md`** - Current implementation state
 - **`project_docs/patterns/`** - Established architectural patterns
 - **`roadmap/`** - Detailed cycle-specific plans (created just-in-time)

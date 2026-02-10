@@ -44,7 +44,7 @@ This project follows the FluxFrame development methodology.
 
 | File | Purpose |
 |------|---------|
-| `{{DOCS_DIR}}/context_master_guide.md` | Single source of truth |
+| `AGENTS.md` | Project philosophy, workflow, activation protocol |
 | `{{DOCS_DIR}}/technical_status.md` | Current implementation state |
 | `{{DOCS_DIR}}/ROADMAP.md` | Roadmap and cycles |
 | `{{DOCS_DIR}}/patterns/` | Reusable solution patterns (PRESCRIPTIVE) |
@@ -69,7 +69,7 @@ The `reference_library/` stores DESCRIPTIVE information that INFORMS but doesn't
 ### Activation Sequence
 
 **Transition Rule:** Before ANY code changes, planning, debugging, or answering questions about the project, you must:
-1. Read `{{DOCS_DIR}}/context_master_guide.md`
+1. Read `AGENTS.md` (project philosophy and workflow)
 2. Check `{{DOCS_DIR}}/technical_status.md`
 
 ### Skip Activation For
@@ -196,7 +196,7 @@ Use current date from environment, not training data dates.
 ## Quick Reference
 
 ### Session Start
-- [ ] Read context_master_guide.md
+- [ ] Read AGENTS.md (auto-loaded)
 - [ ] Check technical_status.md
 - [ ] Identify task type
 - [ ] Search patterns (PRESCRIPTIVE)
@@ -215,4 +215,4 @@ Use current date from environment, not training data dates.
 
 ---
 
-*For complete methodology, see `{{DOCS_DIR}}/context_master_guide.md` and `AGENTS.md`*
+*For detailed document descriptions, see `{{DOCS_DIR}}/document_catalog.md`. For completion checklists, see `{{DOCS_DIR}}/completion_protocol.md`.*

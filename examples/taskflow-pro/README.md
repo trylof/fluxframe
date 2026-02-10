@@ -41,10 +41,14 @@ taskflow-pro/
 ├── CLAUDE.md                    # Claude Code extension
 │
 └── project_docs/                # Generated documentation
-    ├── context_master_guide.md  # Master guide with Two-Tier Planning
+    ├── document_catalog.md      # Detailed document descriptions (on-demand)
+    ├── completion_protocol.md   # Validation sequence & checklists (on-demand)
     ├── technical_status.md      # Current state with archive strategy
     ├── ROADMAP.md               # High-level strategic roadmap
     ├── api_contract_standards.md # API contract enforcement
+    │
+    ├── templates/               # Boilerplate templates
+    │   └── change_request.md    # Change documentation template
     │
     ├── patterns/                # Example patterns (PRESCRIPTIVE)
     │   ├── api_task_endpoint_pattern.md
@@ -76,7 +80,7 @@ taskflow-pro/
 ## FluxFrame 0.5.0 Features Demonstrated
 
 ### Two-Tier Planning System
-The `context_master_guide.md` includes the Agent Protocol section with strict separation of planning and execution phases.
+The `AGENTS.md` includes the Agent Protocol section with strict separation of planning and execution phases.
 
 ### Reference Library
 Demonstrates the distinction between:
@@ -144,7 +148,7 @@ Shows server state management with React Query:
 ## Key Learnings from This Example
 
 ### 1. Documentation-First Development
-The `context_master_guide.md` is comprehensive and serves as single source of truth. Every rule, workflow, and standard is documented there.
+`AGENTS.md` is the always-loaded source of truth for philosophy, workflow, and standards. On-demand files (`document_catalog.md`, `completion_protocol.md`) provide deeper reference when needed.
 
 ### 2. Two-Tier Planning System
 Strict separation prevents "hallucinated progress":
@@ -176,7 +180,7 @@ Completed cycles move to `tech-status/` to keep `technical_status.md` concise an
 
 ### If You're Learning FluxFrame
 
-1. **Start with `context_master_guide.md`** - Understand the philosophy and protocols
+1. **Start with `AGENTS.md`** - Understand the philosophy and protocols
 2. **Read the patterns** - See what good pattern documentation looks like
 3. **Examine `technical_status.md`** - See how state is tracked with archive strategy
 4. **Review `AGENTS.md`** - See comprehensive AI assistant configuration
@@ -214,8 +218,11 @@ This example does NOT include:
 
 ## Questions This Example Answers
 
-**Q: What does a filled context_master_guide look like?**
-A: See [`project_docs/context_master_guide.md`](project_docs/context_master_guide.md)
+**Q: What does the document catalog look like?**
+A: See [`project_docs/document_catalog.md`](project_docs/document_catalog.md)
+
+**Q: What does the completion protocol look like?**
+A: See [`project_docs/completion_protocol.md`](project_docs/completion_protocol.md)
 
 **Q: How do I document patterns?**
 A: See any of the [`project_docs/patterns/`](project_docs/patterns/) files

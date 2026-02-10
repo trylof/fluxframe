@@ -128,8 +128,8 @@ For each file found, **read the entire content** and classify:
 
 | Content Type | Look For | Maps To |
 |--------------|----------|---------|
-| Project purpose | "what is this", "why", goals, vision | context_master_guide.md |
-| Tech decisions | "we chose X because", stack descriptions | context_master_guide.md |
+| Project purpose | "what is this", "why", goals, vision | AGENTS.md + document_catalog.md |
+| Tech decisions | "we chose X because", stack descriptions | AGENTS.md + document_catalog.md |
 | Current state | "works", "broken", limitations, issues | technical_status.md |
 | Future plans | "todo", "planned", "next", milestones | ROADMAP.md |
 | Conventions | "how we do", patterns, style notes | patterns/ |
@@ -161,10 +161,29 @@ useful information for generating your FluxFrame documentation.
 
 ---
 
-## For context_master_guide.md
+## For AGENTS.md (philosophy, agent protocol, soul content)
 
 **What this document needs:**
-- Project purpose and vision
+- Project purpose and vision (soul content)
+- Agent behavioral protocol
+- High-level philosophy and development principles
+
+**Sources found:**
+
+| File | Relevant Content | Confidence |
+|------|------------------|------------|
+| [file] | [content description] | [H/M/L] |
+
+**Missing?** Do you have any project briefs, requirements docs, or planning notes I should use?
+
+---
+
+## For document_catalog.md, completion_protocol.md, and templates/change_request.md
+
+**What these documents need:**
+- Document catalog: index of all project documentation and their purposes
+- Completion protocol: definition of done, verification steps, quality gates
+- Change request template: structured format for proposing changes
 - Target users and their needs
 - Tech stack rationale
 - High-level architecture
@@ -174,8 +193,6 @@ useful information for generating your FluxFrame documentation.
 | File | Relevant Content | Confidence |
 |------|------------------|------------|
 | [file] | [content description] | [H/M/L] |
-
-**Missing?** Do you have any project briefs, requirements docs, or planning notes I should use?
 
 ---
 
@@ -201,7 +218,10 @@ useful information for generating your FluxFrame documentation.
 
 | Target Document | Sources | Status |
 |-----------------|---------|--------|
-| context_master_guide.md | [N] files | [status] |
+| AGENTS.md | [N] files | [status] |
+| document_catalog.md | [N] files | [status] |
+| completion_protocol.md | [N] files | [status] |
+| templates/change_request.md | [N] files | [status] |
 | technical_status.md | [N] files | [status] |
 | ROADMAP.md | [N] files | [status] |
 | patterns/ | [N] files | [status] |
@@ -239,7 +259,7 @@ If no sources were found for project purpose/vision/goals, this is a **blocking*
 I couldn't find any documentation describing your project's purpose, vision, or goals.
 
 FluxFrame needs this information to generate meaningful documentation. Without it,
-`context_master_guide.md` would just be a template with placeholder text.
+`AGENTS.md` and `document_catalog.md` would just be templates with placeholder text.
 
 **Please create a project brief:**
 
@@ -273,7 +293,7 @@ FluxFrame needs this information to generate meaningful documentation. Without i
 **Location:** Place `project_brief.md` in your project root (next to README.md)
 
 **Why this matters:**
-- This becomes the foundation for your `context_master_guide.md`
+- This becomes the foundation for your `AGENTS.md` and `document_catalog.md`
 - It ensures AI assistants understand your project's purpose
 - It's faster than answering many individual questions
 - The file remains in your project as ongoing reference
@@ -414,7 +434,8 @@ Please choose one of the options above.
 
 ```
 1. Directory structure
-2. context_master_guide.md (references everything)
+2. document_catalog.md, completion_protocol.md, and templates/change_request.md (structured project docs)
+   Note: Philosophy/agent protocol content is generated as part of AGENTS.md in Step 10
 3. technical_status.md (initial state)
 4. ROADMAP.md (strategic roadmap)
 5. Pattern library structure
@@ -423,7 +444,7 @@ Please choose one of the options above.
 7.5. FluxFrame guide (persistent post-bootstrap instructions)
 8. MCP server configuration
 9. package.json
-10. .clinerules (references all above)
+10. AI rules including AGENTS.md (references all above)
 11. Validation
 ```
 
@@ -471,39 +492,42 @@ mkdir -p seed_data/schemas
 
 ---
 
-### Step 2: Generate context_master_guide.md
+### Step 2: Generate document_catalog.md, completion_protocol.md, and templates/change_request.md
 
 **FIRST: Read Confirmed Content Sources**
 
 Before generating, check `.fluxframe/detected_content_sources.md` for confirmed sources:
 
 1. Read the mapping file
-2. For `context_master_guide.md`, identify source files
+2. For `document_catalog.md`, `completion_protocol.md`, and `templates/change_request.md`, identify source files
 3. Read each source file
 4. Extract relevant content as mapped
 5. Use extracted content to fill template sections
 
 **If sources exist:**
 ```markdown
-Reading confirmed sources for context_master_guide.md:
+Reading confirmed sources for document_catalog.md, completion_protocol.md, and templates/change_request.md:
 - [source 1]: Extracting project purpose...
 - [source 2]: Extracting tech stack details...
 
-Synthesizing into context_master_guide.md...
+Synthesizing into document_catalog.md, completion_protocol.md, and templates/change_request.md...
 ```
 
 **If no sources (pure greenfield with project_brief.md):**
 Use the `project_brief.md` created in Step 0.5.4.1 as the primary source.
 
 **If no sources at all:**
-Use template defaults and user questionnaire answers. Note in the document that content can be expanded as project evolves.
+Use template defaults and user questionnaire answers. Note in the documents that content can be expanded as project evolves.
 
 ---
 
-**Source Template:** `doc-templates/context_master_guide.template.md`
+**Source Templates:**
+- `doc-templates/document_catalog.template.md`
+- `doc-templates/completion_protocol.template.md`
+- `doc-templates/change_request.template.md`
 
 **Process:**
-1. Read template file
+1. Read template files
 2. Replace ALL placeholders:
    - `{{PROJECT_NAME}}` → User's project name
    - `{{PROJECT_PURPOSE}}` → One-line purpose
@@ -547,31 +571,32 @@ Results in:
 
 **Special Handling:**
 
-**Section 2 (Core Context Documents):**
+**document_catalog.md:**
 - Adapt document list to project's actual structure
 - If no workflows yet: Add note "Workflows: To be documented"
 - If no patterns yet: Keep structure but note "Empty - patterns will be added"
 
-**Section 3 (Golden Rule):**
+**completion_protocol.md:**
 - Replace "Steel Thread" with "Development Cycle" or "Iteration"
 - Keep all workflow steps
 - Keep API modernization section if using OpenAPI
 - Remove API section if not using OpenAPI
-
-**Section 4 (Pattern-Driven Development):**
-- Keep ALL content - universal principles
+- Keep ALL pattern-driven development content - universal principles
 - Examples stay generic or adapted to project domain
 
-**Section 5 (Change Request Protocol):**
+**templates/change_request.md:**
 - Keep ALL content - universal workflow
 - Update paths to match {{DOCS_DIR}}
 
-**Output Location:** `{{DOCS_DIR}}/context_master_guide.md`
+**Output Locations:**
+- `{{DOCS_DIR}}/document_catalog.md`
+- `{{DOCS_DIR}}/completion_protocol.md`
+- `{{DOCS_DIR}}/templates/change_request.md`
 
 **Validation:**
 - [ ] No `{{PLACEHOLDER}}` syntax remaining
 - [ ] All paths use {{DOCS_DIR}} value
-- [ ] File is valid markdown
+- [ ] All three files are valid markdown
 - [ ] No broken internal links
 
 ---
@@ -699,7 +724,10 @@ None yet - starting fresh with framework.
 
 ## Documentation Status
 
-- ✅ context_master_guide.md - Complete
+- ✅ AGENTS.md - Complete (philosophy, agent protocol)
+- ✅ document_catalog.md - Complete
+- ✅ completion_protocol.md - Complete
+- ✅ templates/change_request.md - Complete
 - ✅ technical_status.md - This file
 - ✅ ROADMAP.md - Template ready
 - ⏹️ patterns/ - Empty, ready for patterns
@@ -716,7 +744,7 @@ This project follows the FluxFrame methodology:
 - Systematic change protocols
 - Development cycle methodology
 
-See context_master_guide.md for complete framework documentation.
+See AGENTS.md (always-loaded) and document_catalog.md (on-demand) for complete framework documentation.
 ```
 
 **Placeholder Replacements:**
@@ -883,7 +911,7 @@ None yet - starting fresh!
 - Documented (patterns, technical status)
 - User-visible results delivered
 
-See `context_master_guide.md` for complete development cycle methodology.
+See `AGENTS.md` (always-loaded) and `completion_protocol.md` for complete development cycle methodology.
 
 ---
 
@@ -1038,7 +1066,7 @@ When you establish a new UI pattern:
 3. Note when/where to use it
 4. Reference implementation location
 
-See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+See `AGENTS.md` and `completion_protocol.md` for pattern documentation guidelines.
 ```
 
 If project has NO frontend, create as placeholder:
@@ -1053,7 +1081,7 @@ If project has NO frontend, create as placeholder:
 
 > **Note:** This file exists as a placeholder. If UI components are added later, document patterns here. Projects evolve—this ensures the pattern file exists when needed.
 
-See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+See `AGENTS.md` and `completion_protocol.md` for pattern documentation guidelines.
 ```
 
 **5.3: `{{DOCS_DIR}}/patterns/api_patterns.md`** (REQUIRED)
@@ -1088,7 +1116,7 @@ When you establish a new API pattern:
 3. Note when/where to use it  
 4. Reference implementation location
 
-See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+See `AGENTS.md` and `completion_protocol.md` for pattern documentation guidelines.
 ```
 
 If project has NO backend/API, create as placeholder:
@@ -1103,7 +1131,7 @@ If project has NO backend/API, create as placeholder:
 
 > **Note:** This file exists as a placeholder. If API endpoints are added later, document patterns here. Projects evolve—this ensures the pattern file exists when needed.
 
-See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+See `AGENTS.md` and `completion_protocol.md` for pattern documentation guidelines.
 ```
 
 **5.4: `{{DOCS_DIR}}/patterns/data_patterns.md`** (REQUIRED)
@@ -1126,7 +1154,7 @@ When you establish a new data pattern:
 3. Note when/where to use it
 4. Reference implementation location
 
-See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+See `AGENTS.md` and `completion_protocol.md` for pattern documentation guidelines.
 ```
 
 If project has NO database, create as placeholder:
@@ -1141,7 +1169,7 @@ If project has NO database, create as placeholder:
 
 > **Note:** This file exists as a placeholder. If a database is added later, document patterns here. Projects evolve—this ensures the pattern file exists when needed.
 
-See `context_master_guide.md` Section 4 for pattern documentation guidelines.
+See `AGENTS.md` and `completion_protocol.md` for pattern documentation guidelines.
 ```
 
 **5.5: `{{DOCS_DIR}}/patterns/infra_patterns.md`** (REQUIRED)
@@ -1317,7 +1345,7 @@ Add this section to `{{DOCS_DIR}}/patterns/data_patterns.md`:
 
 **Purpose:** The Reference Library stores DESCRIPTIVE information (what the real world looks like)
 as opposed to PRESCRIPTIVE documentation (what to do and how). This distinction is critical:
-- **Prescriptive:** patterns/, workflows/, context_master_guide.md - tell you WHAT to do
+- **Prescriptive:** patterns/, workflows/, AGENTS.md, completion_protocol.md - tell you WHAT to do
 - **Descriptive:** reference_library/ - tells you WHAT EXISTS in the real world
 
 **Source:** `doc-templates/reference_library_readme.template.md`
@@ -2081,12 +2109,12 @@ node mcp-server.js
 **Expected Output:**
 ```
 Project Docs MCP Server running on stdio
-Single source of truth: {{DOCS_DIR}}/context_master_guide.md
+Source of truth: AGENTS.md (always-loaded) + {{DOCS_DIR}}/document_catalog.md (on-demand)
 ```
 
 **If errors:**
 - Check `PROJECT_DOCS_DIR` path is correct
-- Ensure `context_master_guide.md` exists at that path
+- Ensure `AGENTS.md` and `document_catalog.md` exist at their respective paths
 - Verify file syntax (no JSON errors)
 
 **Validation:**
@@ -2103,7 +2131,9 @@ Before presenting to user, verify:
 ### Files Created
 
 **Documentation (in final location):**
-- [ ] `{{DOCS_DIR}}/context_master_guide.md`
+- [ ] `{{DOCS_DIR}}/document_catalog.md`
+- [ ] `{{DOCS_DIR}}/completion_protocol.md`
+- [ ] `{{DOCS_DIR}}/templates/change_request.md`
 - [ ] `{{DOCS_DIR}}/technical_status.md`
 - [ ] `{{DOCS_DIR}}/ROADMAP.md`
 - [ ] `{{DOCS_DIR}}/BUGS.md`
@@ -2196,7 +2226,7 @@ sudo mkdir -p {{DOCS_DIR}}
 
 **Cause 2:** Missing file
 
-**Solution:** Ensure `context_master_guide.md` exists
+**Solution:** Ensure `AGENTS.md` exists at project root and `document_catalog.md` exists in docs directory
 
 **Cause 3:** Syntax error
 

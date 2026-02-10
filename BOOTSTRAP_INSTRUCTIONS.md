@@ -974,9 +974,11 @@ After workflow execution, validate:
 ### Configuration Created
 
 **Documentation:** `[docs_path]/`
-- context_master_guide.md - Single source of truth
+- document_catalog.md - Detailed document descriptions (on-demand)
+- completion_protocol.md - Validation & completion checklists (on-demand)
 - technical_status.md - Project status
 - ROADMAP.md - Roadmap
+- templates/ - Boilerplate templates (change_request.md)
 - patterns/ - Pattern library
 - workflows/ - Development protocols
 - bug_fixes/ - Change documentation
@@ -1072,10 +1074,13 @@ A successfully bootstrapped project will have:
 ```
 [project root]/
 ├── [docs_location]/
-│   ├── context_master_guide.md      # Single source of truth
+│   ├── document_catalog.md          # Detailed document descriptions (on-demand)
+│   ├── completion_protocol.md       # Validation & completion checklists (on-demand)
 │   ├── technical_status.md          # Real-time project state
-│   ├── ROADMAP.md       # Roadmap & cycles
+│   ├── ROADMAP.md                   # Roadmap & cycles
 │   ├── api_contract_standards.md    # API enforcement (if applicable)
+│   ├── templates/                   # Boilerplate templates
+│   │   └── change_request.md
 │   ├── patterns/                    # Pattern library
 │   │   ├── README.md
 │   │   └── [domain]_patterns.md

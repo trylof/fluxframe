@@ -64,8 +64,8 @@ Full integration leverages Roo Code's unique features:
 
    Update the `fileRegex` patterns in `.roomodes` to match your project structure:
    ```yaml
-   # Example: Protect your docs directory
-   - fileRegex: "^(?!project_docs/context_master_guide\\.md$).*$"
+   # Example: Protect your main rules file
+   - fileRegex: "^(?!AGENTS\\.md$).*$"
    ```
 
 ### Option B: Basic Integration
@@ -122,7 +122,7 @@ your-project/
 
 | Mode | When to Use | Permissions |
 |------|-------------|-------------|
-| 💻 FluxFrame Code | Writing/modifying code | All except master guide |
+| 💻 FluxFrame Code | Writing/modifying code | All except AGENTS.md |
 | 🏗️ FluxFrame Architect | Planning, documentation | Docs only |
 | 🔍 FluxFrame Debug | Bug fixing | Full access |
 | 📚 Pattern Librarian | Pattern documentation | Patterns only |

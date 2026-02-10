@@ -148,7 +148,7 @@ class ProjectDocsMCPServer {
         tools: [
           {
             name: 'get_context_for_task',
-            description: 'Extracts relevant sections from context_master_guide.md based on task type. This ensures you get exactly what you need from the SINGLE source of truth.',
+            description: 'Extracts relevant context from project documentation based on task type. Reads from document_catalog.md, completion_protocol.md, and AGENTS.md as appropriate.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -163,7 +163,7 @@ class ProjectDocsMCPServer {
           },
           {
             name: 'validate_cycle_completion',
-            description: 'Validates if current work meets ALL development cycle completion criteria from the master guide. Returns checklist with pass/fail status.',
+            description: 'Validates if current work meets ALL development cycle completion criteria from the completion protocol. Returns checklist with pass/fail status.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -637,77 +637,139 @@ class ProjectDocsMCPServer {
   }
 
   async getContextForTask(taskType) {
-    const masterGuidePath = path.join(PROJECT_DOCS_DIR, 'context_master_guide.md');
-    const content = await fs.readFile(masterGuidePath, 'utf-8');
+    const catalogPath = path.join(PROJECT_DOCS_DIR, 'document_catalog.md');
+    const completionPath = path.join(PROJECT_DOCS_DIR, 'completion_protocol.md');
+    const agentsPath = path.join(__dirname, '..', 'AGENTS.md');
 
-    let sectionsToExtract = [];
     let message = '';
+    let contextText = '';
 
     switch (taskType) {
-      case 'session_start':
-        sectionsToExtract = [
-          'The Core Context Documents',
-          'The Golden Rule',
-        ];
-        message = 'Context for session start - understand available documents and critical rules:';
+      case 'session_start': {
+        // Read document catalog for available documents overview
+        let catalogContent = '';
+        try {
+          catalogContent = await fs.readFile(catalogPath, 'utf-8');
+        } catch (err) {
+          catalogContent = '(document_catalog.md not found — check AGENTS.md for project documentation map)';
+        }
+        message = 'Context for session start — available documents and their purposes. Note: AGENTS.md is auto-loaded and contains philosophy, workflow, and activation protocol.';
+        contextText = catalogContent;
         break;
+      }
 
-      case 'cycle_start':
-        sectionsToExtract = [
-          'The Core Context Documents',
-          'Pattern-Driven Development',
+      case 'cycle_start': {
+        // Read document catalog for relevant sections
+        let catalogContent = '';
+        try {
+          catalogContent = await fs.readFile(catalogPath, 'utf-8');
+        } catch (err) {
+          catalogContent = '(document_catalog.md not found)';
+        }
+        const sections = this.extractSections(catalogContent, [
+          'Pattern Library',
+          'Implementation Plans',
+          'API Contract Standard',
+        ]);
+        const extractedText = sections
+          .map(s => `## ${s.title}\n\n${s.content}`)
+          .join('\n\n---\n\n');
+        message = 'Context for starting a development cycle — check patterns and understand workflow. AGENTS.md (auto-loaded) contains the full development workflow.';
+        contextText = extractedText || catalogContent;
+        break;
+      }
+
+      case 'cycle_complete': {
+        // Read completion protocol
+        let completionContent = '';
+        try {
+          completionContent = await fs.readFile(completionPath, 'utf-8');
+        } catch (err) {
+          completionContent = '(completion_protocol.md not found — check AGENTS.md for validation gate requirements)';
+        }
+        message = 'Context for completing a development cycle — critical completion sequence and validation:';
+        contextText = completionContent;
+        break;
+      }
+
+      case 'pattern_check': {
+        // Read pattern-related sections from catalog
+        let catalogContent = '';
+        try {
+          catalogContent = await fs.readFile(catalogPath, 'utf-8');
+        } catch (err) {
+          catalogContent = '(document_catalog.md not found)';
+        }
+        const sections = this.extractSections(catalogContent, [
+          'Pattern Library',
           'Before Starting Any New Feature',
-        ];
-        message = 'Context for starting a development cycle - check patterns and understand workflow:';
-        break;
-
-      case 'cycle_complete':
-        sectionsToExtract = [
-          'The Golden Rule: Maintain the Mind',
-          'Critical Update Sequence',
-          'Critical Alignment Rule',
-        ];
-        message = 'Context for completing a development cycle - critical completion sequence and validation:';
-        break;
-
-      case 'pattern_check':
-        sectionsToExtract = [
-          'Pattern-Driven Development',
-          'Before Starting Any New Feature',
-        ];
+        ]);
+        const extractedText = sections
+          .map(s => `## ${s.title}\n\n${s.content}`)
+          .join('\n\n---\n\n');
         message = 'Context for checking patterns before implementation:';
+        contextText = extractedText || 'Check patterns/ directory for existing solutions.';
         break;
+      }
 
-      case 'cycle_planning':
-        sectionsToExtract = [
-          'Two-Tier Planning System',
-          'Planning Workflow',
-          'Pattern-Driven Development',
-        ];
-        message = 'Context for planning a development cycle - research, scope analysis, and plan creation:';
+      case 'cycle_planning': {
+        // Planning context from AGENTS.md (agent protocol section)
+        let agentsContent = '';
+        try {
+          agentsContent = await fs.readFile(agentsPath, 'utf-8');
+        } catch (err) {
+          agentsContent = '(AGENTS.md not found at project root)';
+        }
+        const sections = this.extractSections(agentsContent, [
+          'Agent Protocol',
+          'Before Implementation',
+          'Pattern Library',
+        ]);
+        const extractedText = sections
+          .map(s => `## ${s.title}\n\n${s.content}`)
+          .join('\n\n---\n\n');
+        message = 'Context for planning a development cycle — research, scope analysis, and plan creation:';
+        contextText = extractedText || agentsContent;
         break;
+      }
 
-      case 'full_guide':
+      case 'full_guide': {
+        // Read AGENTS.md + document_catalog + completion_protocol
+        let parts = [];
+        try {
+          const agentsContent = await fs.readFile(agentsPath, 'utf-8');
+          parts.push(`# AGENTS.md\n\n${agentsContent}`);
+        } catch (err) {
+          parts.push('(AGENTS.md not found)');
+        }
+        try {
+          const catalogContent = await fs.readFile(catalogPath, 'utf-8');
+          parts.push(`# Document Catalog\n\n${catalogContent}`);
+        } catch (err) {
+          parts.push('(document_catalog.md not found)');
+        }
+        try {
+          const completionContent = await fs.readFile(completionPath, 'utf-8');
+          parts.push(`# Completion Protocol\n\n${completionContent}`);
+        } catch (err) {
+          parts.push('(completion_protocol.md not found)');
+        }
         return {
           content: [
             {
               type: 'text',
-              text: `Full context_master_guide.md:\n\n${content}`,
+              text: parts.join('\n\n---\n\n'),
             },
           ],
         };
+      }
     }
-
-    const sections = this.extractSections(content, sectionsToExtract);
-    const extractedText = sections
-      .map(s => `## ${s.title}\n\n${s.content}`)
-      .join('\n\n---\n\n');
 
     return {
       content: [
         {
           type: 'text',
-          text: `${message}\n\n${extractedText}\n\n---\n\nNote: This is extracted from context_master_guide.md, the SINGLE source of truth.`,
+          text: `${message}\n\n${contextText}\n\n---\n\nNote: AGENTS.md is the always-loaded source of truth for philosophy, workflow, and activation protocol. Document catalog and completion protocol are available on-demand.`,
         },
       ],
     };
@@ -773,7 +835,7 @@ class ProjectDocsMCPServer {
               ? '✅ ALL CRITERIA MET - Cycle can be marked complete'
               : '❌ INCOMPLETE - Do not mark this cycle as complete until all items are checked'
             }\n\n` +
-            `Reminder: Test data must match actual implementation (see Critical Alignment Rule in context_master_guide.md)`,
+            `Reminder: Test data must match actual implementation (see Critical Alignment Rule in completion_protocol.md)`,
         },
       ],
     };
@@ -968,7 +1030,7 @@ class ProjectDocsMCPServer {
             `1. Review if these workflow documents exist\n` +
             `2. Update if conceptual logic changed\n` +
             `3. Show diff to user for approval\n\n` +
-            `Reference: context_master_guide.md for workflow update guidelines`,
+            `Reference: AGENTS.md for workflow update guidelines`,
         },
       ],
     };
@@ -1365,7 +1427,7 @@ This check applies to:
 
 ---
 
-**Reference:** context_master_guide.md - "Critical Update Sequence for Every Development Cycle"`;
+**Reference:** completion_protocol.md - "Critical Update Sequence for Every Development Cycle"`;
 
     return {
       content: [
@@ -2769,7 +2831,7 @@ This check applies to:
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     console.error(`${PROJECT_NAME} MCP Server v1.0 running on stdio`);
-    console.error(`Single source of truth: ${PROJECT_DOCS_DIR}/context_master_guide.md`);
+    console.error(`Single source of truth: AGENTS.md + ${PROJECT_DOCS_DIR}/`);
   }
 }
 

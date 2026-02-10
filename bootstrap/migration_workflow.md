@@ -100,10 +100,10 @@ Log a decision whenever:
 ```
 log_decision({
   category: "migration",  // See categories below
-  decision: "Reference ADRs from context_master_guide instead of migrating",
+  decision: "Reference ADRs from AGENTS.md and document_catalog.md instead of migrating",
   reasoning: "ADRs serve a different purpose (recording WHY decisions were made) than FluxFrame docs (WHAT to do). Team actively uses ADR process and wants to continue.",
   alternatives: ["Copy ADR content into patterns/", "Migrate ADRs to FluxFrame structure"],
-  implications: "context_master_guide will link to ADRs directory. Team continues existing ADR workflow for architectural decisions."
+  implications: "AGENTS.md and document_catalog.md will link to ADRs directory. Team continues existing ADR workflow for architectural decisions."
 })
 ```
 
@@ -225,7 +225,7 @@ Map existing docs to FluxFrame structure:
 
 | Your Documentation | FluxFrame Equivalent | Compatibility |
 |-------------------|---------------------|---------------|
-| `docs/architecture/OVERVIEW.md` | `context_master_guide.md` | Partial - needs expansion |
+| `docs/architecture/OVERVIEW.md` | `AGENTS.md` + `document_catalog.md` | Partial - needs expansion |
 | `docs/ADRs/` | Could inform `patterns/` | Different purpose - reference |
 | `docs/STATUS.md` | `technical_status.md` | Good match - migrate |
 | `docs/api/` | `api_contract_standards.md` | Partial - needs structuring |
@@ -243,11 +243,22 @@ The Reference Library stores DESCRIPTIVE information (real-world context, user r
 
 ### Step 1.4: Identify Content for Each FluxFrame Document
 
-**context_master_guide.md needs:**
+**AGENTS.md needs:**
 - Project overview (from: ___)
 - Architecture decisions (from: ___)
 - Tech stack details (from: ___)
 - Key workflows (from: ___)
+
+**document_catalog.md needs:**
+- Core context document index (from: ___)
+- Document locations and descriptions (from: ___)
+
+**completion_protocol.md needs:**
+- Task completion checklists (from: ___)
+- Update procedures (from: ___)
+
+**templates/change_request.md needs:**
+- Change request template (from: ___)
 
 **technical_status.md needs:**
 - Current capabilities (from: ___)
@@ -302,9 +313,9 @@ For **every documentation file** discovered in Phase 1.1-1.4, perform comprehens
 
 | Content Type | Signals to Look For | Target Document |
 |--------------|---------------------|-----------------|
-| Project purpose/vision | "what is this", "why", "goals", "mission" | context_master_guide.md |
-| Architecture decisions | "we chose", "architecture", "design" | context_master_guide.md |
-| Tech stack details | "stack", "technologies", "built with" | context_master_guide.md |
+| Project purpose/vision | "what is this", "why", "goals", "mission" | AGENTS.md |
+| Architecture decisions | "we chose", "architecture", "design" | AGENTS.md |
+| Tech stack details | "stack", "technologies", "built with" | AGENTS.md |
 | Current state | "status", "works", "implemented" | technical_status.md |
 | Known issues | "issues", "bugs", "limitations", "debt" | technical_status.md |
 | Recent changes | "changed", "updated", "fixed" | technical_status.md |
@@ -324,8 +335,8 @@ For **every documentation file** discovered in Phase 1.1-1.4, perform comprehens
 
 | Content Type | Location in File | Target FluxFrame Doc | Confidence |
 |--------------|------------------|---------------------|------------|
-| Project purpose | Lines 1-30 | context_master_guide.md | High |
-| Architecture | Lines 50-120 | context_master_guide.md | High |
+| Project purpose | Lines 1-30 | AGENTS.md | High |
+| Architecture | Lines 50-120 | AGENTS.md | High |
 | Known issues | Lines 200-250 | technical_status.md | Medium |
 | Future plans | "Roadmap" section | ROADMAP.md | High |
 
@@ -363,7 +374,7 @@ FluxFrame patterns document WHAT to do (prescriptive).
 
 | ADR | Decision Topic | Extract For | Notes |
 |-----|----------------|-------------|-------|
-| ADR-001 | Database choice | context_master_guide.md (rationale) | Context only |
+| ADR-001 | Database choice | AGENTS.md (rationale) | Context only |
 | ADR-003 | API style | api_patterns.md (pattern basis) | Informs pattern |
 
 **Recommendation:** Extract decision context; reference ADR directory for history.
@@ -409,7 +420,7 @@ to map what content should be extracted for each FluxFrame document.
 
 ---
 
-## For context_master_guide.md
+## For AGENTS.md
 
 **What this document needs:**
 - Project purpose, vision, goals
@@ -417,6 +428,54 @@ to map what content should be extracted for each FluxFrame document.
 - High-level architecture overview
 - Tech stack and rationale
 - Core workflows (adapted to FluxFrame)
+
+**Sources identified:**
+
+| File | Content | Lines/Section | Confidence | Org Fate (TBD) |
+|------|---------|---------------|------------|----------------|
+| [file] | [content type] | [location] | [H/M/L] | [Phase 2] |
+
+**Gaps:** [any missing content types]
+
+---
+
+## For document_catalog.md
+
+**What this document needs:**
+- Index of all core context documents
+- Document locations and descriptions
+- Cross-references between documents
+
+**Sources identified:**
+
+| File | Content | Lines/Section | Confidence | Org Fate (TBD) |
+|------|---------|---------------|------------|----------------|
+| [file] | [content type] | [location] | [H/M/L] | [Phase 2] |
+
+**Gaps:** [any missing content types]
+
+---
+
+## For completion_protocol.md
+
+**What this document needs:**
+- Task completion checklists
+- Document update procedures after changes
+
+**Sources identified:**
+
+| File | Content | Lines/Section | Confidence | Org Fate (TBD) |
+|------|---------|---------------|------------|----------------|
+| [file] | [content type] | [location] | [H/M/L] | [Phase 2] |
+
+**Gaps:** [any missing content types]
+
+---
+
+## For templates/change_request.md
+
+**What this document needs:**
+- Change request template structure
 
 **Sources identified:**
 
@@ -478,7 +537,10 @@ to map what content should be extracted for each FluxFrame document.
 
 | Target Document | Sources | Confidence | Gaps |
 |-----------------|---------|------------|------|
-| context_master_guide.md | [N] files | [avg] | [gaps] |
+| AGENTS.md | [N] files | [avg] | [gaps] |
+| document_catalog.md | [N] files | [avg] | [gaps] |
+| completion_protocol.md | [N] files | [avg] | [gaps] |
+| templates/change_request.md | [N] files | [avg] | [gaps] |
 | technical_status.md | [N] files | [avg] | [gaps] |
 | ROADMAP.md | [N] files | [avg] | [gaps] |
 | patterns/ | [N] files | [avg] | [gaps] |
@@ -511,7 +573,10 @@ where I should get content for each FluxFrame document.
 
 | FluxFrame Document | Main Sources | Gaps |
 |--------------------|--------------|------|
-| context_master_guide.md | [list] | [gaps] |
+| AGENTS.md | [list] | [gaps] |
+| document_catalog.md | [list] | [gaps] |
+| completion_protocol.md | [list] | [gaps] |
+| templates/change_request.md | [list] | [gaps] |
 | technical_status.md | [list] | [gaps] |
 | ROADMAP.md | [list] | [gaps] |
 | patterns/ | [list] | [gaps] |
@@ -794,7 +859,9 @@ Your choice (1/2/3)?
 | [etc.] | | | |
 
 ### New Documents to Create
-- [ ] `context_master_guide.md` - [Create/Adapt existing]
+- [ ] `document_catalog.md` - [Create/Adapt existing]
+- [ ] `completion_protocol.md` - [Create/Adapt existing]
+- [ ] `templates/change_request.md` - [Create/Adapt existing]
 - [ ] `technical_status.md` - [Create/Adapt existing]
 - [ ] `ROADMAP.md` - [Create]
 - [ ] `patterns/` - [Create/Adapt existing]
@@ -871,7 +938,10 @@ Show the user what a complete FluxFrame bootstrap includes:
 Before we proceed with migration, here's what a complete FluxFrame setup provides. I'll then show what you already have and what's missing.
 
 ### Core Documentation
-- [ ] `context_master_guide.md` - Single source of truth for project context
+- [ ] `AGENTS.md` - Single source of truth for project context
+- [ ] `document_catalog.md` - Index of all core context documents
+- [ ] `completion_protocol.md` - Task completion checklists and update procedures
+- [ ] `templates/change_request.md` - Change request template
 - [ ] `technical_status.md` - Real-time project state tracking
 - [ ] `ROADMAP.md` - Development roadmap with cycles
 - [ ] `api_contract_standards.md` - API type safety enforcement (if applicable)
@@ -1223,7 +1293,10 @@ Proceed with this archival plan? (yes/modify)
 >
 > | FluxFrame Document | Use Sources From Mapping |
 > |-------------------|--------------------------|
-> | context_master_guide.md | [confirmed sources for this doc] |
+> | AGENTS.md | [confirmed sources for this doc] |
+> | document_catalog.md | [confirmed sources for this doc] |
+> | completion_protocol.md | [confirmed sources for this doc] |
+> | templates/change_request.md | [confirmed sources for this doc] |
 > | technical_status.md | [confirmed sources for this doc] |
 > | ROADMAP.md | [confirmed sources for this doc] |
 > | patterns/* | [confirmed sources for each pattern file] |
@@ -1351,10 +1424,10 @@ Confirmed sources for [document_name]:
 
 For each FluxFrame document, based on migration decisions AND content source mapping:
 
-#### context_master_guide.md
+#### AGENTS.md
 
 ```markdown
-# Creating context_master_guide.md
+# Creating AGENTS.md
 
 **Sources from mapping (.fluxframe/detected_content_sources.md):**
 - [Confirmed source 1]: [specific content mapped]
@@ -1382,8 +1455,55 @@ For each FluxFrame document, based on migration decisions AND content source map
 5. **Pattern-Driven Development**
    - From FluxFrame template
    - Reference existing conventions: [path]
+```
 
-6. **Change Request Protocol**
+#### document_catalog.md
+
+```markdown
+# Creating document_catalog.md
+
+**Sources from mapping (.fluxframe/detected_content_sources.md):**
+- [Confirmed source 1]: [specific content mapped]
+
+**Reading confirmed sources...**
+
+**Sections to populate:**
+
+1. **Core Context Documents Index**
+   - Generated based on final structure
+
+2. **Document Locations and Descriptions**
+   - Source: [where to get this]
+```
+
+#### completion_protocol.md
+
+```markdown
+# Creating completion_protocol.md
+
+**Sources from mapping (.fluxframe/detected_content_sources.md):**
+- [Confirmed source 1]: [specific content mapped]
+
+**Reading confirmed sources...**
+
+**Sections to populate:**
+
+1. **Task Completion Checklists**
+   - From FluxFrame template (new)
+   - Adapted for project specifics
+
+2. **Document Update Procedures**
+   - From FluxFrame template (new)
+```
+
+#### templates/change_request.md
+
+```markdown
+# Creating templates/change_request.md
+
+**Sections to populate:**
+
+1. **Change Request Template**
    - From FluxFrame template (new)
 ```
 
@@ -1457,7 +1577,7 @@ Special handling for existing bug fix documentation:
    - Optionally reformat to FluxFrame template
 
 2. **Keep in place, reference in FluxFrame**
-   - Add reference in context_master_guide
+   - Add reference in AGENTS.md and document_catalog.md
    - Create index in bugs/ pointing to original
 
 3. **Archive and start fresh**
@@ -1612,7 +1732,7 @@ Generate `seed_data/README.md` from template.
 **For any choice, always:**
 1. Create `seed_data/README.md` explaining the project's seed data approach
 2. Update `patterns/data_patterns.md` with fixture and factory patterns
-3. Add seed data section to context_master_guide.md
+3. Add seed data section to AGENTS.md and document_catalog.md
 
 **Content generation based on Q-Data answer:**
 - **Full Setup:** Generate starter samples based on detected domain entities
@@ -2058,7 +2178,10 @@ Create `ROADMAP.md` based on:
 - [ ] FluxFrame docs in place
 
 ### Content Validation
-- [ ] context_master_guide.md complete and accurate
+- [ ] AGENTS.md complete and accurate
+- [ ] document_catalog.md complete and accurate
+- [ ] completion_protocol.md complete and accurate
+- [ ] templates/change_request.md complete and accurate
 - [ ] technical_status.md reflects current state
 - [ ] patterns/ has initial content or index
 - [ ] workflows/ has FluxFrame protocols
@@ -2092,7 +2215,10 @@ Create `ROADMAP.md` based on:
 | ... | ... | ... | ... |
 
 **New documentation created:**
-- `context_master_guide.md` - Single source of truth
+- `AGENTS.md` - Single source of truth
+- `document_catalog.md` - Core context document index
+- `completion_protocol.md` - Task completion checklists
+- `templates/change_request.md` - Change request template
 - `technical_status.md` - Project status tracking
 - `ROADMAP.md` - Development roadmap
 - `workflows/` - Development protocols
@@ -2107,7 +2233,10 @@ Create `ROADMAP.md` based on:
 ```
 [project root]
 ├── [docs location]/
-│   ├── context_master_guide.md
+│   ├── document_catalog.md
+│   ├── completion_protocol.md
+│   ├── templates/
+│   │   └── change_request.md
 │   ├── technical_status.md
 │   ├── ROADMAP.md
 │   ├── patterns/
@@ -2155,7 +2284,7 @@ Provide guidance on maintaining the new structure:
 ## Ongoing Maintenance
 
 ### Documentation Updates
-- When updating project info → Update `context_master_guide.md`
+- When updating project info → Update `AGENTS.md` and `document_catalog.md`
 - When completing work → Update `technical_status.md`
 - When fixing bugs → Add to `bugs/` (after confirmed)
 - When establishing patterns → Add to `patterns/`
@@ -2188,11 +2317,11 @@ ADRs serve a different purpose than FluxFrame docs:
 
 **Recommended approach:**
 1. Keep ADRs in place (don't migrate)
-2. Reference ADRs from context_master_guide.md
+2. Reference ADRs from AGENTS.md and document_catalog.md
 3. Extract relevant patterns from ADRs into patterns/
 4. For new architectural decisions: Continue using ADR process
 
-**Example reference in context_master_guide.md:**
+**Example reference in AGENTS.md:**
 ```markdown
 ## Architecture Decisions
 
@@ -2222,7 +2351,7 @@ Wikis are often:
 3. Gradually migrate high-value pages to patterns/
 4. Use wiki for onboarding, FluxFrame for AI context
 
-**In context_master_guide.md:**
+**In AGENTS.md:**
 ```markdown
 ## Detailed Documentation
 
