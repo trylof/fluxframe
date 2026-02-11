@@ -386,6 +386,8 @@ Built-in MCP tools:
 
 **Why:** AI has persistent memory across sessions.
 
+**Tool Override Rules:** Some AI assistants (notably Claude Code) have built-in planning and task tools that overlap with FluxFrame's MCP workflow. FluxFrame's tool-specific templates include explicit override rules that map these built-ins to their MCP equivalents, preventing the assistant from silently bypassing gates, cycle tracking, and documentation workflows.
+
 ---
 
 ## Framework Structure
@@ -608,7 +610,7 @@ For existing projects:
 
 ### AI Assistants
 
-- ✅ **Claude Code** - Full support with `CLAUDE.md` + `.claude/rules/`
+- ✅ **Claude Code** - Full support with `CLAUDE.md` + `.claude/rules/` (includes tool override rules to prevent built-in tools from bypassing MCP workflow)
 - ✅ **Roo Code** - Full support with `.roomodes` + `.roo/rules/`
 - ✅ **Cline** - Full support with `.clinerules/`
 - ✅ **Cursor** - Support via `AGENTS.md`
