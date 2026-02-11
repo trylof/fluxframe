@@ -180,6 +180,16 @@ rm .claude/rules/frontend-rules.md
    /project:new-feature
    ```
 
+## Tool Override Rules (Important)
+
+Claude Code has built-in tools (`EnterPlanMode`, `TaskCreate`, `TaskUpdate`) that overlap with FluxFrame's MCP workflow. The CLAUDE.md template includes explicit override rules telling Claude Code to use MCP equivalents instead.
+
+**This is critical** — without these overrides, Claude Code may silently substitute its own planning and task tools, bypassing FluxFrame's gates, cycle tracking, and documentation workflow.
+
+The template also restricts `MEMORY.md` (Claude Code's per-user auto-memory) to personal preferences only. Project state belongs in `project_docs/` and MCP tools, not in a file that isn't shared across collaborators.
+
+If you're using Option B (symlink), these overrides won't be present. Consider adding them manually to your project's AGENTS.md or switching to Option A.
+
 ## Connecting MCP Server
 
 For full FluxFrame workflow support, connect the MCP server:

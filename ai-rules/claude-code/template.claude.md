@@ -101,6 +101,32 @@ Rules in `.claude/rules/` are automatically loaded when working on matching file
 | `frontend-rules.md` | `{{FRONTEND_PATH_PATTERN}}` | Frontend development standards |
 | `test-rules.md` | `{{TEST_PATH_PATTERN}}` | Testing standards |
 
+## Tool Override Rules
+
+**The MCP tools defined in AGENTS.md REPLACE Claude Code built-in equivalents. Do NOT use the built-in versions.**
+
+| Instead of (Built-in) | Use (MCP) |
+|---|---|
+| `EnterPlanMode` | `start_cycle_planning()` + `create_cycle_plan()` |
+| `TaskCreate` / `TaskUpdate` / `TaskList` | MCP cycle & change request tracking |
+| Writing plans to arbitrary files | `create_cycle_plan()` + `approve_cycle_plan()` |
+
+**Why:** Claude Code's built-in planning and task tools operate outside the FluxFrame methodology. They don't enforce gates, don't track cycles, and don't produce documentation in the right locations. Using them means silently bypassing the workflow that AGENTS.md defines.
+
+### Auto-Memory Boundaries
+
+`MEMORY.md` is **per-user and not shared** across collaborators. It must ONLY contain:
+- Personal coding preferences and quirks
+- Individual tool/environment configuration notes
+
+**Never** store any of the following in MEMORY.md:
+- Project state, architecture, or implementation details
+- Cycle progress or task tracking
+- Debug patterns, file paths, or operational knowledge
+- Anything that belongs in `{{DOCS_DIR}}/`
+
+All project knowledge lives in `{{DOCS_DIR}}/` and is managed through MCP tools.
+
 ## MCP Tool Failure Protocol
 
 **If ANY MCP tool call fails during a session, STOP and investigate.** Do not circumvent the failure by reading files directly or skipping the tool. MCP tools enforce the FluxFrame methodology - bypassing them means bypassing the methodology. Investigate the root cause, fix it, retry the tool, then resume work. A prior instruction to "execute" or "build" does NOT override this - tool failures are blockers, not inconveniences.
@@ -113,3 +139,4 @@ Rules in `.claude/rules/` are automatically loaded when working on matching file
 - Call `get_completion_checklist` BEFORE marking work complete
 - Use MCP tools for context gathering when available
 - **NEVER circumvent a failed MCP tool call** - investigate and fix the failure instead
+- **NEVER use Claude Code built-in planning/task tools** - use MCP equivalents per Tool Override Rules above
